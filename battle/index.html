@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#0C0B0A" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+<title>2026 체장왕전 · 國菌硏究所</title>
+<meta property="og:title" content="국균연구소 2026 체장왕전 (體長王戰)" />
+<meta property="og:description" content="팀 피눈물 vs 팀 한테란 — 최장의 체장을 가리는 단 하나의 전쟁!" />
+<meta property="og:image" content="https://raw.githubusercontent.com/ljy5747/Beetle_Log/main/battle-poster.jpg" />
+<style>
+:root{
+--bg:#0C0B0A;--surf:#16130F;--surf2:#1F1B16;--line:#2E2921;--line2:#241F19;
+--text:#F2EDE4;--dim:#9A9086;--gold:#C9A54D;--gold-l:#E6C97A;--gold-d:#8A6F2E;
+--red:#C43B32;--blue:#3E7FB0;color-scheme:dark}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);
+font-family:-apple-system,"Apple SD Gothic Neo","Pretendard","Malgun Gothic",sans-serif;font-size:15px;line-height:1.55}
+.mono{font-family:ui-monospace,"SF Mono",Menlo,monospace;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.serif{font-family:"Times New Roman","Nanum Myeongjo",Georgia,serif}
+.wrap{max-width:560px;margin:0 auto;padding:0 15px 70px}
+
+/* ── 포스터 대문 ── */
+.hero{position:relative;margin:0 auto;max-width:560px;padding:0 0 8px;display:flex;flex-direction:column}
+
+/* 방문자 카운터 */
+.visit{order:-1;display:flex;align-items:center;justify-content:center;gap:9px;
+padding:9px 12px;margin:0 15px 8px;font-size:12px;color:var(--dim);
+background:var(--surf);border:1px solid var(--line);border-radius:999px}
+.visit b{color:var(--gold-l);font-weight:800;font-variant-numeric:tabular-nums}
+.visit .sep{color:#3A342C}
+
+/* 좋아요 */
+.likebtn{width:100%;margin-top:9px;background:var(--surf2);border:1px solid var(--line);color:var(--dim);
+border-radius:10px;padding:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;
+display:flex;align-items:center;justify-content:center;gap:7px}
+.likebtn.on{background:#2A1614;border-color:#C4413855;color:#E8827A}
+.likebtn b{font-variant-numeric:tabular-nums}
+.hero>img{display:block;width:100%;height:auto;cursor:pointer}
+.hero-cta{position:sticky;bottom:14px;z-index:20;display:flex;justify-content:center;margin-top:12px;pointer-events:none}
+.cta{pointer-events:auto;background:linear-gradient(180deg,var(--gold-l),var(--gold));color:#1A1206;border:none;
+border-radius:999px;padding:13px 26px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;
+box-shadow:0 8px 28px rgba(0,0,0,.6),0 0 0 1px rgba(230,201,122,.35);letter-spacing:.02em}
+.cta:active{transform:translateY(1px)}
+.live-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#1A1206;margin-right:7px;
+animation:blink 1.6s infinite;vertical-align:middle}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+
+/* ── 섹션 ── */
+.sec-t{display:flex;align-items:center;gap:10px;margin:26px 2px 12px}
+.sec-t:before,.sec-t:after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold-d),transparent)}
+.sec-t span{font-family:"Times New Roman","Nanum Myeongjo",Georgia,serif;font-size:14px;font-weight:700;
+color:var(--gold-l);letter-spacing:.14em;white-space:nowrap}
+.panel{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:14px 15px;margin-bottom:10px}
+.boot{padding:70px 20px;text-align:center;color:var(--dim);line-height:2}
+
+/* ── 스코어보드 ── */
+.score{background:linear-gradient(180deg,#1A1611,#100D0A);border:1px solid var(--line);
+border-radius:16px;padding:20px 10px 16px;display:flex;align-items:stretch;box-shadow:0 4px 24px rgba(0,0,0,.5)}
+.side{flex:1;text-align:center;min-width:0}
+.side-name{font-size:14px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.side-score{font-family:"Times New Roman","Nanum Myeongjo",Georgia,serif;font-size:42px;font-weight:700;line-height:1.1;margin-top:5px}
+.side-score small{font-size:14px;color:var(--dim);font-weight:400;margin-left:2px}
+.side-sub{font-size:11px;color:var(--dim);margin-top:5px}
+.crown{font-size:15px;display:block;height:18px}
+.vs{flex:none;display:flex;align-items:center;padding:0 4px;color:var(--gold-d);
+font-family:"Times New Roman",Georgia,serif;font-style:italic;font-size:19px}
+.gap-note{text-align:center;font-size:12.5px;color:var(--dim);margin:10px 0 4px}
+.gap-note b{color:var(--gold-l)}
+.tie-note{text-align:center;font-size:11.5px;color:var(--dim);margin-bottom:4px}
+
+/* ── 아바타 ── */
+.av{border-radius:50%;object-fit:cover;flex:none;background:var(--surf2);border:1px solid var(--line)}
+.av.ph{display:flex;align-items:center;justify-content:center;color:var(--dim);font-weight:800}
+
+/* ── 성별 색 ── */
+.sx-m,.sx-f{font-family:"Apple Symbols","Segoe UI Symbol","Noto Sans Symbols2","DejaVu Sans",sans-serif;
+display:inline-block;line-height:1;vertical-align:middle;position:relative;top:-.04em;font-weight:400}
+.sx-m{color:#5AA9E6}
+.sx-f{color:#F08CB4}
+.dim{color:var(--dim)}
+
+/* ── 랭킹 ── */
+.rrow{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line2)}
+.rrow:first-child{border-top:none;padding-top:2px}
+.rrow:last-child{padding-bottom:2px}
+.rk{flex:none;width:20px;text-align:center;font-weight:800;font-size:14px;color:var(--dim)}
+.rk.g{color:var(--gold-l)}
+.rname{flex:1;min-width:0}
+.rname b{font-size:14.5px;display:flex;align-items:center;gap:6px}
+.rname b i{width:7px;height:7px;border-radius:50%;flex:none}
+.rname span{font-size:11.5px;color:var(--dim);display:block;margin-top:2px}
+.rsep{color:#3A342C;margin:0 4px}
+.rnone{color:#5A5349}
+.rtot{flex:none;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.rscore{font-size:15px;font-weight:700;color:var(--text)}
+.rrow.top .rscore{font-size:18px}
+.grade{font-size:10.5px;font-weight:800;border-radius:5px;padding:1px 6px;border:1px solid;line-height:1.5}
+.grade.gS{color:#E8C77A;border-color:#E8C77A88;background:#2A2114}
+.grade.gA{color:#9BC7E8;border-color:#5AA9E666;background:#141D24}
+.grade.gB{color:#A8C98C;border-color:#6B8E4E88;background:#171E12}
+.grade.gC,.grade.gD,.grade.gE{color:var(--dim);border-color:var(--line)}
+.rwait{font-size:11px;color:#6E6559}
+.rcrown{flex:none;width:26px;text-align:right;font-size:17px;line-height:1}
+.rrow.top .rname b{font-size:18px}
+.rrow.top .rk{font-size:18px;width:24px}
+.rrow.top{padding:12px 0}
+.rrow.t1 .rk{color:#E8C77A}
+.rrow.t2 .rk{color:#CFCFCF}
+.rrow.t3 .rk{color:#D2A277}
+.tb-art{background:#fff;border-radius:11px;overflow:hidden;line-height:0;border:1px solid #2A241C}
+.tb-art img{display:block;width:100%;height:auto;max-height:168px;object-fit:contain}
+.tb-row{display:flex;align-items:center;gap:8px;margin-top:13px}
+.tb-tag{flex:none;max-width:78px;border:1.5px solid;border-radius:999px;padding:5px 10px;
+font-size:11.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+background:rgba(255,255,255,.03);text-align:center}
+.tb-fight{position:relative;flex:1;min-width:0;padding-bottom:3px}
+.tb-bar{display:flex;height:26px;border-radius:999px;overflow:hidden;background:var(--surf2);border:1px solid var(--line)}
+.tb-bar i{display:flex;align-items:center;height:100%;transition:width .5s ease;min-width:0;overflow:hidden}
+.tb-bar i.a{justify-content:flex-start;padding-left:11px}
+.tb-bar i.b{justify-content:flex-end;padding-right:11px}
+.tb-bar i span{font-size:11.5px;font-weight:800;color:#fff;white-space:nowrap;
+text-shadow:0 1px 2px rgba(0,0,0,.5);font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.tb-clashline{position:absolute;top:-3px;bottom:-1px;width:2px;transform:translateX(-50%);
+background:linear-gradient(180deg,transparent,#F3E3BC,transparent);opacity:.9;transition:left .5s ease;
+box-shadow:0 0 10px 2px rgba(232,199,122,.55)}
+.tb-vs{position:absolute;top:50%;transform:translate(-50%,-50%);z-index:3;transition:left .5s ease;
+width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+font-family:"Times New Roman",Georgia,serif;font-style:italic;font-weight:700;font-size:18px;color:#F6EEDC;
+background:radial-gradient(circle at 50% 38%,#40331C,#100E0A 72%);border:2px solid var(--gold);
+box-shadow:0 0 0 3px rgba(12,11,10,.92),0 0 16px rgba(168,136,79,.6);animation:vspulse 2.4s ease-in-out infinite}
+@keyframes vspulse{0%,100%{box-shadow:0 0 0 3px rgba(12,11,10,.92),0 0 16px rgba(168,136,79,.6)}
+50%{box-shadow:0 0 0 3px rgba(12,11,10,.92),0 0 24px rgba(168,136,79,.95)}}
+.info-btn{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;margin-left:7px;
+border-radius:50%;border:1px solid var(--gold-d);background:transparent;color:var(--gold-l);cursor:pointer;
+font-family:Georgia,serif;font-style:italic;font-size:11px;font-weight:700;line-height:1;padding:0;vertical-align:2px}
+.info-body{font-size:13px;line-height:1.7;color:#D9D2C6}
+.info-body p{margin:0 0 10px}
+.info-body b{color:var(--gold-l)}
+.info-body table{width:100%;margin-bottom:6px}
+.info-body td{text-align:right}
+.info-sum td{font-weight:800;color:var(--gold-l);border-top:1px solid var(--line)}
+.info-lead{padding:4px 0 6px}
+.info-sec{font-size:11px;font-weight:800;color:var(--gold-l);letter-spacing:.06em;margin:14px 0 5px}
+.info-foot{font-size:11.5px;color:var(--dim)}
+.rval{flex:none;text-align:right;font-size:17px;font-weight:700}
+.rval small{font-size:11.5px;color:var(--dim);font-weight:400}
+.badge{font-size:10px;font-weight:700;border:1px solid var(--line);border-radius:999px;padding:0 6px;color:var(--dim)}
+.badge.full{color:var(--gold-l);border-color:var(--gold-d)}
+
+/* ── 그래프 ── */
+.chart-sub{font-size:11.5px;color:var(--dim);margin:-4px 0 8px;text-align:center}
+.legend{display:flex;gap:9px 13px;justify-content:center;font-size:11px;color:var(--dim);margin-top:9px;flex-wrap:wrap}
+.legend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+.chart-tbl{overflow-x:auto;margin-top:10px;border-top:1px solid var(--line2);padding-top:8px}
+.chart-tbl table{min-width:100%}
+.dt{color:var(--gold-l);font-weight:700}
+.u{color:#6E6559;font-size:9.5px;margin-left:1px}
+
+/* ── 상세 ── */
+details{background:var(--surf);border:1px solid var(--line);border-radius:12px;margin-bottom:8px;overflow:hidden}
+summary{list-style:none;cursor:pointer;padding:11px 14px;display:flex;align-items:center;gap:10px}
+summary::-webkit-details-marker{display:none}
+.sm-name{font-weight:700;font-size:14.5px;display:flex;align-items:center;gap:6px;flex:none}
+.sm-name i{width:7px;height:7px;border-radius:50%;flex:none}
+.sm-like{flex:none;font-size:11px;font-weight:800;color:#E8827A;letter-spacing:-.02em;
+background:#2A1614;border:1px solid #C4413844;border-radius:999px;padding:1px 7px}
+.sm-like.zero{color:#6E6559;background:transparent;border-color:var(--line2);font-weight:600}
+.sm-motto{flex:1;min-width:0;color:var(--gold-l);font-size:12px;font-style:italic;opacity:.82;
+white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sm-sub{font-size:11.5px;color:var(--dim);margin-left:auto;text-align:right;flex:none;padding-left:6px}
+.sm-arrow{color:var(--dim);font-size:11px;flex:none}
+details[open] .sm-arrow{transform:rotate(180deg)}
+.dbody{border-top:1px solid var(--line2);padding:12px 14px}
+.pcard{display:flex;gap:11px;background:var(--surf2);border:1px solid var(--line);border-radius:11px;padding:11px;margin-bottom:11px}
+.pcard-img{flex:none;width:84px;height:84px;border-radius:9px;object-fit:cover;background:#0F0D0B;border:1px solid var(--line);cursor:zoom-in}
+.pcard-img.ph{display:flex;align-items:center;justify-content:center;color:#4A443B;font-size:26px;cursor:default}
+.pcard-b{flex:1;min-width:0}
+.pcard-t{font-size:10.5px;font-weight:800;color:var(--gold-l);letter-spacing:.1em;margin-bottom:7px}
+.pl{display:flex;align-items:baseline;gap:7px;padding:4px 0;font-size:13px;flex-wrap:wrap}
+.pl-k{flex:none;width:14px;color:var(--dim);font-size:11.5px}
+.pl-v{flex:none;font-weight:700}
+.pl-v.dimv{font-weight:400;color:var(--dim)}
+.pl-bl{flex:1;min-width:90px;color:#A79D91;font-size:12px;word-break:break-word;line-height:1.5}
+table{border-collapse:collapse;width:100%;font-size:12.5px;font-variant-numeric:tabular-nums}
+th{color:var(--dim);font-size:10.5px;font-weight:700;text-align:right;padding:6px 4px 5px;border-bottom:1px solid var(--line2);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+td{text-align:right;padding:6px 4px;border-bottom:1px solid var(--line2);white-space:nowrap;color:#D9D2C6}
+tr:last-child td{border-bottom:none}
+tr.best td{color:var(--gold-l);font-weight:700}
+.star{color:var(--gold);font-size:10px}
+.tbl-wrap{overflow-x:auto}
+
+.foot{margin-top:32px;text-align:center;font-size:11.5px;color:#6E6559;line-height:1.9}
+.foot a{color:var(--gold-d);text-decoration:none;font-weight:700}
+svg{display:block}
+
+/* ── 암/수 요약표 ── */
+.sxt{width:100%;border-collapse:collapse;font-size:13px}
+.sxt th{font-size:11.5px;font-weight:800;text-align:right;padding:0 4px 7px;border-bottom:1px solid var(--line2)}
+.sxt th:first-child{text-align:left}
+.sxt th.hm{color:#5AA9E6}
+.sxt th.hf{color:#F08CB4}
+.sxt td{text-align:right;padding:7px 4px;border-bottom:1px solid var(--line2);font-weight:700;color:var(--text)}
+.sxt tr:last-child td{border-bottom:none}
+.sxt-k{text-align:left!important;color:var(--dim);font-weight:400!important;font-size:12.5px}
+.sxt .nul{color:#5A5349;font-weight:400}
+.recbtn{width:100%;margin-top:11px;background:var(--surf2);border:1px solid var(--line);color:var(--gold-l);
+border-radius:10px;padding:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+.recbtn:active{background:#2A241C}
+
+/* ── 개체별 기록 창 ── */
+.rec-ov{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:98;display:flex;align-items:center;
+justify-content:center;padding:14px;backdrop-filter:blur(3px)}
+.rec-box{background:var(--surf);border:1px solid var(--line);border-radius:14px;width:100%;max-width:620px;
+max-height:88vh;display:flex;flex-direction:column;box-shadow:0 12px 44px rgba(0,0,0,.7)}
+.rec-head{display:flex;align-items:center;gap:10px;padding:13px 15px;border-bottom:1px solid var(--line);flex:none}
+.rec-t{font-weight:800;font-size:15px;flex:1;min-width:0}
+.rec-x{background:none;border:none;color:var(--dim);font-size:19px;cursor:pointer;padding:0 4px;flex:none}
+.rec-body{overflow:auto;padding:6px 15px 15px}
+.rec-body table{min-width:100%}
+.rec-body th{position:sticky;top:0;background:var(--surf);z-index:1}
+.pud-o{color:var(--gold-l);font-weight:800}
+.pud-x{color:#5A5349;font-weight:400}
+.th-s{font-size:9px;font-weight:400;color:#6E6559}
+.hw{color:var(--dim);font-weight:400}
+.fd{font-size:11px;color:var(--gold-l);opacity:.8;font-weight:400;margin-top:2px;white-space:nowrap;line-height:1.35}
+.fd.sz{color:var(--dim);opacity:1;margin-top:0}
+.rec-note{font-size:11px;color:var(--dim);margin-top:11px;text-align:center}
+
+/* ── 사진 확대 ── */
+.lb{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:99;display:flex;align-items:center;
+justify-content:center;padding:20px;cursor:zoom-out}
+.lb img{max-width:100%;max-height:100%;border-radius:8px}
+
+@media (min-width:940px){
+  .layout{display:grid;grid-template-columns:minmax(320px,440px) minmax(0,560px);
+  gap:34px;justify-content:center;align-items:start;padding:24px 20px 60px}
+  .hero{max-width:none;padding:0}
+  .visit{order:0;margin:12px 0 0}
+  .gb{margin:16px 0 0}
+  .side-detail{margin:22px 0 0}
+  .hero>img{border-radius:14px;box-shadow:0 12px 44px rgba(0,0,0,.6)}
+  .hero-cta{display:none}
+  .wrap{max-width:none;padding:0}
+  .sec-t:first-child{margin-top:0}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+  <div class="hero">
+    <div class="visit" id="visit"><span class="dim">방문 집계 불러오는 중…</span></div>
+    <img src="https://raw.githubusercontent.com/ljy5747/Beetle_Log/main/battle-poster.jpg" alt="국균연구소 2026 체장왕전 — 팀 피눈물 vs 팀 한테란" onclick="document.getElementById('live').scrollIntoView()" />
+    <div class="hero-cta"><button class="cta" onclick="document.getElementById('live').scrollIntoView()"><span class="live-dot"></span>현 상황 보기</button></div>
+    <div class="side-detail" id="detail"></div>
+  </div>
+  <div class="wrap" id="live"><div class="boot">불러오는 중…</div></div>
+</div>
+
+<script>
+var SUPA_URL = "https://qybgsztoegkzqsdipili.supabase.co";
+var SUPA_ANON = "sb_publishable_IwNmQESmOgj-DHR0sxOIlw_4EKsa4wu";
+
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+function num(v){var n=parseFloat(v);return isFinite(n)&&n>0?n:null;}
+function n1(v){return v==null?"—":(Math.round(v*10)/10).toLocaleString();}
+function avg(a){var x=a.filter(function(v){return v!=null;});return x.length?x.reduce(function(s,v){return s+v;},0)/x.length:null;}
+function shortDate(d){return d?String(d).slice(2).replace(/-/g,"."):"";}
+
+/*NORM-START*/
+/* 예전 형식도 읽히게 정규화 */
+function normRounds(rs){
+  return (rs||[]).map(function(r,i){
+    if(typeof r==="string")return {name:r,date:""};
+    return {name:(r&&r.name)||(i+1)+"병",date:(r&&r.date)||""};
+  });
+}
+function shortTeam(x){return String(x||"").replace(/^팀\s*/,"");}
+function normBreeder(br){
+  var L=br.line||{},M=L.male||{},F=L.female||{};
+  var mb=M.blood||"",fb=F.blood||"";
+  if(!mb&&!fb&&L.blood)mb=L.blood;   /* 옛 공통 혈통 → ♂ 칸으로 */
+  return {
+    name:br.name||"?",team:br.team||"?",photo:br.photo||"",motto:br.motto||"",
+    line:{male:{size:num(M.size),photo:M.photo||"",blood:mb},
+          female:{size:num(F.size),blood:fb}},
+    larvae:(br.larvae||[]).map(function(r){
+      var hd=r[4],head=null;
+      if(Array.isArray(hd)){                      /* 옛 형식: 라운드별 두폭 배열 → 마지막 값 사용 */
+        for(var k=hd.length-1;k>=0;k--){var v=num(hd[k]);if(v!=null){head=v;break;}}
+      } else head=num(hd);
+      return {code:r[0]||"",sex:String(r[1]||""),weights:Array.isArray(r[2])?r[2]:[],adult:num(r[3]),
+              head:head,pupa:num(r[5]),
+              feeds:Array.isArray(r[6])?r[6]:[],sizes:Array.isArray(r[7])?r[7]:[],
+              pudding:r[8]===1||r[8]===true};
+    })
+  };
+}
+/*NORM-END*/
+
+/*RULES-START*/
+function sexOf(s){s=String(s||"");return s.indexOf("수")>=0?"m":s.indexOf("암")>=0?"f":"u";}
+function latestW(l){for(var i=l.weights.length-1;i>=0;i--){var v=num(l.weights[i]);if(v!=null)return v;}return null;}
+function maxW(l){var a=(l.weights||[]).map(num).filter(function(v){return v!=null;});return a.length?Math.max.apply(null,a):null;}
+/* 성별별 요약 통계 */
+function sexStats(larvae,sex){
+  var ls=larvae.filter(function(l){return sexOf(l.sex)===sex;});
+  var mws=ls.map(maxW).filter(function(v){return v!=null;});
+  var ads=ls.map(function(l){return l.adult;}).filter(function(v){return v!=null;});
+  return {n:ls.length,
+    wAvg:avg(ls.map(latestW)),
+    hAvg:avg(ls.map(function(l){return l.head;})),
+    pAvg:avg(ls.map(function(l){return l.pupa;})),
+    aAvg:avg(ads),
+    wMax:mws.length?Math.max.apply(null,mws):null,
+    aMax:ads.length?Math.max.apply(null,ads):null};
+}
+function pickBest(larvae,metric){
+  var best={m:null,f:null};
+  larvae.forEach(function(l){
+    var v=metric(l); if(v==null)return;
+    var s=sexOf(l.sex); if(s==="u")return;
+    if(!best[s]||v>best[s].v)best[s]={v:v,code:l.code};
+  });
+  return best;
+}
+function breederScore(best){
+  var vs=[best.m?best.m.v:null,best.f?best.f.v:null].filter(function(v){return v!=null;});
+  return vs.length?avg(vs):null;
+}
+/* ── 브리더 종합 평가 (100점) ──
+   항목별 점수 = 내 기록 ÷ 참가자 최고 기록 × 100 (최고 기록 대비 비율)
+   수컷 최대 20 · 평균 20 · TOP3 15 / 암컷 최대 15 · 평균 15 · TOP3 10 / 유효 개체수 5
+   참가 조건: 수컷 3두 이상 + 암컷 3두 이상 (최신 병 무게 기준) */
+var EVAL_ITEMS=[["mAvg",0.21],["mMax",0.18],["mHAvg",0.14],["mHMax",0.12],["fAvg",0.16],["fMax",0.14]];
+var MIN_TOTAL=3;
+function sexVals(larvae,metric,sex){
+  var vs=[];
+  larvae.forEach(function(l){
+    if(sexOf(l.sex)!==sex)return;
+    var v=metric(l); if(v!=null)vs.push(v);
+  });
+  return vs.sort(function(a,b){return b-a;});
+}
+/* 두폭(mm) — 개체당 1회 측정값 */
+function sexHeads(larvae,sex){
+  var vs=[];
+  larvae.forEach(function(l){
+    if(sexOf(l.sex)!==sex)return;
+    if(l.head!=null)vs.push(l.head);
+  });
+  return vs.sort(function(a,b){return b-a;});
+}
+function countPts(n){return n>=10?5:n===9?4:n===8?3:n===7?2:n===6?1:0;}
+function gradeOf(t){return t>=90?"S":t>=80?"A":t>=70?"B":t>=60?"C":t>=50?"D":"E";}
+function computeBreederRanks(rows,metric){
+  rows.forEach(function(r){
+    var M=sexVals(r.br.larvae,metric,"m"),F=sexVals(r.br.larvae,metric,"f");
+    r.mN=M.length;r.fN=F.length;
+    r.valid=r.br.larvae.filter(function(l){return metric(l)!=null;}).length;   /* 무게가 기록된 개체 수 */
+    r.eligible=r.valid>=MIN_TOTAL;
+    var MH=sexHeads(r.br.larvae,"m");
+    r.mMax=M.length?M[0]:null;   r.mAvg=M.length?avg(M):null;
+    r.mHMax=MH.length?MH[0]:null; r.mHAvg=MH.length?avg(MH):null;
+    r.fMax=F.length?F[0]:null;   r.fAvg=F.length?avg(F):null;
+  });
+  /* 최고 기록 기준: 기록이 있는 모든 참가자 (전황 막대가 초반부터 움직이도록) */
+  var best={};
+  EVAL_ITEMS.forEach(function(it){
+    best[it[0]]=rows.reduce(function(m,r){return Math.max(m,r[it[0]]||0);},0);
+  });
+  rows.forEach(function(r){
+    /* 가진 항목만으로 환산한 부분 점수 — 팀 전황 막대에 사용 */
+    var acc=0,wsum=0;
+    EVAL_ITEMS.forEach(function(it){
+      var b=best[it[0]];
+      if(b>0&&r[it[0]]!=null){acc+=(r[it[0]]/b*100)*it[1];wsum+=it[1];}
+    });
+    r.partial=wsum>0?(acc/wsum*0.95+countPts(r.valid)):null;
+    /* 랭킹 점수: 가진 항목만으로 환산 (전체 3두 이상이면 집계) */
+    if(!r.eligible){r.total=null;r.grade=null;return;}
+    r.total=r.partial;
+    r.grade=gradeOf(r.total);
+  });
+  return rows;
+}
+function teamStats(rows){
+  var pool=[],males=[];
+  rows.forEach(function(r){
+    if(r.best.m){pool.push(r.best.m.v);males.push(r.best.m.v);}
+    if(r.best.f)pool.push(r.best.f.v);
+  });
+  return {score:avg(pool),male:avg(males),n:pool.length,breeders:rows.filter(function(r){return r.score!=null;}).length};
+}
+/*RULES-END*/
+
+/*COLOR-START*/
+/* 팀 색을 밝기만 달리해 브리더별 구분색 생성 */
+function hex2rgb(h){h=String(h||"").replace("#","");
+  if(h.length===3)h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
+  var n=parseInt(h,16);return isFinite(n)?[(n>>16)&255,(n>>8)&255,n&255]:[154,144,134];}
+function rgb2hex(c){return "#"+c.map(function(v){return ("0"+Math.max(0,Math.min(255,Math.round(v))).toString(16)).slice(-2);}).join("");}
+function mix(hex,target,t){var a=hex2rgb(hex),b=hex2rgb(target);
+  return rgb2hex([0,1,2].map(function(i){return a[i]+(b[i]-a[i])*t;}));}
+function shadeFor(base,i,n){
+  if(n<=1)return base;
+  var t=i/(n-1);                    /* 0 → 어둡게, 1 → 밝게 */
+  return t<0.5?mix(base,"#000000",(0.5-t)*0.7):mix(base,"#FFFFFF",(t-0.5)*0.95);
+}
+/*COLOR-END*/
+
+
+/*CHART-START*/
+/* 라운드별 다중 선 그래프 — 선 끝에 브리더 프로필 사진 */
+function chart(series,rounds,unit,cid){
+  cid=cid||0;
+  var flat=[];series.forEach(function(s){s.vals.forEach(function(v){if(v!=null)flat.push(v);});});
+  if(!flat.length)return '<div style="color:var(--dim);text-align:center;padding:16px 0;font-size:13px">데이터가 등록되면 그래프가 그려져요</div>';
+  var W=340,H=204,PL=32,PR=30,PT=16,PB=38;   /* 오른쪽 여백은 사진 자리 */
+  var mn=Math.min.apply(null,flat),mx=Math.max.apply(null,flat);
+  if(mx-mn<0.4){mx+=0.2;mn=Math.max(0,mn-0.2);}
+  var pad=(mx-mn)*0.12;mx+=pad;mn=Math.max(0,mn-pad);
+  var n=rounds.length;
+  var X=function(i){return n<=1?(PL+(W-PL-PR)/2):PL+i*((W-PL-PR)/(n-1));};
+  var Y=function(v){return H-PB-((v-mn)/(mx-mn))*(H-PT-PB);};
+  var defs="",body="",avatars="";
+  /* 가로 눈금 */
+  [0,0.5,1].forEach(function(t){
+    var v=mn+(mx-mn)*t,y=Y(v);
+    body+='<line x1="'+PL+'" y1="'+y+'" x2="'+(W-PR)+'" y2="'+y+'" stroke="#241F19"/>'
+      +'<text x="'+(PL-5)+'" y="'+(y+3)+'" font-size="9" fill="#6E6559" text-anchor="end">'+n1(v)+'</text>';
+  });
+  /* x축: 라운드명 + 날짜 */
+  rounds.forEach(function(r,i){
+    body+='<text x="'+X(i)+'" y="'+(H-20)+'" font-size="10" fill="#9A9086" text-anchor="middle">'+esc(r.name)+'</text>';
+    if(r.date)body+='<text x="'+X(i)+'" y="'+(H-8)+'" font-size="8.5" fill="#6E6559" text-anchor="middle">'+esc(shortDate(r.date))+'</text>';
+  });
+  /* 선 + 끝점 사진 */
+  series.forEach(function(sr,si){
+    var pts=[];sr.vals.forEach(function(v,i){if(v!=null)pts.push([X(i),Y(v)]);});
+    if(!pts.length)return;
+    if(pts.length>=2)body+='<polyline points="'+pts.map(function(p){return p[0].toFixed(1)+","+p[1].toFixed(1);}).join(" ")
+      +'" fill="none" stroke="'+sr.color+'" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round" opacity=".92"/>';
+    pts.forEach(function(p,i){
+      if(i===pts.length-1)return;              /* 마지막 점은 사진으로 대체 */
+      body+='<circle cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="1.9" fill="'+sr.color+'"/>';
+    });
+    var last=pts[pts.length-1],R=9,id="cp"+cid+"-"+si;
+    if(sr.photo){
+      defs+='<clipPath id="'+id+'"><circle cx="'+last[0].toFixed(1)+'" cy="'+last[1].toFixed(1)+'" r="'+R+'"/></clipPath>';
+      avatars+='<image href="'+esc(sr.photo)+'" x="'+(last[0]-R).toFixed(1)+'" y="'+(last[1]-R).toFixed(1)+'" '
+        +'width="'+(R*2)+'" height="'+(R*2)+'" clip-path="url(#'+id+')" preserveAspectRatio="xMidYMid slice"/>';
+    }else{
+      avatars+='<circle cx="'+last[0].toFixed(1)+'" cy="'+last[1].toFixed(1)+'" r="'+R+'" fill="#1F1B16"/>'
+        +'<text x="'+last[0].toFixed(1)+'" y="'+last[1].toFixed(1)+'" dy="3.2" font-size="9" font-weight="700" '
+        +'fill="'+sr.color+'" text-anchor="middle">'+esc((sr.name||"?").slice(0,1))+'</text>';
+    }
+    avatars+='<circle cx="'+last[0].toFixed(1)+'" cy="'+last[1].toFixed(1)+'" r="'+R+'" fill="none" stroke="'+sr.color+'" stroke-width="1.8"/>';
+  });
+  var s='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%">'
+    +(defs?'<defs>'+defs+'</defs>':"")+body+avatars+'</svg>';
+  s+='<div class="legend">'+series.filter(function(sr){return sr.vals.some(function(v){return v!=null;});})
+    .map(function(sr){return '<span><i style="background:'+sr.color+'"></i>'+esc(sr.name)+'</span>';}).join("")+'</div>';
+  /* 그래프 아래 날짜별 수치표 */
+  s+='<div class="chart-tbl"><table><tr><th>날짜</th>'
+    +series.map(function(sr){return '<th>'+esc(sr.name)+'</th>';}).join("")+'</tr>';
+  rounds.forEach(function(r,i){
+    s+='<tr><td><span class="dt">'+esc(r.name)+'</span>'+(r.date?' <span style="color:#6E6559;font-size:11px">'+esc(shortDate(r.date))+'</span>':"")+'</td>'
+      +series.map(function(sr){var v=sr.vals[i];
+        return '<td class="mono">'+(v!=null?n1(v)+'<span class="u">'+esc(unit)+'</span>':"·")+'</td>';}).join("")+'</tr>';
+  });
+  s+='</table></div>';
+  return s;
+}
+/*CHART-END*/
+
+function avatarHTML(br,size){
+  if(br.photo)return '<img class="av" src="'+esc(br.photo)+'" style="width:'+size+'px;height:'+size+'px" alt="'+esc(br.name)+'"/>';
+  return '<span class="av ph" style="width:'+size+'px;height:'+size+'px;font-size:'+Math.round(size*0.42)+'px">'+esc((br.name||"?").slice(0,1))+'</span>';
+}
+
+function render(B){
+  var rounds=normRounds(B.rounds);
+  var teams=B.teams||{};
+  var keys=Object.keys(teams);
+  var tcolor=function(k){return (teams[k]&&teams[k].color)||"#9A9086";};
+  var tname=function(k){return (teams[k]&&teams[k].name)||("팀 "+k);};
+  var breeders=(B.breeders||[]).map(normBreeder);
+
+  /* 브리더별 구분색 */
+  var idxInTeam={};
+  keys.forEach(function(k){
+    var mem=breeders.filter(function(b){return b.team===k;});
+    mem.forEach(function(b,i){idxInTeam[b.name]=shadeFor(tcolor(k),i,mem.length);});
+  });
+  var bcolor=function(br){return idxInTeam[br.name]||tcolor(br.team);};
+  /* 암컷 섹션용: 파랑 계열 팀색은 핑크 계열로 */
+  var PINK_BASE="#E0709E";
+  var isBlue=function(hex){var c=hex2rgb(hex);return c[2]>c[0]+20;};
+  var idxInTeamF={};
+  keys.forEach(function(k){
+    var mem=breeders.filter(function(b){return b.team===k;});
+    var base=isBlue(tcolor(k))?PINK_BASE:tcolor(k);
+    mem.forEach(function(b,i){idxInTeamF[b.name]=shadeFor(base,i,mem.length);});
+  });
+  var bcolorF=function(br){return idxInTeamF[br.name]||bcolor(br);};
+
+  var adultCnt=breeders.reduce(function(a,b){return a+b.larvae.filter(function(l){return l.adult!=null;}).length;},0);
+  var mode=adultCnt>0?"adult":"weight";
+  var unit=mode==="adult"?"mm":"g";
+  var metric=function(l){return mode==="adult"?l.adult:latestW(l);};
+
+  var rows=breeders.map(function(br){
+    var best=pickBest(br.larvae,metric);
+    return {br:br,best:best,score:breederScore(best)};
+  });
+  computeBreederRanks(rows,metric);
+  var ranked=rows.slice().sort(function(a,b){
+    if(a.total==null&&b.total==null)return 0;
+    if(a.total==null)return 1;                   /* 집계 대기는 항상 뒤로 */
+    if(b.total==null)return -1;
+    if(Math.abs(a.total-b.total)>1e-9)return b.total-a.total;   /* 높을수록 상위 */
+    return (b.mAvg||0)-(a.mAvg||0);              /* 동점이면 수컷 평균 */
+  });
+
+  var tA=keys[0],tB=keys[1];
+  var sA=teamStats(rows.filter(function(r){return r.br.team===tA;}));
+  var sB=teamStats(rows.filter(function(r){return r.br.team===tB;}));
+  var lead=null,tieBreak=false;
+  if(sA.score!=null&&sB.score!=null){
+    if(Math.abs(sA.score-sB.score)<0.001){
+      tieBreak=true;
+      if(sA.male!=null&&sB.male!=null&&Math.abs(sA.male-sB.male)>0.001)lead=sA.male>sB.male?tA:tB;
+    }else lead=sA.score>sB.score?tA:tB;
+  }else if(sA.score!=null)lead=tA;
+  else if(sB.score!=null)lead=tB;
+
+  var html="";
+
+  /* ── 스코어보드 (우화 데이터가 있을 때만 공개) ── */
+  function side(k,s){
+    var on=lead===k;
+    return '<div class="side"><span class="crown">'+(on?"👑":"")+'</span>'
+      +'<div class="side-name" style="color:'+tcolor(k)+'">'+esc(tname(k))+'</div>'
+      +'<div class="side-score" style="color:'+(on?"var(--gold-l)":"var(--text)")+'">'+(s.score!=null?n1(s.score):"—")+'<small>'+unit+'</small></div>'
+      +'<div class="side-sub">선발 '+s.n+'두 · 브리더 '+s.breeders+'명</div></div>';
+  }
+  if(mode==="adult"&&tA&&tB){
+    html+='<div class="sec-t"><span>공식 스코어 · 선발개체 평균</span></div>';
+    html+='<div class="score">'+side(tA,sA)+'<div class="vs">VS</div>'+side(tB,sB)+'</div>';
+    if(sA.score!=null&&sB.score!=null){
+      if(tieBreak)html+='<div class="gap-note">동점! <b>수컷 평균</b>으로 판가름 — '+(lead?esc(tname(lead))+' 우세':'수컷 평균도 동일')+'</div>';
+      else html+='<div class="gap-note">격차 <b class="mono">'+n1(Math.abs(sA.score-sB.score))+unit+'</b> · '+esc(tname(lead))+' 리드</div>';
+      html+='<div class="tie-note">수컷 평균 '+esc(tname(tA))+' <b class="mono">'+n1(sA.male)+unit+'</b> · '+esc(tname(tB))+' <b class="mono">'+n1(sB.male)+unit+'</b></div>';
+    }
+  }
+
+  /* ── 브리더 랭킹 ── */
+  /* ── 팀 중간 집계 (팀장 ×1.3 · 종합점수 합계) ── */
+  var normName=function(x){return String(x||"").replace(/^팀\s*/,"").replace(/\s+/g,"");};
+  var LEADER_W=1.3;
+  var tsum={};
+  keys.forEach(function(k){
+    var mem=rows.filter(function(r){return r.br.team===k;});
+    var sum=0,counted=0;
+    mem.forEach(function(r){
+      var isLeader=normName(r.br.name)===normName(tname(k));
+      r.isLeader=isLeader;
+      var v=r.partial||0;
+      if(r.partial!=null)counted++;
+      sum+=isLeader?v*LEADER_W:v;
+    });
+    tsum[k]={sum:sum,n:mem.length,counted:counted};
+  });
+  var kA=keys[0],kB=keys[1];
+  if(kA&&kB&&(tsum[kA].sum>0||tsum[kB].sum>0)){
+    var sA=tsum[kA].sum,sB=tsum[kB].sum,tot=sA+sB;
+    var pA=tot>0?sA/tot*100:50,pB=100-pA;
+    var lead=Math.abs(sA-sB)<0.05?null:(sA>sB?kA:kB);
+    html+='<div class="sec-t"><span>팀 중간 집계</span></div><div class="panel">'
+      +'<div class="tb-art"><img src="battle-clash-'+(pA<35?"1":pA>65?"3":"2")+'.jpg" alt="'+esc(tname(kA))+' vs '+esc(tname(kB))+'"/></div>'
+      +'<div class="tb-row">'
+      +'<span class="tb-tag" style="border-color:'+tcolor(kA)+';color:'+tcolor(kA)+'">'
+      +(lead===kA?'👑 ':"")+esc(shortTeam(tname(kA)))+'</span>'
+      +'<div class="tb-fight"><div class="tb-bar">'
+      +'<i class="a" style="width:'+pA.toFixed(1)+'%;background:linear-gradient(90deg,'+mix(tcolor(kA),"#000000",0.35)+','+tcolor(kA)+')"><span>'+n1(pA)+'%</span></i>'
+      +'<i class="b" style="width:'+pB.toFixed(1)+'%;background:linear-gradient(90deg,'+tcolor(kB)+','+mix(tcolor(kB),"#000000",0.35)+')"><span>'+n1(pB)+'%</span></i>'
+      +'</div><div class="tb-clashline" style="left:'+Math.max(16,Math.min(84,pA)).toFixed(1)+'%"></div>'
+      +'<div class="tb-vs" style="left:'+Math.max(16,Math.min(84,pA)).toFixed(1)+'%">VS</div></div>'
+      +'<span class="tb-tag" style="border-color:'+tcolor(kB)+';color:'+tcolor(kB)+'">'
+      +esc(shortTeam(tname(kB)))+(lead===kB?' 👑':"")+'</span>'
+      +'</div>'
+      +'</div>';
+  }
+
+  html+='<div class="sec-t"><span>브리더 랭킹<button class="info-btn" onclick="openRankInfo()" aria-label="랭킹 산정 방식">i</button></span></div><div class="panel">';
+  if(!ranked.length)html+='<div style="color:var(--dim);text-align:center;padding:12px 0">참가자 데이터를 기다리는 중…</div>';
+  var CROWN=["👑","🥈","🥉"];
+  var place=0,prevT=null;
+  ranked.forEach(function(r,i){
+    var scored=r.total!=null;
+    if(scored){
+      if(prevT==null||Math.abs(r.total-prevT)>0.005)place=i+1;   /* 소수 둘째자리까지 같으면 공동 순위 */
+      prevT=r.total;
+    }
+    var top=scored&&place<=3;
+    var right=scored
+      ? '<span class="rscore mono">'+r.total.toFixed(1)+'</span><span class="grade g'+r.grade+'">'+r.grade+'</span>'
+      : '<span class="rwait">집계 대기 <span class="sx-m">♂</span>'+r.mN+' <span class="sx-f">♀</span>'+r.fN+'</span>';
+    html+='<div class="rrow'+(top?" top t"+place:"")+'">'
+      +'<div class="rk'+(top?" g":"")+'">'+(scored?place:"–")+'</div>'
+      +avatarHTML(r.br,top?38:32)
+      +'<div class="rname"><b><i style="background:'+bcolor(r.br)+'"></i>'+esc(r.br.name)+'</b></div>'
+      +'<div class="rtot">'+right+'</div>'
+      +'<div class="rcrown">'+(top?CROWN[place-1]:"")+'</div></div>';
+  });
+  html+='</div>';
+
+  /* ── 그래프 3종 ── */
+  var haveW=breeders.some(function(br){return br.larvae.some(function(l){return l.weights.some(function(w){return num(w)!=null;});});});
+  if(haveW){
+    var mkSeries=function(fn,colorFn){
+      return breeders.map(function(br){
+        return {name:br.name,color:(colorFn||bcolor)(br),photo:br.photo||"",
+          vals:rounds.map(function(_,i){return fn(br,i);})};
+      });
+    };
+    var wAt=function(br,i,sex){
+      return br.larvae.filter(function(l){return sex?sexOf(l.sex)===sex:true;})
+        .map(function(l){return num(l.weights[i]);}).filter(function(v){return v!=null;});
+    };
+    var charts=[
+      ["수컷 유충 평균","<span class=\"sx-m\">♂</span> 개체들의 라운드별 평균",function(br,i){return avg(wAt(br,i,"m"));}],
+      ["암컷 유충 평균","<span class=\"sx-f\">♀</span> 개체들의 라운드별 평균",function(br,i){return avg(wAt(br,i,"f"));},bcolorF],
+    ];
+    charts.forEach(function(c,ci){
+      html+='<div class="sec-t"><span>'+c[0]+'</span></div><div class="panel">'
+        +'<div class="chart-sub">'+c[1]+' · 단위 g</div>'
+        +chart(mkSeries(c[2],c[3]),rounds,"g",ci)+'</div>';
+    });
+  }
+
+  /* ── 수컷 / 암컷 최대 무게 TOP 10 ── */
+  var topMetric=function(l){return mode==="adult"?l.adult:maxW(l);};   /* 유충: 전 라운드 중 최대 무게 */
+  [["m","수컷"],["f","암컷"]].forEach(function(sx){
+    var list=[];
+    breeders.forEach(function(br){br.larvae.forEach(function(l){
+      if(sexOf(l.sex)!==sx[0])return;
+      var v=topMetric(l); if(v!=null)list.push({br:br,l:l,v:v});
+    });});
+    if(!list.length)return;
+    list.sort(function(a,b){return b.v-a.v;});
+    html+='<div class="sec-t"><span><span class="sx-'+sx[0]+'">'+(sx[0]==="m"?"♂":"♀")+'</span> '+sx[1]
+      +(mode==="adult"?" 체장":" 최대 무게")+' TOP 10</span></div><div class="panel">';
+    list.slice(0,10).forEach(function(x,i){
+      html+='<div class="rrow"><div class="rk'+(i===0?" g":"")+'">'+(i+1)+'</div>'
+        +avatarHTML(x.br,24)
+        +'<div class="rname"><b>'+esc(x.br.name)
+        +' <span class="mono" style="font-size:12px;color:var(--dim);font-weight:400">'+esc(x.l.code)+'</span></b></div>'
+        +'<div class="rval mono">'+n1(x.v)+'<small>'+unit+'</small></div></div>';
+    });
+    html+='</div>';
+  });
+
+  /* ── 참가자별 상세 (왼쪽 열) ── */
+  var dh='';
+  window.__REC=rows; window.__ROUNDS=rounds; window.__UNIT=unit;   /* rows = 관리자 입력 순서 그대로 */
+  dh+='<div class="sec-t"><span>참가자별 상세</span></div>';
+  rows.forEach(function(r,bi){
+    var br=r.br,L=br.line;
+    dh+='<details><summary>'+avatarHTML(br,34)
+      +'<span class="sm-name"><i style="background:'+bcolor(br)+'"></i>'+esc(br.name)+'</span>'
+      +'<span class="sm-like'+((LIKES[br.name]||0)?"":" zero")+'" id="lkc-'+bi+'">❤️ '+(LIKES[br.name]||0)+'</span>'
+      +(br.motto?'<span class="sm-motto" title="'+esc(br.motto)+'">“'+esc(br.motto)+'”</span>':"")
+      +'<span class="sm-sub mono">'+(r.score!=null?n1(r.score)+unit+" · ":"")+br.larvae.length+'두</span>'
+      +'<span class="sm-arrow">▾</span></summary><div class="dbody">';
+
+    /* 종충 카드 */
+    var hasParent=L.male.size||L.female.size||L.male.blood||L.female.blood||L.male.photo;
+    if(hasParent){
+      var pline=function(sx,sz,bl){
+        return '<div class="pl"><span class="pl-k '+(sx==="m"?"sx-m":"sx-f")+'">'+(sx==="m"?"♂":"♀")+'</span>'
+          +'<span class="pl-v mono'+(sz?"":" dimv")+'">'+(sz?n1(sz)+"mm":"미등록")+'</span>'
+          +(bl?'<span class="pl-bl">'+esc(bl)+'</span>':"")+'</div>';
+      };
+      dh+='<div class="pcard">'
+        +(L.male.photo
+          ? '<img class="pcard-img" src="'+esc(L.male.photo)+'" alt="'+esc(br.name)+' 종충 수컷" onclick="zoom(this.src)"/>'
+          : '<span class="pcard-img ph">🪲</span>')
+        +'<div class="pcard-b"><div class="pcard-t">종충 · PARENTS</div>'
+        +pline("m",L.male.size,L.male.blood)
+        +pline("f",L.female.size,L.female.blood)
+        +'</div></div>';
+    }
+
+    /* 암/수 요약 */
+    if(!br.larvae.length){
+      dh+='<div style="color:var(--dim);text-align:center;padding:10px 0;font-size:13px">아직 유충 데이터가 없어요</div>';
+    }else{
+      var M=sexStats(br.larvae,"m"),Fm=sexStats(br.larvae,"f");
+      var rowsDef=[
+        ["유충 무게 평균",function(x){return x.wAvg!=null?n1(x.wAvg)+"g":null;}],
+        ["두폭 평균",function(x){return x.hAvg!=null?n1(x.hAvg)+"mm":null;}],
+        ["용 무게 평균",function(x){return x.pAvg!=null?n1(x.pAvg)+"g":null;}],
+        ["우화 평균",function(x){return x.aAvg!=null?n1(x.aAvg)+"mm":null;}],
+        ["최대 유충 무게",function(x){return x.wMax!=null?n1(x.wMax)+"g":null;}],
+        ["최대 체장",function(x){return x.aMax!=null?n1(x.aMax)+"mm":null;}],
+      ];
+      dh+='<table class="sxt"><tr><th></th>'
+        +'<th class="hm"><span class="sx-m">♂</span> '+M.n+'두</th>'
+        +'<th class="hf"><span class="sx-f">♀</span> '+Fm.n+'두</th></tr>';
+      rowsDef.forEach(function(rd){
+        var a=rd[1](M),b=rd[1](Fm);
+        if(a==null&&b==null)return;   /* 양쪽 다 없는 항목은 숨김 */
+        dh+='<tr><td class="sxt-k">'+rd[0]+'</td>'
+          +'<td class="mono'+(a?"":" nul")+'">'+(a||"—")+'</td>'
+          +'<td class="mono'+(b?"":" nul")+'">'+(b||"—")+'</td></tr>';
+      });
+      dh+='</table>';
+      dh+='<button class="recbtn" onclick="openRecords('+bi+')">개체별 기록 '+br.larvae.length+'두 보기 ›</button>';
+    }
+    dh+=likeHTML(bi,br.name);
+    dh+='</div></details>';
+  });
+
+  var dEl=document.getElementById("detail");
+  if(dEl)dEl.innerHTML=dh;
+
+  html+='<div class="foot">'+(B.updated?'마지막 업데이트 '+esc(B.updated)+'<br/>':"")
+    +'★ 국균연구소 브리더방 ★<br/>powered by <a href="./">BeetleLog</a> · <a href="admin.html" style="color:#6E6559;font-weight:400">관리</a></div>';
+
+  document.getElementById("live").innerHTML=html;
+}
+
+/* 개체별 기록 창 */
+function openRecords(bi){
+  var r=(window.__REC||[])[bi]; if(!r)return;
+  var br=r.br,rounds=window.__ROUNDS||[];
+  var h='<div class="rec-head"><div class="rec-t">'+esc(br.name)+' · 개체별 기록</div>'
+    +'<button class="rec-x" onclick="closeRecords()">✕</button></div>'
+    +'<div class="rec-body"><table><tr><th>번호</th><th>성별</th>'
+    +'<th>푸딩<br/><span class="th-s">O/X</span></th>'
+    +rounds.map(function(rd){return '<th>'+esc(rd.name)+'<br/><span class="th-s">무게 g</span></th>';}).join("")
+    +'<th>두폭<br/><span class="th-s">mm</span></th>'
+    +'<th>용<br/><span class="th-s">무게 g</span></th>'
+    +'<th>체장<br/><span class="th-s">mm</span></th></tr>';
+  br.larvae.forEach(function(l){
+    var sx=sexOf(l.sex);
+    var isBest=(r.best.m&&r.best.m.code===l.code&&sx==="m")||(r.best.f&&r.best.f.code===l.code&&sx==="f");
+    h+='<tr class="'+(isBest?"best":"")+'"><td class="mono">'+(isBest?'<span class="star">★</span> ':"")+esc(l.code)+'</td>'
+      +'<td>'+(sx==="m"?'<span class="sx-m">♂</span>':sx==="f"?'<span class="sx-f">♀</span>':'<span style="color:var(--dim)">—</span>')+'</td>'
+      +'<td class="mono">'+(l.pudding?'<span class="pud-o">O</span>':'<span class="pud-x">X</span>')+'</td>'
+      +rounds.map(function(_,i){
+        var w=num(l.weights[i]);
+        var fd=(l.feeds||[])[i]||"",sz=(l.sizes||[])[i]||"";
+        return '<td class="mono">'+(w!=null?n1(w):"·")
+          +(fd?'<div class="fd">'+esc(fd)+'</div>':"")
+          +(sz?'<div class="fd sz">'+esc(sz)+'</div>':"")+'</td>';
+      }).join("")
+      +'<td class="mono">'+(l.head!=null?n1(l.head):"·")+'</td>'
+      +'<td class="mono">'+(l.pupa!=null?n1(l.pupa):"·")+'</td>'
+      +'<td class="mono">'+(l.adult!=null?n1(l.adult):"·")+'</td></tr>';
+  });
+  h+='</table><div class="rec-note">★ = 팀 스코어에 반영되는 선발 개체 &nbsp;·&nbsp; 푸딩 = 첫 병 전 푸딩 사용</div></div>';
+  var d=document.createElement("div");
+  d.className="rec-ov";d.id="recOv";d.innerHTML='<div class="rec-box">'+h+'</div>';
+  d.onclick=function(e){if(e.target===d)closeRecords();};
+  document.body.appendChild(d);
+}
+function openRankInfo(){
+  var rows=[["수컷 평균 무게",21],["수컷 최대 무게",18],["수컷 평균 두폭",14],["수컷 최대 두폭",12],
+            ["암컷 평균 무게",16],["암컷 최대 무게",14],["유효 개체수",5]];
+  var h='<div class="rec-head"><div class="rec-t">브리더 랭킹 산정 방식</div>'
+    +'<button class="rec-x" onclick="closeRecords()">✕</button></div>'
+    +'<div class="rec-body info-body">'
+    +'<p class="info-lead"><b>100점 만점</b> 종합 평가예요. 한 마리만 크게 키운 것보다 <b>전체를 고르게 크게</b> 키운 브리더가 유리해요.</p>'
+    +'<table><tr><th style="text-align:left">항목</th><th>배점</th></tr>'
+    +rows.map(function(r){return '<tr><td style="text-align:left">'+r[0]+'</td><td class="mono">'+r[1]+'</td></tr>';}).join("")
+    +'<tr class="info-sum"><td style="text-align:left">합계</td><td class="mono">100</td></tr></table>'
+    +'<div class="info-sec">항목별 점수</div>'
+    +'<p>참가자 중 <b>최고 기록 대비 비율</b>로 환산해요.<br/>예) 1위 33.2g, 내 기록 31.5g → 31.5 ÷ 33.2 = 94.9% → 수컷 최대 무게 18점 × 0.949 = <b>17.1점</b></p>'
+    +'<div class="info-sec">유효 개체수</div>'
+    +'<p>최신 병 무게가 기록된 개체 수 · 10두 5점 / 9두 4점 / 8두 3점 / 7두 2점 / 6두 1점 / 5두 이하 0점</p>'
+    +'<div class="info-sec">참가 조건</div>'
+    +'<p>무게가 기록된 개체가 <b>3두 이상</b>이면 집계돼요. 한쪽 성별이 없으면 그 항목은 빼고 <b>가진 항목만으로</b> 환산해요.</p>'
+    +'<div class="info-sec">등급</div>'
+    +'<p><span class="grade gS">S</span> 90↑ &nbsp;<span class="grade gA">A</span> 80↑ &nbsp;<span class="grade gB">B</span> 70↑ &nbsp;<span class="grade gC">C</span> 60↑ &nbsp;<span class="grade gD">D</span> 50↑ &nbsp;<span class="grade gE">E</span></p>'
+    +'<p class="info-foot">무게는 개체별 최신 병 기준 · 동점이면 수컷 평균이 높은 쪽이 상위</p>'
+    +'</div>';
+  var d=document.createElement("div");
+  d.className="rec-ov";d.id="recOv";d.innerHTML='<div class="rec-box">'+h+'</div>';
+  d.onclick=function(e){if(e.target===d)closeRecords();};
+  document.body.appendChild(d);
+}
+function closeRecords(){var d=document.getElementById("recOv");if(d)d.remove();}
+
+/* ════════ 방문자 · 방명록 · 좋아요 ════════ */
+var SB={apikey:SUPA_ANON,Authorization:"Bearer "+SUPA_ANON};
+var LIKES={};
+function todayKey(){var d=new Date();return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2);}
+function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+function lsDel(k){try{localStorage.removeItem(k);}catch(e){}}
+
+function bump(key,delta){
+  return fetch(SUPA_URL+"/rest/v1/rpc/bump",{
+    method:"POST",headers:Object.assign({"Content-Type":"application/json"},SB),
+    body:JSON.stringify({p_key:key,p_delta:delta||1})
+  }).then(function(r){return r.ok?r.json():null;});
+}
+function readStats(){
+  return fetch(SUPA_URL+"/rest/v1/battle_stats?select=key,n",{headers:SB})
+    .then(function(r){return r.ok?r.json():[];}).catch(function(){return [];});
+}
+
+/* ── 방문자 카운터 (들어올 때마다 +1) ── */
+function initVisits(){
+  var el=document.getElementById("visit");
+  var day=todayKey();
+  Promise.all([bump("visit:"+day,1),bump("visit:total",1)])
+    .catch(function(){})
+    .then(readStats).then(function(rows){
+      var m={};(rows||[]).forEach(function(r){m[r.key]=r.n;});
+      var t=m["visit:"+day]||0,all=m["visit:total"]||0;
+      el.innerHTML='<span>오늘 <b>'+t.toLocaleString()+'</b>명</span><span class="sep">·</span>'
+        +'<span>누적 <b>'+all.toLocaleString()+'</b>명</span>';
+    }).catch(function(){
+      el.innerHTML='<span class="dim">방문 집계를 불러오지 못했어요</span>';
+    });
+}
+
+/* ── 좋아요 ── */
+function likeFace(bi,liked,n){
+  return '<span class="ic">'+(liked?"❤️":"🤍")+'</span> '+(liked?"응원함":"응원하기")+' <b>'+n+'</b>';
+}
+function likeHTML(bi,name){
+  var liked=!!lsGet("bl-like-"+name);
+  return '<button class="likebtn'+(liked?" on":"")+'" id="lk-'+bi+'" onclick="toggleLike('+bi+')">'
+    +likeFace(bi,liked,LIKES[name]||0)+'</button>';
+}
+function syncLikeCount(bi,name){
+  var c=document.getElementById("lkc-"+bi);
+  if(!c)return;
+  var n=LIKES[name]||0;
+  c.textContent="❤️ "+n;
+  c.classList.toggle("zero",!n);
+}
+function toggleLike(bi){
+  var r=(window.__REC||[])[bi]; if(!r)return;
+  var name=r.br.name;
+  var k="bl-like-"+name,liked=!!lsGet(k),delta=liked?-1:1;
+  if(liked)lsDel(k); else lsSet(k,"1");
+  LIKES[name]=Math.max(0,(LIKES[name]||0)+delta);
+  var el=document.getElementById("lk-"+bi);
+  if(el){el.classList.toggle("on",!liked);el.innerHTML=likeFace(bi,!liked,LIKES[name]);}
+  syncLikeCount(bi,name);
+  bump("like:"+name,delta).then(function(res){
+    var v=(res&&typeof res==="number")?res:(Array.isArray(res)?res[0]:null);
+    if(typeof v==="number"){
+      LIKES[name]=v;
+      var e2=document.getElementById("lk-"+bi);
+      if(e2){var b=e2.querySelector("b");if(b)b.textContent=v;}
+      syncLikeCount(bi,name);
+    }
+  }).catch(function(){});
+}
+
+/* 사진 확대 */
+function zoom(src){
+  var d=document.createElement("div");
+  d.className="lb";d.innerHTML='<img src="'+esc(src)+'"/>';
+  d.onclick=function(){d.remove();};
+  document.body.appendChild(d);
+}
+
+(function(){
+  var root=document.getElementById("live");
+  initVisits();
+  Promise.all([
+    fetch(SUPA_URL+"/rest/v1/battle?id=eq.1&select=data,updated_at",{
+      headers:{apikey:SUPA_ANON,Authorization:"Bearer "+SUPA_ANON}
+    }).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json();}),
+    readStats()
+  ]).then(function(res){
+    (res[1]||[]).forEach(function(r){
+      if(r.key&&r.key.indexOf("like:")===0)LIKES[r.key.slice(5)]=r.n;
+    });
+    var rows=res[0];
+    return rows;
+  })
+  .then(function(rows){
+    var row=rows&&rows[0],B=(row&&row.data)||{};
+    if(row&&row.updated_at&&!B.updated)B.updated=String(row.updated_at).slice(0,10);
+    if(!B.breeders||!B.breeders.length){
+      root.innerHTML='<div class="boot">🪲<br/>아직 배틀 데이터가 없어요.<br/>첫 병갈이 데이터가 등록되면 여기에 표시됩니다.</div>';
+      return;
+    }
+    render(B);
+  }).catch(function(e){
+    root.innerHTML='<div class="boot">⚠️ 데이터를 불러오지 못했어요.<br/>잠시 후 새로고침 해주세요.<br/><span style="font-size:11px">('+esc(e&&e.message||e)+')</span></div>';
+  });
+})();
+</script>
+</body>
+</html>
