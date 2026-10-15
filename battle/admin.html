@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#FAF9F7" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+<title>배틀 관리</title>
+<style>
+:root{--bg:#FAF9F7;--surf:#FFFFFF;--surf2:#F4F2EE;--line:#E7E3DC;--line2:#EFEDE8;
+--text:#1C1A17;--dim:#8A8378;--gold:#A8884F;--gold-d:#937640;--green:#6B8E4E;--red:#B4503F;
+--tA:#C43B32;--tB:#3E7FB0;color-scheme:light}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg)}
+.app{min-height:100vh;color:var(--text);max-width:560px;margin:0 auto;padding:16px 14px 92px;
+font-family:-apple-system,"Apple SD Gothic Neo","Pretendard","Malgun Gothic",sans-serif;font-size:15px;line-height:1.55}
+.mono{font-family:ui-monospace,"SF Mono",Menlo,monospace;letter-spacing:-.01em}
+.boot{padding:80px 20px;text-align:center;color:var(--dim);line-height:2}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:4px 0 13px;border-bottom:1px solid var(--line);margin-bottom:14px}
+.brand{font-family:"Times New Roman","Nanum Myeongjo",Georgia,serif;font-size:21px;font-weight:700}
+.brand small{font-size:12px;color:var(--dim);font-weight:400;font-family:-apple-system,sans-serif;display:block;margin-top:1px}
+.hbtn{background:none;border:none;color:var(--gold-d);font-size:14px;font-weight:700;padding:8px 2px;cursor:pointer;font-family:inherit}
+.login-box{text-align:center;padding:60px 10px}
+.login-box .icon{font-size:44px;margin-bottom:14px}
+.login-t{font-size:21px;font-weight:800;margin-bottom:8px;font-family:"Times New Roman",Georgia,serif}
+.login-d{font-size:13px;color:var(--dim);line-height:1.8;margin-bottom:22px}
+.btn{background:var(--surf);border:1px solid var(--line);color:var(--text);border-radius:11px;
+padding:12px 16px;font-size:14.5px;font-weight:700;cursor:pointer;font-family:inherit}
+.btn.primary{background:var(--gold);border-color:var(--gold);color:#fff}
+.btn.big{width:100%;padding:15px}
+.sect{font-size:11px;font-weight:800;color:var(--gold-d);letter-spacing:.08em;text-transform:uppercase;margin:20px 2px 10px}
+.panel{background:var(--surf);border:1px solid var(--line);border-radius:13px;padding:14px 15px;margin-bottom:10px}
+.row{display:flex;gap:10px}
+.field{margin-bottom:12px;flex:1;min-width:0}
+.field:last-child{margin-bottom:2px}
+.label{font-size:12px;color:var(--dim);font-weight:700;margin-bottom:6px}
+.in{width:100%;background:var(--surf);border:1px solid var(--line);color:var(--text);border-radius:11px;
+padding:11px 12px;font-size:16px;font-family:inherit;appearance:none}
+.in:focus{outline:none;border-color:var(--gold)}
+select.in{background-image:linear-gradient(45deg,transparent 50%,var(--dim) 50%),linear-gradient(135deg,var(--dim) 50%,transparent 50%);
+background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px;background-repeat:no-repeat}
+.hint{font-size:11.5px;color:var(--dim);margin-top:7px;line-height:1.7}
+.hint b{color:var(--text)}
+
+/* 모드 · 라운드 선택 */
+.sticky{position:sticky;top:0;z-index:30;background:var(--bg);padding:8px 0 10px;margin:0 0 4px}
+.modes{display:flex;border:1px solid var(--line);border-radius:11px;overflow:hidden;background:var(--surf)}
+.mode-b{flex:1;background:none;border:none;padding:10px 4px;font-size:13.5px;font-weight:700;color:var(--dim);cursor:pointer;font-family:inherit}
+.mode-b.on{background:var(--text);color:#fff}
+.rtabs{display:flex;gap:6px;overflow-x:auto;margin-top:8px;scrollbar-width:none}
+.rtabs::-webkit-scrollbar{display:none}
+.rtab{flex:none;background:var(--surf);border:1px solid var(--line);border-radius:999px;padding:6px 13px;
+font-size:12.5px;font-weight:700;color:var(--dim);cursor:pointer;font-family:inherit;line-height:1.35;text-align:center}
+.rtab.on{background:var(--gold);border-color:var(--gold);color:#fff}
+.rtab span{display:block;font-size:9.5px;font-weight:400;opacity:.75}
+
+/* 참가자 블록 */
+.bblock{background:var(--surf);border:1px solid var(--line);border-radius:13px;padding:12px 13px;margin-bottom:10px}
+.bhead{display:flex;gap:9px;align-items:center;margin-bottom:10px}
+.bhead .in{padding:9px 11px;font-size:15px}
+.bhead .name{flex:1.3}
+.bhead .team{flex:1}
+.ava{flex:none;width:46px;height:46px;border-radius:50%;object-fit:cover;background:var(--surf2);
+border:1px solid var(--line);cursor:pointer;display:flex;align-items:center;justify-content:center;
+color:var(--dim);font-size:11px;font-weight:700;text-align:center;line-height:1.25;overflow:hidden}
+.ava.busy{opacity:.5}
+.xbtn{flex:none;background:none;border:none;color:var(--dim);font-size:17px;cursor:pointer;padding:0 5px}
+.motto-f{margin-bottom:10px}
+.motto-f .in{font-style:italic}
+.pgrid{display:flex;gap:11px;background:var(--surf2);border:1px solid var(--line2);border-radius:11px;padding:11px;margin-bottom:11px}
+.pimg{flex:none;width:78px;height:78px;border-radius:9px;object-fit:cover;background:#EDEAE4;
+border:1px solid var(--line);cursor:pointer;display:flex;align-items:center;justify-content:center;
+color:var(--dim);font-size:11px;font-weight:700;text-align:center;line-height:1.3;padding:4px;overflow:hidden}
+.pfields{flex:1;min-width:0}
+.pfields .field{margin-bottom:8px}
+.pfields .in{padding:8px 10px;font-size:15px}
+.pfields .label{font-size:11px;margin-bottom:4px}
+.ptitle{font-size:10.5px;font-weight:800;color:var(--gold-d);letter-spacing:.08em;margin-bottom:8px}
+
+/* 유충 카드 */
+.lwrap{border:1px solid var(--line2);border-radius:11px;overflow:hidden;background:var(--surf2)}
+.lsum{list-style:none;cursor:pointer;padding:10px 12px;display:flex;align-items:center;gap:8px;
+font-size:12.5px;font-weight:700;color:var(--text)}
+.lsum::-webkit-details-marker{display:none}
+.lsum .arw{margin-left:auto;color:var(--dim);font-size:11px}
+details[open] .lsum .arw{transform:rotate(180deg)}
+.lcards{padding:2px 9px 10px;background:var(--surf2)}
+.lcard{border:1px solid var(--line);border-radius:11px;padding:9px 10px 10px;margin-bottom:8px;background:var(--surf)}
+.lc-h{display:flex;align-items:center;margin-bottom:8px}
+.lc-n{font-size:10.5px;font-weight:800;color:var(--gold-d);letter-spacing:.08em}
+.lc-x{margin-left:auto;background:none;border:none;color:#C9C3B8;font-size:14px;cursor:pointer;padding:0 2px}
+.lc-f{display:flex;align-items:center;gap:9px;margin-bottom:7px;flex-wrap:wrap}
+.lc-f:last-child{margin-bottom:0}
+.lc-l{flex:none;width:76px;font-size:12px;color:var(--dim);font-weight:700}
+.lc-in{flex:1;min-width:0;background:var(--surf);border:1px solid var(--line);color:var(--text);
+border-radius:9px;padding:10px 11px;font-size:16px;font-family:ui-monospace,Menlo,monospace;appearance:none}
+.lc-in:focus{outline:none;border-color:var(--gold);background:#FFFDF8}
+.lc-in.bad{border-color:var(--red);background:#FDF4F2}
+.lc-in.txt{font-family:inherit;font-size:15px}
+.lc-pl{flex:none;font-size:12px;color:var(--dim);font-weight:700;margin-left:4px}
+.oxseg{flex:none;display:flex;gap:6px;width:88px}
+.oxseg button{flex:1;border:1px solid var(--line);background:var(--surf);border-radius:9px;padding:9px 0;
+font-size:15px;font-weight:700;color:#C4BDB1;cursor:pointer;font-family:inherit}
+.oxseg button.on[data-p="O"]{background:#FCFAF5;color:var(--gold-d);border-color:var(--gold)}
+.oxseg button.on[data-p="X"]{background:var(--surf2);color:var(--dim);border-color:var(--line)}
+.sxseg{flex:1;display:flex;gap:6px}
+.sxseg button{flex:1;border:1px solid var(--line);background:var(--surf);border-radius:9px;padding:9px 0;line-height:1;
+font-size:15px;font-weight:700;color:#C4BDB1;cursor:pointer;font-family:inherit}
+.sxseg button.on[data-s=""]{background:var(--surf2);color:var(--dim);border-color:var(--line)}
+.sxseg button.on[data-s="수"]{background:#F0F6FB;color:#3E7FB0;border-color:#3E7FB0}
+.sxseg button.on[data-s="암"]{background:#FDF2F6;color:#D2568A;border-color:#E88BA8}
+.lg-acts{display:flex;gap:7px;margin-top:2px}
+.addmini{flex:1;background:var(--surf);border:1px dashed var(--line);color:var(--dim);border-radius:10px;
+padding:9px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit}
+.cnt{font-size:11.5px;color:var(--dim);font-weight:400}
+.cnt b{color:var(--green)}
+.cnt .warn{color:var(--red)}
+.rd{display:flex;gap:7px;align-items:center;margin-bottom:7px}
+.rd .in{padding:9px 11px;font-size:15px}
+.rd .nm{flex:1}
+.rd .dt{flex:1.2}
+.addb{width:100%;background:var(--surf2);border:1px dashed var(--line);color:var(--dim);border-radius:13px;
+padding:13px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:10px}
+.savebar{position:fixed;bottom:0;left:0;right:0;background:linear-gradient(transparent,var(--bg) 30%);padding:20px 14px 20px;z-index:40}
+.savebar-in{max-width:560px;margin:0 auto;display:flex;gap:9px}
+.savebar-in .btn{flex:1}
+.toast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%);background:var(--text);
+color:#fff;border-radius:999px;padding:10px 18px;font-size:13.5px;font-weight:600;z-index:99;
+box-shadow:0 8px 24px rgba(28,26,23,.25);max-width:92vw;text-align:center}
+.guide{background:#FCFAF5;border:1px solid #A8884F44;border-radius:12px;padding:11px 13px;font-size:12.5px;line-height:1.75;color:#6B5A38;margin-bottom:12px}
+.guide b{font-weight:800}
+
+
+</style>
+</head>
+<body>
+<div id="root" class="app"><div class="boot">불러오는 중…</div></div>
+<input type="file" id="filepick" accept="image/*" style="display:none" />
+<datalist id="dl-size"><option value="500cc"></option><option value="800cc"></option><option value="1100cc"></option>
+<option value="1400cc"></option><option value="2000cc"></option><option value="3000cc"></option></datalist>
+<datalist id="dl-feed"></datalist>
+
+<script>
+var SUPA_URL = "https://qybgsztoegkzqsdipili.supabase.co";
+var SUPA_ANON = "sb_publishable_IwNmQESmOgj-DHR0sxOIlw_4EKsa4wu";
+var TOKEN_KEY = "battle-admin-token";
+var PAGE_URL = location.origin + location.pathname;
+var TEAM_COLORS = { A: "#C43B32", B: "#3E7FB0" };
+
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+function $(id){return document.getElementById(id);}
+function num(v){var n=parseFloat(v);return isFinite(n)&&n>0?n:null;}
+var toastT=null;
+function say(msg){
+  var old=document.querySelector(".toast"); if(old)old.remove();
+  var t=document.createElement("div");t.className="toast";t.textContent=msg;
+  document.body.appendChild(t);
+  clearTimeout(toastT);toastT=setTimeout(function(){t.remove();},3400);
+}
+
+/*CONV-START*/
+/* 저장형식 [code,sex,weights[],adult,head,pupa,feeds[],sizes[],pudding] ↔ 편집형식
+   · 무게·균사·용량은 라운드별 / 두폭·용무게·체장은 1회 / pudding=첫병 전 푸딩컵 사용 여부 */
+function larvaFromData(r,nR){
+  var w=Array.isArray(r[2])?r[2]:[];
+  var fd=Array.isArray(r[6])?r[6]:[];
+  var sz=Array.isArray(r[7])?r[7]:[];
+  var hd=r[4],head=null;
+  if(Array.isArray(hd)){                       /* 옛 형식: 라운드별 두폭 배열 → 마지막 값 */
+    for(var k=hd.length-1;k>=0;k--){var v=num(hd[k]);if(v!=null){head=v;break;}}
+  } else head=num(hd);
+  var o={code:r[0]||"",sex:r[1]==="수"||r[1]==="암"?r[1]:"",w:[],feed:[],size:[],
+    head:head!=null?String(head):"",
+    pupa:r[5]!=null?String(r[5]):"",adult:r[3]!=null?String(r[3]):"",
+    pudding:r[8]===1||r[8]===true};
+  for(var i=0;i<nR;i++){
+    o.w.push(w[i]!=null?String(w[i]):"");
+    o.feed.push(fd[i]||"");
+    o.size.push(sz[i]||"");
+  }
+  return o;
+}
+function larvaToData(o,nR){
+  var w=[],fd=[],sz=[],any=false;
+  for(var i=0;i<nR;i++){
+    w.push(num(o.w[i]));
+    var f=(o.feed[i]||"").trim(),z=(o.size[i]||"").trim();
+    fd.push(f);sz.push(z);
+    if(f||z)any=true;
+  }
+  var out=[o.code||"",o.sex||"",w,num(o.adult),num(o.head),num(o.pupa)];
+  /* 푸딩 체크가 있으면 index 8까지 채워야 하므로 feeds/sizes도 함께 저장 */
+  if(any||o.pudding)out.push(fd,sz);
+  if(o.pudding)out.push(1);                     /* index 8: 푸딩컵 사용 */
+  return out;
+}
+function blankLarva(code,nR){
+  var o={code:code||"",sex:"",w:[],feed:[],size:[],head:"",pupa:"",adult:"",pudding:false};
+  for(var i=0;i<nR;i++){o.w.push("");o.feed.push("");o.size.push("");}
+  return o;
+}
+function pad2(n){return (n<10?"0":"")+n;}
+/*CONV-END*/
+
+/* ══ 인증 ══ */
+function captureHashToken(){
+  if(location.hash.indexOf("access_token")<0)return;
+  var p=new URLSearchParams(location.hash.slice(1));
+  var tok={access_token:p.get("access_token"),refresh_token:p.get("refresh_token"),
+    expires_at:Date.now()+(parseInt(p.get("expires_in")||"3600",10)-120)*1000};
+  try{localStorage.setItem(TOKEN_KEY,JSON.stringify(tok));}catch(e){}
+  history.replaceState(null,"",PAGE_URL);
+}
+function getToken(){
+  try{var t=JSON.parse(localStorage.getItem(TOKEN_KEY));
+    if(t&&t.access_token&&t.expires_at>Date.now())return t;}catch(e){}
+  return null;
+}
+function login(){location.href=SUPA_URL+"/auth/v1/authorize?provider=google&redirect_to="+encodeURIComponent(PAGE_URL);}
+function logout(){try{localStorage.removeItem(TOKEN_KEY);}catch(e){}location.reload();}
+
+/* ══ 사진 ══ */
+function resizeImage(file,maxPx,quality){
+  return new Promise(function(res,rej){
+    if(!/^image\//.test(file.type))return rej(new Error("이미지 파일만 올릴 수 있어요"));
+    var url=URL.createObjectURL(file),img=new Image();
+    img.onload=function(){
+      var w=img.naturalWidth,h=img.naturalHeight;
+      var sc=Math.min(1,maxPx/Math.max(w,h));
+      var c=document.createElement("canvas");
+      c.width=Math.max(1,Math.round(w*sc));c.height=Math.max(1,Math.round(h*sc));
+      c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+      c.toBlob(function(b){URL.revokeObjectURL(url);b?res(b):rej(new Error("사진 변환에 실패했어요"));},"image/jpeg",quality);
+    };
+    img.onerror=function(){URL.revokeObjectURL(url);rej(new Error("사진을 읽을 수 없어요"));};
+    img.src=url;
+  });
+}
+function uploadImage(blob,path){
+  var tok=getToken();
+  if(!tok)return Promise.reject(new Error("로그인이 만료됐어요"));
+  return fetch(SUPA_URL+"/storage/v1/object/battle/"+path,{
+    method:"POST",
+    headers:{apikey:SUPA_ANON,Authorization:"Bearer "+tok.access_token,
+      "Content-Type":"image/jpeg","x-upsert":"true","Cache-Control":"3600"},
+    body:blob
+  }).then(function(r){
+    if(r.ok)return SUPA_URL+"/storage/v1/object/public/battle/"+path;
+    return r.text().then(function(t){
+      if(r.status===400&&/Bucket not found/i.test(t))throw new Error("사진 보관함이 없어요 — battle-storage.sql을 먼저 실행해주세요");
+      if(r.status===403||/row-level security|Unauthorized/i.test(t))throw new Error("사진 올릴 권한이 없어요 — SQL의 관리자 이메일을 확인해주세요");
+      if(r.status===401)throw new Error("로그인이 만료됐어요 — 다시 로그인해주세요");
+      throw new Error("업로드 실패 ("+r.status+")");
+    });
+  });
+}
+function pickPhoto(kind,i){
+  var inp=$("filepick");
+  inp.value="";
+  inp.onchange=function(){
+    var f=inp.files&&inp.files[0]; if(!f)return;
+    readForm();
+    var isProfile=kind==="profile";
+    var el=$(isProfile?"ava-"+i:"pimg-"+i);
+    if(el)el.classList.add("busy");
+    say("사진 처리 중…");
+    resizeImage(f,isProfile?400:1400,0.82)
+      .then(function(blob){say("업로드 중… ("+Math.round(blob.size/1024)+"KB)");
+        return uploadImage(blob,(isProfile?"profile/b":"parent/b")+i+"-"+Date.now()+".jpg");})
+      .then(function(url){
+        if(isProfile)S.breeders[i].photo=url; else S.breeders[i].line.male.photo=url;
+        renderForm();say("✓ 사진 등록됨 — 저장하기를 눌러야 반영돼요");
+      })
+      .catch(function(e){if(el)el.classList.remove("busy");say("⚠️ "+(e&&e.message||"업로드 실패"));});
+  };
+  inp.click();
+}
+
+/* ══ 상태 ══ */
+var S=null,userEmail="",MODE="larva",CUR=0;
+
+function defaultState(){
+  var roster=[["피눈물","A"],["슈퍼맨","A"],["일팜이","A"],["창원한토리","A"],
+              ["한테란","B"],["천궁","B"],["디디","B"],["매미킴","B"]];
+  return {
+    title:"국균연구소 2026 체장왕전",subtitle:"최장의 체장을 가리는 단 하나의 전쟁",season:"體長王戰",
+    rounds:[1,2,3,4,5].map(function(n){return {name:n+"병",date:""};}),
+    teams:{A:{name:"팀 피눈물",color:TEAM_COLORS.A},B:{name:"팀 한테란",color:TEAM_COLORS.B}},
+    breeders:roster.map(function(r){return blankBreeder(r[0],r[1],1);}),
+  };
+}
+function blankBreeder(name,team,nR){
+  var ls=[];
+  for(var i=1;i<=10;i++)ls.push(blankLarva(pad2(i),nR||1));
+  return {name:name||"",team:team||"A",photo:"",motto:"",
+    line:{male:{size:"",photo:"",blood:""},female:{size:"",blood:""}},larvae:ls};
+}
+function stateFromData(B){
+  if(!B||!B.breeders||!B.breeders.length)return defaultState();
+  var d=defaultState();
+  var rounds=(B.rounds&&B.rounds.length?B.rounds:["1병"]).map(function(r,i){
+    return typeof r==="string"?{name:r,date:""}:{name:r.name||(i+1)+"병",date:r.date||""};
+  });
+  while(rounds.length<5)rounds.push({name:(rounds.length+1)+"병",date:""});   /* 5병까지 자동 확보 */
+  var nR=rounds.length;
+  return {
+    title:B.title||d.title,subtitle:B.subtitle||"",season:B.season||"",
+    rounds:rounds,teams:B.teams||d.teams,
+    breeders:B.breeders.map(function(br){
+      var L=br.line||{},M=L.male||{},F=L.female||{};
+      var mb=M.blood||"",fb=F.blood||"";
+      if(!mb&&!fb&&L.blood)mb=L.blood;
+      var ls=(br.larvae||[]).map(function(r){return larvaFromData(r,nR);});
+      if(!ls.length)for(var i=1;i<=10;i++)ls.push(blankLarva(pad2(i),nR));
+      return {name:br.name||"",team:br.team==="B"?"B":"A",photo:br.photo||"",motto:br.motto||"",
+        line:{male:{size:M.size!=null?String(M.size):"",photo:M.photo||"",blood:mb},
+              female:{size:F.size!=null?String(F.size):"",blood:fb}},
+        larvae:ls};
+    }),
+  };
+}
+
+/* ══ 화면 ══ */
+function showLogin(extra){
+  $("root").innerHTML='<div class="login-box"><div class="icon">🪲</div>'
+    +'<div class="login-t">Battle Admin</div>'
+    +'<div class="login-d">배틀 데이터 입력은 관리자만 가능해요.<br/>구글 계정으로 로그인해주세요.'
+    +(extra?'<br/><span style="color:var(--red)">'+esc(extra)+'</span>':"")+'</div>'
+    +'<button class="btn primary big" id="loginBtn">구글로 로그인</button>'
+    +'<div class="hint" style="margin-top:16px">로그인해도 저장은 등록된 관리자 계정만 가능합니다</div></div>';
+  $("loginBtn").addEventListener("click",login);
+}
+
+function renderForm(){
+  if(CUR>=S.rounds.length)CUR=S.rounds.length-1;
+  var isL=MODE==="larva";
+  var h='<div class="topbar"><div class="brand">Battle <span style="font-style:italic">admin</span>'
+    +'<small>'+esc(userEmail||"로그인됨")+'</small></div>'
+    +'<button class="hbtn" id="logoutBtn">로그아웃</button></div>';
+
+  h+='<div class="guide">'
+    +(isL?'📝 <b>'+esc(S.rounds[CUR].name)+'</b> 무게만 채우면 돼요. 성별은 ♂/♀ 버튼을 탭해서 바꿔요.'
+        :'🦋 두폭 · 용화 무게 · 우화 체장은 병갈이와 무관하게 한 번만 적어요.')
+    +'<br/><span style="color:#8A7A55">빈칸은 그냥 두면 돼요 · 최고 암/수 1두씩은 자동 선발</span></div>';
+
+  /* 기본 설정 */
+  h+='<details class="panel" style="padding:0"><summary style="padding:12px 15px;cursor:pointer;font-size:13px;font-weight:700;color:var(--dim)">⚙️ 대회 이름 · 팀 · 라운드 설정</summary>'
+    +'<div style="padding:0 15px 14px">'
+    +'<div class="field"><div class="label">배틀 이름</div><input class="in" id="f-title" value="'+esc(S.title)+'"/></div>'
+    +'<div class="row"><div class="field"><div class="label">부제</div><input class="in" id="f-subtitle" value="'+esc(S.subtitle)+'"/></div>'
+    +'<div class="field"><div class="label">시즌</div><input class="in" id="f-season" value="'+esc(S.season)+'"/></div></div>'
+    +'<div class="row"><div class="field"><div class="label">팀 1 이름</div><input class="in" id="f-ta" value="'+esc(S.teams.A?S.teams.A.name:"팀 A")+'"/></div>'
+    +'<div class="field"><div class="label">팀 2 이름</div><input class="in" id="f-tb" value="'+esc(S.teams.B?S.teams.B.name:"팀 B")+'"/></div></div>'
+    +'<div class="label" style="margin-top:6px">측정 라운드</div>';
+  S.rounds.forEach(function(r,i){
+    h+='<div class="rd"><input class="in nm mono" id="r-nm-'+i+'" value="'+esc(r.name)+'" placeholder="1병"/>'
+      +'<input class="in dt" id="r-dt-'+i+'" type="date" value="'+esc(r.date)+'"/>'
+      +'<button class="xbtn" id="r-del-'+i+'">✕</button></div>';
+  });
+  h+='<button class="addmini" id="addRound" style="width:100%">＋ 라운드 추가</button>'
+    +'<div class="hint">병갈이할 때마다 추가하면 그래프에 날짜별로 쌓여요</div></div></details>';
+
+  /* 모드 · 라운드 */
+  h+='<div class="sticky"><div class="modes">'
+    +'<button class="mode-b'+(isL?" on":"")+'" id="m-larva">병갈이 무게</button>'
+    +'<button class="mode-b'+(!isL?" on":"")+'" id="m-adult">두폭 · 용화 · 우화</button></div>';
+  if(isL){
+    h+='<div class="rtabs">';
+    S.rounds.forEach(function(r,i){
+      h+='<button class="rtab'+(i===CUR?" on":"")+'" id="rt-'+i+'">'+esc(r.name)
+        +'<span>'+(r.date?esc(r.date.slice(5).replace("-",".")):"날짜 미정")+'</span></button>';
+    });
+    h+='</div>';
+  }
+  h+='</div>';
+
+  /* 참가자 */
+  S.breeders.forEach(function(br,i){
+    var L=br.line;
+    h+='<div class="bblock">'
+      +'<div class="bhead">'
+      +(br.photo?'<img class="ava" id="ava-'+i+'" src="'+esc(br.photo)+'" alt="프로필"/>'
+                :'<div class="ava" id="ava-'+i+'">사진<br/>추가</div>')
+      +'<input class="in name" id="b-name-'+i+'" value="'+esc(br.name)+'" placeholder="닉네임"/>'
+      +'<select class="in team" id="b-team-'+i+'">'
+      +'<option value="A"'+(br.team!=="B"?" selected":"")+'>'+esc(S.teams.A?S.teams.A.name:"팀 A")+'</option>'
+      +'<option value="B"'+(br.team==="B"?" selected":"")+'>'+esc(S.teams.B?S.teams.B.name:"팀 B")+'</option></select>'
+      +'<button class="xbtn" id="b-del-'+i+'">✕</button></div>'
+
+      +'<div class="field motto-f"><div class="label">포부 · 한 줄 각오</div>'
+      +'<input class="in" id="b-motto-'+i+'" value="'+esc(br.motto||"")+'" placeholder="올해는 기필코 90 넘긴다" maxlength="60"/></div>'
+
+      +'<div class="pgrid">'
+      +(L.male.photo?'<img class="pimg" id="pimg-'+i+'" src="'+esc(L.male.photo)+'" alt="종충 수컷"/>'
+                    :'<div class="pimg" id="pimg-'+i+'">종충 ♂<br/>사진</div>')
+      +'<div class="pfields"><div class="ptitle">종충 정보</div>'
+      +'<div class="row"><div class="field"><div class="label">♂ 사이즈 mm</div>'
+      +'<input class="in mono" inputmode="decimal" id="p-m-'+i+'" value="'+esc(L.male.size)+'" placeholder="82.5"/></div>'
+      +'<div class="field"><div class="label">♂ 혈통</div>'
+      +'<input class="in" id="p-mb-'+i+'" value="'+esc(L.male.blood)+'" placeholder="능걸산 WD"/></div></div>'
+      +'<div class="row"><div class="field"><div class="label">♀ 사이즈 mm</div>'
+      +'<input class="in mono" inputmode="decimal" id="p-f-'+i+'" value="'+esc(L.female.size)+'" placeholder="48.3"/></div>'
+      +'<div class="field"><div class="label">♀ 혈통</div>'
+      +'<input class="in" id="p-fb-'+i+'" value="'+esc(L.female.blood)+'" placeholder="자가 F2"/></div></div>'
+      +'</div></div>'
+
+      /* 유충 카드 */
+      +'<details class="lwrap"><summary class="lsum">🪲 유충 &nbsp;<span class="cnt" id="b-cnt-'+i+'"></span><span class="arw">▾</span></summary>'
+      +'<div class="lcards">';
+    br.larvae.forEach(function(l,j){
+      h+='<div class="lcard"><div class="lc-h"><span class="lc-n">개체 '+(j+1)+'</span>'
+        +'<button class="lc-x" id="l-x-'+i+'-'+j+'">✕</button></div>'
+        +'<div class="lc-f"><span class="lc-l">번호</span>'
+        +'<input class="lc-in" id="l-c-'+i+'-'+j+'" value="'+esc(l.code)+'" placeholder="'+pad2(j+1)+'"/></div>'
+        +'<div class="lc-f"><span class="lc-l">성별</span>'
+        +'<div class="sxseg" id="l-s-'+i+'-'+j+'" data-v="'+esc(l.sex)+'">'
+        +'<button data-s=""'+(l.sex===""?' class="on"':"")+'>?</button>'
+        +'<button data-s="수"'+(l.sex==="수"?' class="on"':"")+'>♂</button>'
+        +'<button data-s="암"'+(l.sex==="암"?' class="on"':"")+'>♀</button></div>'
+        +(isL&&CUR===0                          /* 첫 병에서만: 성별 오른쪽에 푸딩 O/X */
+          ? '<span class="lc-pl">푸딩</span>'
+            +'<div class="oxseg" id="l-p-'+i+'-'+j+'" data-v="'+(l.pudding?"O":"X")+'">'
+            +'<button data-p="O"'+(l.pudding?' class="on"':"")+'>O</button>'
+            +'<button data-p="X"'+(!l.pudding?' class="on"':"")+'>X</button></div>'
+          : "")
+        +'</div>';
+      if(isL){
+        h+='<div class="lc-f"><span class="lc-l">'+esc(S.rounds[CUR].name)+' 무게</span>'
+          +'<input class="lc-in" inputmode="decimal" id="l-a-'+i+'-'+j+'" value="'+esc(l.w[CUR]==null?"":l.w[CUR])+'" placeholder="g"/></div>'
+          +'<div class="lc-f"><span class="lc-l">균사</span>'
+          +'<input class="lc-in txt" list="dl-feed" id="l-f-'+i+'-'+j+'" value="'+esc(l.feed[CUR]||"")+'" placeholder="국균 등"/></div>'
+          +'<div class="lc-f"><span class="lc-l">용량</span>'
+          +'<input class="lc-in txt" list="dl-size" id="l-v-'+i+'-'+j+'" value="'+esc(l.size[CUR]||"")+'" placeholder="1400cc"/></div>';
+      }else{
+        h+='<div class="lc-f"><span class="lc-l">두폭</span>'
+          +'<input class="lc-in" inputmode="decimal" id="l-a-'+i+'-'+j+'" value="'+esc(l.head)+'" placeholder="mm"/></div>'
+          +'<div class="lc-f"><span class="lc-l">용 무게</span>'
+          +'<input class="lc-in" inputmode="decimal" id="l-b-'+i+'-'+j+'" value="'+esc(l.pupa)+'" placeholder="g"/></div>'
+          +'<div class="lc-f"><span class="lc-l">우화 체장</span>'
+          +'<input class="lc-in" inputmode="decimal" id="l-d-'+i+'-'+j+'" value="'+esc(l.adult)+'" placeholder="mm"/></div>';
+      }
+      h+='</div>';
+    });
+    h+='<div class="lg-acts"><button class="addmini" id="l-add-'+i+'">＋ 유충 1두</button>'
+      +'<button class="addmini" id="l-fill-'+i+'">번호 자동 (01~)</button></div>'
+      +(isL?'<div class="lg-acts" style="margin-top:6px"><button class="addmini" id="l-copy-'+i+'">개체 1의 균사·용량을 전체 적용</button></div>':"")
+      +'</div></details></div>';
+  });
+  h+='<button class="addb" id="addBreeder">＋ 참가자 추가</button>';
+
+  h+='<div style="height:46px"></div><div class="savebar"><div class="savebar-in">'
+    +'<button class="btn" id="previewBtn">배틀 페이지</button>'
+    +'<button class="btn primary" id="saveBtn">저장하기</button></div></div>';
+
+  $("root").innerHTML=h;
+
+  /* 이미 입력한 균사 이름을 자동완성으로 */
+  var feeds={};
+  S.breeders.forEach(function(b){b.larvae.forEach(function(l){
+    (l.feed||[]).forEach(function(f){if(f&&f.trim())feeds[f.trim()]=1;});});});
+  var dl=$("dl-feed");
+  if(dl)dl.innerHTML=Object.keys(feeds).map(function(f){return '<option value="'+esc(f)+'"></option>';}).join("");
+
+  /* 이벤트 */
+  $("logoutBtn").addEventListener("click",logout);
+  $("previewBtn").addEventListener("click",function(){window.open("index.html","_blank");});
+  $("saveBtn").addEventListener("click",save);
+  $("m-larva").addEventListener("click",function(){if(MODE!=="larva"){readForm();MODE="larva";renderForm();}});
+  $("m-adult").addEventListener("click",function(){if(MODE!=="adult"){readForm();MODE="adult";renderForm();}});
+  $("addRound").addEventListener("click",function(){
+    readForm();
+    S.rounds.push({name:(S.rounds.length+1)+"병",date:""});
+    S.breeders.forEach(function(b){b.larvae.forEach(function(l){l.w.push("");l.feed.push("");l.size.push("");});});
+    CUR=S.rounds.length-1;MODE="larva";renderForm();
+  });
+  $("addBreeder").addEventListener("click",function(){readForm();S.breeders.push(blankBreeder("","A",S.rounds.length));renderForm();});
+  S.rounds.forEach(function(_,i){
+    if($("rt-"+i))$("rt-"+i).addEventListener("click",function(){readForm();CUR=i;renderForm();});
+    $("r-del-"+i).addEventListener("click",function(){
+      if(S.rounds.length<=1)return say("라운드는 1개 이상 필요해요");
+      if(!confirmOnce("rd"+i,"한 번 더 누르면 "+S.rounds[i].name+" 라운드를 삭제해요"))return;
+      readForm();
+      S.rounds.splice(i,1);
+      S.breeders.forEach(function(b){b.larvae.forEach(function(l){l.w.splice(i,1);l.feed.splice(i,1);l.size.splice(i,1);});});
+      if(CUR>=S.rounds.length)CUR=S.rounds.length-1;
+      renderForm();
+    });
+  });
+  S.breeders.forEach(function(br,i){
+    $("ava-"+i).addEventListener("click",function(){pickPhoto("profile",i);});
+    $("pimg-"+i).addEventListener("click",function(){pickPhoto("parent",i);});
+    $("b-del-"+i).addEventListener("click",function(){
+      if(!confirmOnce("b"+i,"한 번 더 누르면 이 참가자를 삭제해요"))return;
+      readForm();S.breeders.splice(i,1);renderForm();
+    });
+    $("l-add-"+i).addEventListener("click",function(){
+      readForm();S.breeders[i].larvae.push(blankLarva(pad2(S.breeders[i].larvae.length+1),S.rounds.length));renderForm();
+    });
+    if($("l-copy-"+i))$("l-copy-"+i).addEventListener("click",function(){
+      readForm();
+      var f0=S.breeders[i].larvae[0];
+      if(!f0)return say("유충이 없어요");
+      var fd=f0.feed[CUR]||"",sz=f0.size[CUR]||"";
+      if(!fd&&!sz)return say("개체 1에 균사·용량을 먼저 적어주세요");
+      S.breeders[i].larvae.forEach(function(l){l.feed[CUR]=fd;l.size[CUR]=sz;});
+      renderForm();say("✓ "+S.rounds[CUR].name+" 균사·용량을 전체 적용했어요");
+    });
+    $("l-fill-"+i).addEventListener("click",function(){
+      readForm();
+      S.breeders[i].larvae.forEach(function(l,j){l.code=pad2(j+1);});
+      renderForm();say("번호를 01부터 다시 매겼어요");
+    });
+    br.larvae.forEach(function(_,j){
+      var seg=$("l-s-"+i+"-"+j);
+      Array.prototype.forEach.call(seg.children,function(btn){
+        btn.addEventListener("click",function(){
+          seg.dataset.v=btn.dataset.s;
+          Array.prototype.forEach.call(seg.children,function(o){o.classList.toggle("on",o===btn);});
+          updateCount(i);
+        });
+      });
+      var pseg=$("l-p-"+i+"-"+j);             /* 푸딩 O/X (첫 병일 때만 존재) */
+      if(pseg){
+        Array.prototype.forEach.call(pseg.children,function(btn){
+          btn.addEventListener("click",function(){
+            pseg.dataset.v=btn.dataset.p;
+            Array.prototype.forEach.call(pseg.children,function(o){o.classList.toggle("on",o===btn);});
+          });
+        });
+      }
+      $("l-x-"+i+"-"+j).addEventListener("click",function(){
+        if(!confirmOnce("l"+i+"-"+j,"한 번 더 누르면 이 유충을 삭제해요"))return;
+        readForm();S.breeders[i].larvae.splice(j,1);renderForm();
+      });
+      ["l-a-","l-b-","l-d-"].forEach(function(pre){
+        var el=$(pre+i+"-"+j); if(!el)return;
+        el.addEventListener("input",function(){
+          this.classList.toggle("bad",this.value.trim()!==""&&num(this.value)==null);
+          updateCount(i);
+        });
+      });
+    });
+    updateCount(i);
+  });
+}
+
+var armed={k:"",t:0};
+function confirmOnce(key,msg){
+  if(armed.k===key&&Date.now()-armed.t<2600){armed.k="";return true;}
+  armed={k:key,t:Date.now()};say(msg);return false;
+}
+
+function updateCount(i){
+  var n=S.breeders[i].larvae.length,m=0,f=0,filled=0,bad=0;
+  for(var j=0;j<n;j++){
+    var v=$("l-s-"+i+"-"+j).dataset.v;
+    if(v==="수")m++; else if(v==="암")f++;
+    ["l-a-","l-b-","l-d-"].forEach(function(pre,k){
+      var el=$(pre+i+"-"+j); if(!el)return;
+      var val=el.value.trim(); if(val==="")return;
+      if(num(val)==null)bad++; else if(k===0)filled++;
+    });
+  }
+  var lbl=MODE==="larva"?S.rounds[CUR].name+" 무게":"두폭";
+  $("b-cnt-"+i).innerHTML=(n===10?'<b>'+n+'/10두</b>':'<span class="warn">'+n+'/10두</span>')
+    +' · ♂'+m+' ♀'+f+' · '+lbl+' '+filled+'두'
+    +(bad?' · <span class="warn">숫자 오류 '+bad+'칸</span>':"");
+}
+
+function readForm(){
+  if(!$("f-title"))return;
+  S.title=$("f-title").value.trim();
+  S.subtitle=$("f-subtitle").value.trim();
+  S.season=$("f-season").value.trim();
+  S.rounds=S.rounds.map(function(_,i){
+    return {name:($("r-nm-"+i).value||"").trim()||(i+1)+"병",date:$("r-dt-"+i).value||""};
+  });
+  S.teams={A:{name:$("f-ta").value.trim()||"팀 A",color:TEAM_COLORS.A},
+           B:{name:$("f-tb").value.trim()||"팀 B",color:TEAM_COLORS.B}};
+  S.breeders=S.breeders.map(function(br,i){
+    var ls=br.larvae.map(function(l,j){
+      var o={code:$("l-c-"+i+"-"+j).value.trim(),sex:$("l-s-"+i+"-"+j).dataset.v,
+             w:l.w.slice(),feed:l.feed.slice(),size:l.size.slice(),
+             head:l.head,pupa:l.pupa,adult:l.adult,pudding:l.pudding};
+      if(MODE==="larva"){
+        o.w[CUR]=$("l-a-"+i+"-"+j).value.trim();
+        o.feed[CUR]=$("l-f-"+i+"-"+j).value.trim();
+        o.size[CUR]=$("l-v-"+i+"-"+j).value.trim();
+        var pud=$("l-p-"+i+"-"+j);            /* 첫 병일 때만 존재 */
+        if(pud)o.pudding=pud.dataset.v==="O";
+      }else{
+        o.head=$("l-a-"+i+"-"+j).value.trim();
+        o.pupa=$("l-b-"+i+"-"+j).value.trim();
+        o.adult=$("l-d-"+i+"-"+j).value.trim();
+      }
+      return o;
+    });
+    return {name:$("b-name-"+i).value.trim(),team:$("b-team-"+i).value,photo:br.photo||"",
+      motto:$("b-motto-"+i).value.trim(),
+      line:{male:{size:$("p-m-"+i).value.trim(),photo:br.line.male.photo||"",blood:$("p-mb-"+i).value.trim()},
+            female:{size:$("p-f-"+i).value.trim(),blood:$("p-fb-"+i).value.trim()}},
+      larvae:ls};
+  });
+}
+
+/* ══ 저장 ══ */
+function save(){
+  readForm();
+  var nR=S.rounds.length,bad=[];
+  var breeders=S.breeders.map(function(br,i){
+    var nm=br.name||"참가자"+(i+1);
+    br.larvae.forEach(function(l,j){
+      l.w.forEach(function(v,k){
+        if(v!==""&&v!=null&&num(v)==null)bad.push(nm+" "+(l.code||j+1)+"행 "+S.rounds[k].name+" 무게");
+      });
+      [["두폭",l.head],["용 무게",l.pupa],["체장",l.adult]].forEach(function(c){
+        if(c[1]!==""&&c[1]!=null&&num(c[1])==null)bad.push(nm+" "+(l.code||j+1)+"행 "+c[0]);
+      });
+    });
+    return {name:nm,team:br.team,photo:br.photo,motto:br.motto,
+      line:{male:{size:num(br.line.male.size),photo:br.line.male.photo,blood:br.line.male.blood},
+            female:{size:num(br.line.female.size),blood:br.line.female.blood}},
+      larvae:br.larvae.filter(function(l){
+        return l.code||l.sex||l.head||l.pupa||l.adult||l.pudding||l.w.some(function(v){return v!=="";})
+          ||l.feed.some(function(v){return v!=="";})||l.size.some(function(v){return v!=="";});
+      }).map(function(l){return larvaToData(l,nR);})};
+  });
+  if(bad.length)return say("⚠️ 숫자 오류: "+bad.slice(0,2).join(", ")+(bad.length>2?" 외 "+(bad.length-2)+"건":""));
+
+  var D={title:S.title,subtitle:S.subtitle,season:S.season,
+    updated:new Date().toISOString().slice(0,10),
+    rounds:S.rounds,teams:S.teams,breeders:breeders};
+  var tok=getToken();
+  if(!tok){showLogin("로그인이 만료됐어요 — 다시 로그인해주세요");return;}
+  $("saveBtn").textContent="저장 중…";
+  fetch(SUPA_URL+"/rest/v1/battle",{
+    method:"POST",
+    headers:{apikey:SUPA_ANON,Authorization:"Bearer "+tok.access_token,
+      "Content-Type":"application/json",Prefer:"resolution=merge-duplicates"},
+    body:JSON.stringify({id:1,data:D,updated_at:new Date().toISOString()}),
+  }).then(function(r){
+    $("saveBtn").textContent="저장하기";
+    if(r.ok){say("✓ 저장 완료 — 배틀 페이지에 바로 반영돼요");return;}
+    if(r.status===401){showLogin("로그인이 만료됐어요 — 다시 로그인해주세요");return;}
+    if(r.status===403){say("⚠️ 저장 권한이 없어요 — SQL의 관리자 이메일을 확인해주세요");return;}
+    return r.text().then(function(t){
+      if(t&&t.indexOf("42501")>=0)say("⚠️ 저장 권한 없음 — SQL 관리자 이메일과 로그인 계정을 확인해주세요");
+      else say("⚠️ 저장 실패 ("+r.status+")");
+    });
+  }).catch(function(){
+    $("saveBtn").textContent="저장하기";say("⚠️ 네트워크 오류 — 다시 시도해주세요");
+  });
+}
+
+/* ══ 시작 ══ */
+(function boot(){
+  captureHashToken();
+  var tok=getToken();
+  if(!tok){showLogin();return;}
+  Promise.all([
+    fetch(SUPA_URL+"/auth/v1/user",{headers:{apikey:SUPA_ANON,Authorization:"Bearer "+tok.access_token}})
+      .then(function(r){return r.ok?r.json():null;}).catch(function(){return null;}),
+    fetch(SUPA_URL+"/rest/v1/battle?id=eq.1&select=data",{headers:{apikey:SUPA_ANON,Authorization:"Bearer "+SUPA_ANON}})
+      .then(function(r){return r.ok?r.json():[];}).catch(function(){return [];}),
+  ]).then(function(res){
+    var user=res[0],rows=res[1];
+    if(!user||!user.email){try{localStorage.removeItem(TOKEN_KEY);}catch(e){}showLogin("세션이 만료됐어요 — 다시 로그인해주세요");return;}
+    userEmail=user.email;
+    S=stateFromData(rows&&rows[0]&&rows[0].data);
+    CUR=Math.max(0,S.rounds.length-1);
+    renderForm();
+  });
+})();
+</script>
+</body>
+</html>
