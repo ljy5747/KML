@@ -582,9 +582,9 @@ function render(B){
     var sA=tsum[kA].sum,sB=tsum[kB].sum,tot=sA+sB;
     var pA=tot>0?sA/tot*100:50,pB=100-pA;
     var lead=Math.abs(sA-sB)<0.05?null:(sA>sB?kA:kB);
-    /* 팀 이미지: 비등=1, 한테란 65%↑=2, 피눈물 65%↑=3 */
+    /* 팀 이미지: 비등=1, 한테란 60%↑=2, 피눈물 60%↑=3 */
     var pHan=/한테란/.test(tname(kA))?pA:pB;
-    var clashImg=pHan>=65?"2":pHan<=35?"3":"1";
+    var clashImg=pHan>=60?"2":pHan<=40?"3":"1";
     html+='<div class="sec-t"><span>팀 중간 집계</span></div><div class="panel">'
       +'<div class="tb-art"><img src="battle-clash-'+clashImg+'.jpg" alt="'+esc(tname(kA))+' vs '+esc(tname(kB))+'"/></div>'
       +'<div class="tb-row">'
