@@ -4,12 +4,12 @@
 
 - KML 웹 프론트엔드는 `index.html`, `styles.css`, `app.js` (GitHub Pages 루트)입니다.
 - Supabase 기존 **BeetleLog** 프로젝트 안에 `kml_` 접두사의 분리된 테이블 7개를 신규 생성했습니다. 기존 `beetlelog_data`, 체장왕전 관련 테이블은 수정하지 않았습니다.
-- **현재 승인된 이메일이 하나도 없습니다.** 따라서 모든 Google 계정에 대해 KML 데이터 접근이 차단됩니다.
+- **첫 관리자 계정 1개가 승인되었습니다.** 미승인 Google 계정은 KML 데이터에 접근할 수 없습니다.
 - 시연용 가짜 성충 데이터는 서버로 이전하지 않았습니다.
 
-## 첫 관리자 계정 승인 (관리자 직접 수행)
+## 관리자 및 연구원 승인
 
-관리할 Google 계정이 정해지면 Supabase 대시보드 → SQL Editor에서 다음 SQL의 이메일만 바꿔 실행합니다.
+최초 관리자 계정은 승인 완료되었습니다. 추가 관리자가 필요한 경우에만 Supabase 대시보드 → SQL Editor에서 다음 SQL의 이메일을 바꿔 실행합니다.
 
 ```sql
 insert into public.kml_allowed_emails (email, role, active)
@@ -62,7 +62,7 @@ where email=lower('MEMBER_GOOGLE_EMAIL@gmail.com');
 - 로그인은 승인된 Google 계정으로 가능하지만 GitHub Pages의 **HTML/JS 소스는 공개**됩니다. 중요한 데이터 보호는 RLS가 수행합니다.
 - 다른 연구원이 수정한 데이터를 즉시 반영하지 않습니다. 업데이트를 보려면 새로고침합니다.
 - 성충·라인 삭제 기능은 제공하지 않습니다. 기록 보존을 위해서입니다.
-- KML 전용 Google 로그인 URL 등록, 관리자 이메일 승인, 실계정 로그인 검증은 직접 확인이 필요합니다.
+- 첫 관리자 이메일 승인은 완료되었습니다. KML 전용 Google 로그인 URL 등록과 실계정 로그인 검증은 확인이 필요합니다.
 
 ## 차기 개발
 
