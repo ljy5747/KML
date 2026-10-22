@@ -76,8 +76,15 @@
     const rs=await Promise.all(names.map(n=>supa.from(n).select('*')));
     rs.forEach((r,i)=>{if(r.error)throw new Error(names[i]+': '+r.error.message)});
     const [p,a,l,v,c,t]=rs.map(r=>r.data||[]);
+    let profiles=p;
+    if(!isAdmin()){
+      const {data:labels,error:labelError}=await supa.rpc('kml_visible_breeder_labels');
+      if(labelError)throw labelError;
+      const found=new Set(p.map(x=>x.user_id));
+      profiles=[...p,...(labels||[]).filter(x=>!found.has(x.user_id)).map(x=>({user_id:x.user_id,nickname:x.nickname,avatar_url:x.avatar_url,intro:''}))];
+    }
     db={currentUser:authUser.id,
-      members:p.map(x=>({id:x.user_id,nickname:x.nickname,intro:x.intro||'',avatar_url:x.avatar_url||'',
+      members:profiles.map(x=>({id:x.user_id,nickname:x.nickname,intro:x.intro||'',avatar_url:x.avatar_url||'',
         role:x.user_id===authUser.id&&role==='admin'?'관리자':'브리더',initial:(x.nickname||'K')[0],color:'#a68758'})),
       adults:a.map(x=>({id:x.id,code:x.code,lineage:x.lineage,sex:x.sex,size:x.size===null?'':String(x.size),emerged:x.emerged||'',
         breeder:x.breeder_id||'',owner:x.owner_id||'',father:x.father_id||'',mother:x.mother_id||'',status:x.status,
