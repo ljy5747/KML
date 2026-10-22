@@ -7,7 +7,7 @@
 - **첫 관리자 계정 1개가 승인되었습니다.** 미승인 Google 계정은 KML 데이터에 접근할 수 없습니다.
 - 시연용 가짜 성충 데이터는 서버로 이전하지 않았습니다.
 
-## 관리자 및 연구원 승인
+## 관리자 및 브리더 승인
 
 최초 관리자 계정은 승인 완료되었습니다. 추가 관리자가 필요한 경우에만 Supabase 대시보드 → SQL Editor에서 다음 SQL의 이메일을 바꿔 실행합니다.
 
@@ -17,7 +17,7 @@ values (lower('YOUR_GOOGLE_EMAIL@gmail.com'), 'admin', true)
 on conflict (email) do update set role='admin', active=true;
 ```
 
-다른 연구원 승인:
+다른 브리더 승인:
 
 ```sql
 insert into public.kml_allowed_emails (email, role, active)
@@ -47,7 +47,7 @@ where email=lower('MEMBER_GOOGLE_EMAIL@gmail.com');
 ## 현재 작동 기능
 
 - 승인된 Google 사용자만 서버 데이터 접근 (RLS)
-- 연구원 프로필: Google 사진 기본 사용, 닉네임·자기소개 수정
+- 브리더 프로필: Google 사진 기본 사용, 닉네임·자기소개 수정
 - 성충 등록·수정·목록 검색·정렬 및 4세대 계통도
 - 교배 라인 생성과 부모 연결
 - 성충 상세 댓글 작성·삭제
@@ -60,7 +60,7 @@ where email=lower('MEMBER_GOOGLE_EMAIL@gmail.com');
 - 엑셀 단일 시트 가져오기/라인 매칭 **미구현**입니다.
 - 개체 이미지 업로드와 실시간 동시 편집·충돌 처리 **미구현**입니다.
 - 로그인은 승인된 Google 계정으로 가능하지만 GitHub Pages의 **HTML/JS 소스는 공개**됩니다. 중요한 데이터 보호는 RLS가 수행합니다.
-- 다른 연구원이 수정한 데이터를 즉시 반영하지 않습니다. 업데이트를 보려면 새로고침합니다.
+- 다른 브리더이 수정한 데이터를 즉시 반영하지 않습니다. 업데이트를 보려면 새로고침합니다.
 - 성충·라인 삭제 기능은 제공하지 않습니다. 기록 보존을 위해서입니다.
 - 첫 관리자 이메일 승인은 완료되었습니다. KML 전용 Google 로그인 URL 등록과 실계정 로그인 검증은 확인이 필요합니다.
 
