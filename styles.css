@@ -17,3 +17,22 @@
 .access-card .btn{width:100%;justify-content:center;min-height:46px}
 .access-note{font-size:11px;color:#999;margin-top:23px;line-height:1.8}
 .mini-avatar,.avatar-large{overflow:hidden}
+
+/* Official KML circular emblem */
+.brand-mark--official { width: 60px; height: 60px; border: 0; border-radius: 50%; background: transparent; box-shadow: none; padding: 0; overflow: visible; flex-shrink: 0; }
+.brand-mark--official .brand-official-logo { width: 60px; height: 60px; display: block; border-radius: 50%; object-fit: contain; border: 1px solid rgba(219,189,139,.7); background: #fff; }
+.brand-name { min-width: 0; }
+.brand-name small { letter-spacing: .025em; font-size: 9px; line-height: 1.4; white-space: nowrap; }
+.access-mark--official { padding: 0; overflow: hidden; background: transparent; width: 110px; height: 110px; border-radius: 50%; box-shadow: 0 3px 20px rgba(0,0,0,.07); }
+.login-official-logo { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 1px solid rgba(74,58,37,.18); background: #fff; }
+.hero-visual--official { overflow: hidden; }
+.hero-visual--official .hero-official-logo { width: min(74%, 285px); height: auto; aspect-ratio: 1; position: relative; z-index: 2; display: block; border-radius: 50%; border: 1px solid rgba(225,197,151,.56); background: #fff; filter: drop-shadow(0 16px 28px rgba(0,0,0,.28)); }
+.hero-visual--official .rings { width: 318px; height: 318px; opacity: .85; }
+@media(max-width:980px) {
+  .brand-mark--official,.brand-mark--official .brand-official-logo { width: 52px; height: 52px; }
+}
+@media(max-width:680px) {
+  .hero-visual--official .hero-official-logo { width: min(64%, 210px); }
+  .hero-visual--official .rings { width: 220px; height: 220px; }
+  .brand-name small { font-size: 8px; }
+}
