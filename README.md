@@ -1,32 +1,12 @@
-# KML · 국균연구소
+# KML · 국균연구소 웹
 
-왕사슴벌레 성충·혈통·교배 라인 관리 웹사이트입니다.
+KML v0.2: 왕사슴벌레 계보 및 성충·교배 라인 관리, Google OAuth + 승인 목록 + Supabase Row Level Security.
 
-## 웹사이트 시연판 (v0.1)
+- `index.html`, `styles.css`, `app.js`: 정적 사이트 (GitHub Pages)
+- `docs/SETUP.md`: 관리자 승인 계정 및 OAuth 리디렉트 설정 방법
+- `docs/SCHEMA_REFERENCE.sql`: 적용한 KML 전용 DB 구조 참고본
+- 기존 `battle/` 관련 파일은 그대로 유지
 
-저장소 루트의 `index.html`, `styles.css`, `app.js`가 첫 번째 KML 홈페이지입니다. GitHub Pages 워크플로는 `.github/workflows/pages.yml`에 있습니다.
+**배포 전:** `docs/SETUP.md`에 따라 KML URL을 Supabase Auth Redirect URLs에 추가하고 첫 관리자 Google 이메일을 승인해야 합니다. 승인 목록은 기본적으로 비어 있으며, 사이트는 로그인 후 허가된 회원에게만 데이터를 표시합니다.
 
-**이 버전은 공개 가능한 가상 데이터를 사용하는 인터랙티브 시연판입니다.** 승인된 Google 계정 인증, Supabase DB, BeetleLog 동기화, Excel 업로드는 아직 구현되지 않았습니다. 시연판에서 추가·수정한 정보는 사용자의 **현재 브라우저 로컬 저장소에만** 저장됩니다. 따라서 실제 연구소의 개인 정보나 사육 원본 데이터는 넣지 마세요.
-
-시연 기능:
-- 성충 등록·수정, 검색·필터·정렬
-- 4세대 가로형 엑셀 스타일 계통도(수컷 파랑, 암컷 핑크, 흰색 셀)
-- 브리더·현재 소유자·소유자 이동 이력
-- 부모 성충 선택 후 교배 라인 생성, 라인별 유충 기록 조회
-- 회원 닉네임 편집, 개체 상세 댓글
-- 라인 기록 CSV 내보내기(Excel 가져오기는 향후 연동)
-
-## 별도 페이지 유지
-
-- `battle/index.html`: 체장왕전 공개 페이지
-- `battle/admin.html`: 체장왕전 관리 페이지
-- 기존 `battle/`의 이관 페이지 및 이미지, `docs/STRUCTURE.md` 유지
-- 기존 Beetle_Log 저장소는 수정하지 않았습니다.
-
-## 개발 우선순위
-
-1. 승인된 Google OAuth + 사용자 allowlist + 데이터베이스 RLS
-2. KML 성충·라인·계보도 실제 서버 저장
-3. 기존 BeetleLog 데이터의 중복 없는 이전과 공통 DB 동기화
-4. KML에 등록된 라인만 허용하는 단일 라인 시트 Excel 업로드
-5. 분석/통계는 등록·정리 기능 안정화 후 진행
+이 버전은 DB 실사용을 위한 초기 구현입니다. Excel 업로드와 기존 BeetleLog 동기화는 아직 구현되지 않았습니다. 브라우저의 JS/HTML 파일은 공개될 수 있지만 DB에는 RLS가 설정되어 있습니다.
