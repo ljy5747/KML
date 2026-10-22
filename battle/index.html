@@ -500,16 +500,8 @@ function render(B){
     mem.forEach(function(b,i){idxInTeam[b.name]=shadeFor(tcolor(k),i,mem.length);});
   });
   var bcolor=function(br){return idxInTeam[br.name]||tcolor(br.team);};
-  /* 암컷 섹션용: 파랑 계열 팀색은 핑크 계열로 */
-  var PINK_BASE="#E0709E";
-  var isBlue=function(hex){var c=hex2rgb(hex);return c[2]>c[0]+20;};
-  var idxInTeamF={};
-  keys.forEach(function(k){
-    var mem=breeders.filter(function(b){return b.team===k;});
-    var base=isBlue(tcolor(k))?PINK_BASE:tcolor(k);
-    mem.forEach(function(b,i){idxInTeamF[b.name]=shadeFor(base,i,mem.length);});
-  });
-  var bcolorF=function(br){return idxInTeamF[br.name]||bcolor(br);};
+  /* 암컷 섹션도 수컷과 같은 브리더 색 사용 */
+  var bcolorF=bcolor;
 
   var adultCnt=breeders.reduce(function(a,b){return a+b.larvae.filter(function(l){return l.adult!=null;}).length;},0);
   var mode=adultCnt>0?"adult":"weight";
