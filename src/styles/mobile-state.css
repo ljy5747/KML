@@ -7,7 +7,7 @@
 
 /* Dead specimens keep their records and are marked with a star and strike-through. */
 .dead-text,.dead-record td:not(.state-cell):not(.control-cell),.dead-record td:not(.control-cell) .id-link,.dead-facts .fact strong,.p-cell.dead-record .p-size,.p-cell.dead-record .p-detail{text-decoration:line-through;text-decoration-thickness:1px}
-.dead-record td:not(.state-cell):not(.control-cell),.dead-facts .fact strong{color:#9b9488}
+.dead-record td:not(.state-cell):not(.control-cell),.dead-facts .fact strong{color:#746e63}
 .death-mark{display:inline-block;color:#9a7b4c;font-size:13px;text-decoration:none}
 .bottle-cell{min-width:170px;white-space:normal;line-height:1.8}
 .delete-record{margin-right:auto}
