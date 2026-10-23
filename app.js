@@ -62,9 +62,13 @@
   const status=(x)=>`<span class="tag ${x==='보유'?'green':x==='종료'?'gold':''}">${esc(x)}</span>`;
   const fmtSize=(n)=>n===null||n===undefined||n===''?'—':`${esc(n)} mm`;
   const persist=async(table,id,payload,updating=false)=>{
-    const query=updating ? supa.from(table).update(payload).eq('id',id) : supa.from(table).insert({id,...payload});
-    const {data,error}=await query.select().single();
+    const old=updating?(table==='kml_adults'?adult(id):table==='kml_lines'?byId(db.lines,id):null):null;
+    if(updating&&!old?.updatedAt)throw Error('수정 기준 정보를 찾을 수 없습니다. 최신 목록을 불러와 다시 시도하세요.');
+    const query=updating ? supa.from(table).update(payload).eq('id',id).eq('updated_at',old.updatedAt)
+      : supa.from(table).insert({id,...payload});
+    const {data,error}=await query.select().maybeSingle();
     if(error)throw error;
+    if(!data)throw Error('다른 앱에서 먼저 수정했습니다. 창을 닫고 최신 내용을 확인한 뒤 다시 수정하세요.');
     return data;
   };
   const adultRecord=a=>({code:a.code,lineage:a.lineage,sex:a.sex,size:a.size===''?null:Number(a.size),
@@ -88,8 +92,8 @@
         role:x.user_id===authUser.id&&role==='admin'?'관리자':'브리더',initial:(x.nickname||'K')[0],color:'#a68758'})),
       adults:a.map(x=>({id:x.id,code:x.code,lineage:x.lineage,sex:x.sex,size:x.size===null?'':String(x.size),emerged:x.emerged||'',
         breeder:x.breeder_id||'',owner:x.owner_id||'',father:x.father_id||'',mother:x.mother_id||'',status:x.status,
-        source:x.source,note:x.note||'',species:x.species||'',beetlelogId:x.beetlelog_id||'',beetlelogOwner:x.beetlelog_owner_id||''})),
-      lines:l.map(x=>({id:x.id,name:x.name,father:x.father_id,mother:x.mother_id,year:x.year||'',method:x.method||'',note:x.note||'',createdBy:x.created_by||'',species:x.species||'',beetlelogId:x.beetlelog_id||'',beetlelogOwner:x.beetlelog_owner_id||''})),
+        source:x.source,note:x.note||'',species:x.species||'',beetlelogId:x.beetlelog_id||'',beetlelogOwner:x.beetlelog_owner_id||'',updatedAt:x.updated_at||''})),
+      lines:l.map(x=>({id:x.id,name:x.name,father:x.father_id,mother:x.mother_id,year:x.year||'',method:x.method||'',note:x.note||'',createdBy:x.created_by||'',species:x.species||'',beetlelogId:x.beetlelog_id||'',beetlelogOwner:x.beetlelog_owner_id||'',updatedAt:x.updated_at||''})),
       larvae:v.map(x=>({id:x.id,lineId:x.line_id,number:x.number,sex:x.sex||'U',records:x.records||[],emerged:x.emerged||'',size:x.size===null?'':String(x.size)})),
       comments:c.map(x=>({id:x.id,adultId:x.adult_id,memberId:x.member_id,body:x.body,date:(x.created_at||'').slice(0,10)})),
       transfers:t.map(x=>({id:x.id,adultId:x.adult_id,from:x.from_user,to:x.to_user,date:x.transfer_date,note:x.note||''}))
@@ -415,12 +419,12 @@
       // Prevent circular parent references (including indirect loops).
       const reaches=(start,target,seen=new Set())=>{if(!start||seen.has(start))return false;if(start===target)return true;seen.add(start);const a=adult(start);return a?reaches(a.father,target,seen)||reaches(a.mother,target,seen):false;};
       if(reaches(next.father,next.id)||reaches(next.mother,next.id))return notify('부모·자손 관계가 순환합니다. 다른 개체를 선택하세요.');
-      try{await persist('kml_adults',next.id,adultRecord(next),Boolean(data.id));}catch(err){return notify('성충 저장 실패: '+(err.message||err));}
+      try{const stored=await persist('kml_adults',next.id,adultRecord(next),Boolean(data.id));next.updatedAt=stored.updated_at;}catch(err){return notify('성충 저장 실패: '+(err.message||err));}
       if(!data.id)db.adults.push(next);else{const ix=db.adults.findIndex(x=>x.id===data.id);if(ix<0)return notify('기존 개체를 찾을 수 없습니다.');db.adults[ix]=next;}
       save();closeModal();go('adult/'+next.id);render();notify(data.id?'성충 정보를 수정했습니다.':'성충을 등록했습니다.');
     }
     if(formId==='line-form'){
-      const name=String(data.name||'').trim();if(!name||!data.father||!data.mother)return notify('라인명과 부모 개체를 선택하세요.');if(db.lines.some(x=>x.name.toLowerCase()===name.toLowerCase()&&x.id!==data.id))return notify('이미 같은 라인명이 있습니다.');if(data.father===data.mother)return notify('부모 개체를 서로 다르게 선택하세요.');const old=data.id?byId(db.lines,data.id):null;if(data.id&&(!old||(!mineLine(old)&&!isAdmin())))return notify('본인이 만든 라인만 수정할 수 있습니다.');const l={...(old||{}),id:data.id||uid(),name,father:data.father,mother:data.mother,year:data.year,method:data.method,note:data.note,createdBy:old?.createdBy||db.currentUser};try{await persist('kml_lines',l.id,lineRecord(l),Boolean(data.id));}catch(err){return notify('라인 저장 실패: '+(err.message||err));}if(data.id){const index=db.lines.findIndex(x=>x.id===l.id);if(index>=0)db.lines[index]=l;}else db.lines.push(l);save();closeModal();go('line/'+l.id);render();notify(data.id?'라인을 수정했습니다.':'라인을 생성했습니다.');
+      const name=String(data.name||'').trim();if(!name||!data.father||!data.mother)return notify('라인명과 부모 개체를 선택하세요.');if(db.lines.some(x=>x.name.toLowerCase()===name.toLowerCase()&&x.id!==data.id))return notify('이미 같은 라인명이 있습니다.');if(data.father===data.mother)return notify('부모 개체를 서로 다르게 선택하세요.');const old=data.id?byId(db.lines,data.id):null;if(data.id&&(!old||(!mineLine(old)&&!isAdmin())))return notify('본인이 만든 라인만 수정할 수 있습니다.');const l={...(old||{}),id:data.id||uid(),name,father:data.father,mother:data.mother,year:data.year,method:data.method,note:data.note,createdBy:old?.createdBy||db.currentUser};try{const stored=await persist('kml_lines',l.id,lineRecord(l),Boolean(data.id));l.updatedAt=stored.updated_at;}catch(err){return notify('라인 저장 실패: '+(err.message||err));}if(data.id){const index=db.lines.findIndex(x=>x.id===l.id);if(index>=0)db.lines[index]=l;}else db.lines.push(l);save();closeModal();go('line/'+l.id);render();notify(data.id?'라인을 수정했습니다.':'라인을 생성했습니다.');
     }
     if(formId==='transfer-form'){
        if(data.id){const x=adult(data.id);if(!x||(!mineAdult(x)&&!isAdmin()))return notify('본인 소유 개체만 이동할 수 있습니다.');}
@@ -449,7 +453,7 @@
     if(target&&target.matches?.('input,select,textarea,[contenteditable="true"]'))return;
     crossAppRefreshBusy=true;
     crossAppRefreshLast=Date.now();
-    try{await loadRemote();if(allowed&&!ui.modal)render();}
+    try{const old=JSON.stringify(db);await loadRemote();if(allowed&&!ui.modal&&JSON.stringify(db)!==old)render();}
     catch(e){/* Retain the last rendered data while offline. */}
     finally{crossAppRefreshBusy=false;}
   }
