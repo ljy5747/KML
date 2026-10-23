@@ -42,3 +42,6 @@
  .hero--specimen .hero-actions .btn{font-size:11px;padding:0 11px}
 }
 
+
+/* Home totals remain a single row of two cards on all screen sizes. */
+.stat-grid.home-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
