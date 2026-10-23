@@ -244,7 +244,7 @@
   });
   document.addEventListener('click',e=>{
     const reset=e.target.closest('[data-action="reset-profile-photo"]');
-    if(reset){const file=document.getElementById('profile-photo');if(file)file.value='';ui.photoReset=true;const photo=document.querySelector('.profile-photo-row .avatar-large');if(photo)photo.innerHTML='${esc(current()?.nickname?.[0]||"?")}';notify('사진 초기화가 선택됐습니다. 저장을 눌러 적용하세요.');}
+    if(reset){const file=document.getElementById('profile-photo');if(file)file.value='';ui.photoReset=true;const photo=document.querySelector('.profile-photo-row .avatar-large');if(photo)photo.textContent=current()?.nickname?.[0]||'?';notify('사진 초기화가 선택됐습니다. 저장을 눌러 적용하세요.');}
   });
   document.addEventListener('change',async e=>{
     if(e.target.id!=='profile-photo'||!e.target.files?.[0])return;
