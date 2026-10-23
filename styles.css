@@ -341,3 +341,17 @@ html.kml-modal-open body{overscroll-behavior:none}
  .label-record-limit{margin-left:14px;margin-right:14px}
  .label-editor-actions .btn{min-height:44px}
 }
+/* Keep detail previews compact; exported labels retain their original resolution. */
+.detail-layout{grid-template-columns:minmax(260px,.8fr) minmax(0,1fr)}
+.specimen-tools{width:100%;max-width:580px;justify-self:start}
+.specimen-stage{padding:12px}
+.specimen-label-canvas{max-width:520px;margin-inline:auto}
+.specimen-stage .pedigree{zoom:.8}
+.specimen-stage .p-body{height:660px}
+.specimen-stage .p-cell{gap:3px;padding:7px 6px}
+.specimen-stage .pedigree-scroll{margin-top:10px}
+@media(max-width:680px){
+ .detail-layout{grid-template-columns:1fr}
+ .specimen-stage{padding:10px}
+ .specimen-label-canvas{max-width:360px}
+}
