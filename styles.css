@@ -230,3 +230,10 @@
  .hero--specimen h2{font-size:30px}
  .hero--specimen .hero-actions .btn{font-size:11px;padding:0 11px}
 }
+
+/* Both KML brand areas are home controls, including keyboard and touch use. */
+.brand-home{width:100%;border:0;border-bottom:1px solid #393731;background:transparent;color:inherit;text-align:left;cursor:pointer}
+.brand-home .brand-mark{display:block}
+.kml-home{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;padding:0 4px;border:0;border-radius:5px;background:transparent;color:inherit;font:inherit;cursor:pointer}
+.kml-home:hover{color:#997844}
+.brand-home:focus-visible,.kml-home:focus-visible{outline:2px solid #c5a46e;outline-offset:3px}
