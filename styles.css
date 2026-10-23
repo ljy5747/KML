@@ -120,9 +120,9 @@
   .modal-backdrop{
     box-sizing:border-box;position:fixed;inset:0;z-index:45;
     display:flex;align-items:stretch;justify-content:stretch;
-    width:100%;height:var(--kml-dialog-viewport-height,100dvh);
+    width:100%;height:var(--kml-dialog-viewport-height,100svh);
     min-height:0;padding:0;
-    transform:translate3d(0,var(--kml-dialog-viewport-top,0px),0);
+    transform:none;
     overflow:hidden;overscroll-behavior:contain
   }
   .modal-backdrop>.modal{
@@ -244,3 +244,14 @@
 .death-mark{display:inline-block;color:#9a7b4c;font-size:13px;text-decoration:none}
 .bottle-cell{min-width:170px;white-space:normal;line-height:1.8}
 .delete-record{margin-right:auto}
+
+/* One scroll container per dialog; no page bounce or viewport-offset feedback. */
+html.kml-modal-open{overflow:hidden;overscroll-behavior:none;scroll-behavior:auto}
+html.kml-modal-open body{overscroll-behavior:none}
+.modal-backdrop,.modal-backdrop .modal,.modal-backdrop .modal-content{scroll-behavior:auto;overflow-anchor:none}
+@media(max-width:680px){
+ .modal-backdrop{inset:0 auto auto 0;top:0;left:0;transform:none;overscroll-behavior:none}
+ .modal-backdrop .modal-head,.modal-backdrop .modal-actions{flex-shrink:0}
+ .modal-backdrop .modal-content{overscroll-behavior-y:contain;scroll-padding-block:16px}
+ .modal-backdrop .modal-content textarea{max-width:100%}
+}
