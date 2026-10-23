@@ -67,3 +67,38 @@
 .profile-photo-row input[type=file]{display:block;width:100%;max-width:430px;font-size:12px;margin-bottom:10px}
 .profile-photo-row .field-hint{display:block;margin-bottom:13px;line-height:1.6}
 @media(max-width:600px){.profile-photo-row{align-items:flex-start}.profile-photo-row>div{min-width:180px}}
+
+/* Selective BeetleLog import: desktop and mobile */
+.beetle-import-dialog{width:min(840px,calc(100vw - 28px));max-height:min(90vh,940px);display:flex;flex-direction:column;overflow:hidden}
+.beetle-import-dialog .modal-head{flex-shrink:0}
+.beetle-import-dialog .modal-content{overflow-y:auto;flex:1;min-height:0;padding:20px 24px}
+.beetle-import-dialog .modal-actions{flex-shrink:0;display:flex;align-items:center;flex-wrap:wrap;gap:10px}
+.beetle-import-selection{margin-right:auto;font-size:12px;color:#6c6253;font-weight:700}
+.beetle-import-tabs{display:flex;gap:10px;margin:0 0 16px}
+.beetle-import-tabs .btn{flex:1;justify-content:center}
+.beetle-import-tools{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.beetle-import-tools .searchbox{flex:1;min-width:200px}
+.beetle-import-scroll{max-height:380px;overflow-y:auto;overscroll-behavior:contain;border:1px solid var(--line);border-radius:12px;background:#fff}
+.beetle-import-item{display:flex;align-items:center;gap:14px;padding:13px 16px;border-bottom:1px solid var(--line);cursor:pointer}
+.beetle-import-item:last-child{border-bottom:0}
+.beetle-import-item:hover{background:#faf7f0}
+.beetle-import-item input[type="checkbox"]{width:18px;height:18px;flex-shrink:0;accent-color:#97754e}
+.beetle-import-item-info{display:flex;flex:1;flex-direction:column;min-width:0;gap:3px}
+.beetle-import-item-info strong{font-size:13px;overflow-wrap:anywhere}
+.beetle-import-item-info small{font-size:11px;color:#8b734d}
+.beetle-import-item-info>span{font-size:11px;color:#8d867b}
+.beetle-import-item.is-disabled{cursor:default;opacity:.62;background:#f9f9f7}
+.beetle-import-status{color:#938271;white-space:nowrap;font-size:10px}
+.beetle-import-empty{padding:36px;text-align:center;color:#898275;font-size:13px}
+.beetle-import-content>.section-caption{margin-top:15px;line-height:1.7}
+@media(max-width:640px){
+  .beetle-import-dialog{width:100vw;max-height:100dvh;height:100dvh;border-radius:0}
+  .beetle-import-dialog .modal-content{padding:14px}
+  .beetle-import-tabs{gap:6px}
+  .beetle-import-tools .searchbox{min-width:100%;width:100%}
+  .beetle-import-item{padding:12px;gap:10px}
+  .beetle-import-status{white-space:normal;max-width:85px;text-align:right}
+  .beetle-import-dialog .modal-actions{padding:12px;gap:7px}
+  .beetle-import-selection{width:100%}
+  .beetle-import-dialog .modal-actions .btn{flex:1;justify-content:center}
+}
