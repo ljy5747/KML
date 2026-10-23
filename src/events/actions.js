@@ -2,6 +2,11 @@ document.addEventListener('click',async event=>{
     const nav=event.target.closest('[data-nav]');if(nav){go(nav.dataset.nav);return;}
     const a=event.target.closest('[data-action]');if(!a)return;
     const act=a.dataset.action;
+    if(act==='detail-specimen-view'){switchSpecimenView(a.dataset.view);return;}
+    if(act==='save-specimen-label'){await saveSpecimenLabel(a);return;}
+    if(act==='clear-label-feed'){clearLabelFeed(a.dataset.feed);return;}
+    if(act==='refill-specimen-label'){refillSpecimenLabel();return;}
+    if(act==='reset-label-inputs'){resetLabelInputs();return;}
     if(act==='year-step'){stepYear(a);return;}
     if(act==='toggle-menu'){ui.menu=!ui.menu;render();}
     if(act==='close-menu'){ui.menu=false;render();}
@@ -77,5 +82,5 @@ document.addEventListener('click',async event=>{
     if(act==='excel-not-ready')notify('엑셀 업로드는 다음 개발 단계에서 연결합니다. 현재는 미구현 기능입니다.');
     if(act==='download-line')downloadCSV(a.dataset.id);
     if(act==='google-login'){if(!supa)return;const redirectTo=location.origin+location.pathname;const {error:e}=await supa.auth.signInWithOAuth({provider:'google',options:{redirectTo}});if(e)notify('Google 로그인 오류: '+e.message);}
-    if(act==='sign-out'){await supa?.auth.signOut();allowed=false;authUser=null;db={members:[],adults:[],lines:[],larvae:[],comments:[],transfers:[],currentUser:null};gate();}
+    if(act==='sign-out'){clearDetailLabels();await supa?.auth.signOut();allowed=false;authUser=null;db={members:[],adults:[],lines:[],larvae:[],comments:[],transfers:[],currentUser:null};gate();}
   });

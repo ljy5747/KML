@@ -7,8 +7,10 @@
     "src/ui/navigation.js",
     "src/pages/adult-list.js",
     "src/pages/home.js",
+    "src/features/specimen-labels.js",
     "src/pages/adult-detail.js",
     "src/pages/lines.js",
+    "src/pages/larva-detail.js",
     "src/pages/account.js",
     "src/ui/modal-frame.js",
     "src/features/beetlelog-import.js",
@@ -29,6 +31,7 @@
     "src/styles/dialogs.css",
     "src/styles/specimens-home.css",
     "src/styles/mobile-state.css",
-    "src/styles/year-picker.css"
+    "src/styles/year-picker.css",
+    "src/styles/specimen-labels.css"
   ]
 }

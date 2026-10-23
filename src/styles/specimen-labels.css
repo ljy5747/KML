@@ -1,0 +1,45 @@
+/* Shared label/pedigree viewer. Label controls only update a local draft. */
+.specimen-tools{min-width:0;overflow-anchor:none}
+.specimen-tools [hidden]{display:none!important}
+.specimen-tools-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:16px 18px;border-bottom:1px solid var(--line)}
+.specimen-tools-head h2{margin:0;font-size:16px;font-weight:800}
+.specimen-view-tabs{display:flex;align-items:center;gap:3px;padding:3px;border:1px solid #ded8cd;background:#f5f2ec;border-radius:8px}
+.specimen-view-tabs button{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:38px;padding:8px 13px;border:0;border-radius:5px;background:transparent;color:#665e52;font-size:13px;font-weight:700}
+.specimen-view-tabs button[aria-selected="true"]{background:#302d27;color:#fff}
+.specimen-view-tabs button:focus-visible{outline:2px solid #a98752;outline-offset:2px}
+.specimen-view-tabs svg{width:15px;height:15px}
+.specimen-stage{padding:18px;min-width:0}
+.specimen-label-canvas{display:block;width:100%;height:auto;border-radius:5px;background:#fff;aspect-ratio:1444/1032}
+.label-load-state{margin:10px 0 0;color:#665e52;font-size:13px;line-height:1.6}
+.specimen-label-actions{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:0 18px 18px}
+.specimen-label-actions .section-caption{margin:0;color:#665e52;font-size:13px;font-weight:600}
+.specimen-label-editor{border-top:1px solid var(--line)}
+.specimen-label-editor summary{padding:15px 18px;font-size:14px;font-weight:700;cursor:pointer;color:#302d27;min-height:48px}
+.specimen-label-fields{padding:0 18px 20px}
+.specimen-label-fields>.section-caption{margin:0 0 14px;color:#665e52}
+.specimen-label-fields h3{font-size:14px;font-weight:800;margin:20px 0 10px;color:#302d27}
+.specimen-label-fields h3:first-of-type{margin-top:0}
+.label-field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.label-field{display:flex;flex-direction:column;gap:5px;min-width:0;color:#665e52;font-size:12px;font-weight:600}
+.label-field input,.label-field select{display:block;width:100%;min-width:0;max-width:100%;min-height:44px;border:1px solid #ded8cd;border-radius:7px;padding:9px 10px;background:#fff;color:#302d27;font-size:16px;line-height:1.4}
+.label-field input:focus,.label-field select:focus{outline:2px solid #a98752;outline-offset:1px}
+.label-feed-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:16px 0 8px;font-size:13px}
+.label-editor-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+.label-date-warning{font-size:13px;color:#a53f31;line-height:1.6;margin-top:14px}
+.label-record-limit{margin:0 18px 16px;font-size:12px;line-height:1.7;color:#665e52}
+.specimen-stage .pedigree-scroll{margin-top:14px;padding-bottom:4px}
+.specimen-stage .pedigree-legend{margin-top:0}
+.larva-records{margin-top:20px}
+.larva-records .panel-head{align-items:center}
+@media(max-width:680px){
+ .specimen-tools-head{padding:14px;gap:10px}
+ .specimen-view-tabs button{min-height:44px;padding:9px 13px}
+ .specimen-stage{padding:14px}
+ .specimen-label-actions{padding:0 14px 14px}
+ .specimen-label-actions .btn{min-height:44px}
+ .specimen-label-editor summary{padding:14px;min-height:48px}
+ .specimen-label-fields{padding:0 14px 20px}
+ .label-field-grid{gap:10px}
+ .label-record-limit{margin-left:14px;margin-right:14px}
+ .label-editor-actions .btn{min-height:44px}
+}

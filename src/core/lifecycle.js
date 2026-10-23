@@ -1,7 +1,7 @@
 let crossAppRefreshBusy=false;
   let crossAppRefreshLast=0;
   async function refreshLinkedRecords(){
-    if(crossAppRefreshBusy||!allowed||ui.modal||document.hidden||
+    if(crossAppRefreshBusy||!allowed||ui.modal||detailLabelState.saving||detailLabelState.editorOpen||document.hidden||
        Date.now()-crossAppRefreshLast<3000)return;
     const target=document.activeElement;
     if(target&&target.matches?.('input,select,textarea,[contenteditable="true"]'))return;

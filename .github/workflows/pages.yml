@@ -31,6 +31,7 @@ jobs:
           node tests/kml-import-ui.cjs
           node tests/year-picker.cjs
           node tests/pedigree-ui.cjs
+          node tests/specimen-labels.cjs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

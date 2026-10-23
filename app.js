@@ -154,7 +154,7 @@
   const isStandaloneApp=()=>window.navigator?.standalone===true||window.matchMedia?.('(display-mode: standalone)')?.matches===true;
   function showStandaloneHome(renderPage=true){
     // Do not discard an edit or a native photo-picker round trip.
-    if(!isStandaloneApp()||ui.modal)return;
+    if(!isStandaloneApp()||ui.modal||preserveSpecimenDetail())return;
     const changed=location.hash!=='#/dashboard'||ui.menu;
     ui.menu=false;
     history.replaceState(history.state,'',location.pathname+location.search+'#/dashboard');
@@ -166,7 +166,7 @@
   const navBtn=(key,label,ico,page)=>`<button class="nav-item ${activeNav(page,key)?'active':''}" data-nav="${key}">${icon(ico)}<span>${label}</span>${activeNav(page,key)?icon('chevron'):''}</button>`;
   function shell(page){
     const c=current();
-    return `<div class="app-shell"><div class="sidebar-overlay ${ui.menu?'open':''}" data-action="close-menu"></div><aside class="sidebar ${ui.menu?'open':''}"><button type="button" class="brand brand-home" data-nav="dashboard" aria-label="KML 홈으로 이동"><span class="brand-mark brand-mark--official"><img src="${OFFICIAL_LOGO}" class="brand-official-logo" alt="" /></span><span class="brand-name">KML<small>국균연구소 · BREEDERS CLUB</small></span></button><div class="nav-label">HOME</div>${navBtn('dashboard','국균연구소 DB','home',page)}<div class="nav-label">MY PAGE</div>${navBtn('adults','성충 관리','bug',page)}${navBtn('lines','라인 관리','layers',page)}${navBtn('profile','프로필','user',page)}<div class="sidebar-bottom"><div class="sidebar-foot">${avatar(c)}<div class="sidebar-user"><strong>${esc(c.nickname)}</strong><span>KML 승인 회원 · ${esc(c.role)}</span></div></div><div class="build-tag">KML · BREEDER HUB</div></div></aside><div class="main-wrap"><header class="topbar"><div class="breadcrumb"><button class="icon-btn mobile-menu" data-action="toggle-menu" aria-label="메뉴 열기">${icon('menu')}</button><button type="button" class="kml-home" data-nav="dashboard" aria-label="KML 홈으로 이동">KML</button>${icon('chevron')}<b>${esc({dashboard:'국균연구소 DB',adults:'성충 관리',adult:'개체 상세',lines:'라인 관리',line:'라인 상세',members:'브리더 목록',mypage:'마이페이지',registry:'전체 성충',archive:'전체 라인',profile:'내 프로필',data:'데이터 관리'}[page]||'페이지')}</b></div><div class="top-actions"><span class="demo-ribbon">승인된 브리더 전용</span><button class="icon-btn" data-action="sign-out" title="로그아웃">${icon('logout')}</button><button class="top-profile" data-nav="profile" aria-label="내 프로필 열기">${avatar(c)}<span>${esc(c.nickname)}</span></button></div></header><main class="page" id="page-content"></main></div></div><div id="modal-root"></div>`;
+    return `<div class="app-shell"><div class="sidebar-overlay ${ui.menu?'open':''}" data-action="close-menu"></div><aside class="sidebar ${ui.menu?'open':''}"><button type="button" class="brand brand-home" data-nav="dashboard" aria-label="KML 홈으로 이동"><span class="brand-mark brand-mark--official"><img src="${OFFICIAL_LOGO}" class="brand-official-logo" alt="" /></span><span class="brand-name">KML<small>국균연구소 · BREEDERS CLUB</small></span></button><div class="nav-label">HOME</div>${navBtn('dashboard','국균연구소 DB','home',page)}<div class="nav-label">MY PAGE</div>${navBtn('adults','성충 관리','bug',page)}${navBtn('lines','라인 관리','layers',page)}${navBtn('profile','프로필','user',page)}<div class="sidebar-bottom"><div class="sidebar-foot">${avatar(c)}<div class="sidebar-user"><strong>${esc(c.nickname)}</strong><span>KML 승인 회원 · ${esc(c.role)}</span></div></div><div class="build-tag">KML · BREEDER HUB</div></div></aside><div class="main-wrap"><header class="topbar"><div class="breadcrumb"><button class="icon-btn mobile-menu" data-action="toggle-menu" aria-label="메뉴 열기">${icon('menu')}</button><button type="button" class="kml-home" data-nav="dashboard" aria-label="KML 홈으로 이동">KML</button>${icon('chevron')}<b>${esc({dashboard:'국균연구소 DB',adults:'성충 관리',adult:'개체 상세',larva:'유충 상세',lines:'라인 관리',line:'라인 상세',members:'브리더 목록',mypage:'마이페이지',registry:'전체 성충',archive:'전체 라인',profile:'내 프로필',data:'데이터 관리'}[page]||'페이지')}</b></div><div class="top-actions"><span class="demo-ribbon">승인된 브리더 전용</span><button class="icon-btn" data-action="sign-out" title="로그아웃">${icon('logout')}</button><button class="top-profile" data-nav="profile" aria-label="내 프로필 열기">${avatar(c)}<span>${esc(c.nickname)}</span></button></div></header><main class="page" id="page-content"></main></div></div><div id="modal-root"></div>`;
   }
   const pageHead=(eyebrow,title,desc,actions='')=>`<div class="page-title"><div><div class="eyebrow">${eyebrow}</div><h1>${title}</h1><div class="subline">${desc}</div></div><div class="actions">${actions}</div></div>`;
   const button=(name,action,cls='btn-dark',ico='plus')=>`<button type="button" class="btn ${cls}" data-action="${action}">${icon(ico)} ${name}</button>`;
@@ -194,7 +194,272 @@
   <section class="hero hero--specimen"><div class="hero-copy"><div class="hero-kicker">KML · BREEDING DATABASE</div><h2>국균연구소 <em>DB</em></h2><p>성충부터 교배 라인, 다음 세대의 혈통까지.<br/>국균연구소의 사육 기록을 한곳에.</p><div class="hero-actions"><button class="btn btn-gold" data-nav="mypage">${icon('user')} MY PAGE</button><button class="btn btn-outline" data-nav="registry">전체 성충 ${icon('arrow')}</button></div></div><div class="hero-visual hero-visual--specimen" aria-hidden="true"><img src="assets/kml-hero-stag.webp" class="hero-specimen" alt="" fetchpriority="high" /><span class="corner-mark">KML · BREEDERS CLUB</span></div></section>
   <div class="stat-grid">${[['전체 성충',db.adults.length,'bug'],['수컷 · 암컷',`${nM} / ${nF}`,'users'],['교배 라인',db.lines.length,'layers'],['내 성충',db.adults.filter(mineAdult).length,'shield']].map(([a,b,i])=>`<div class="stat"><small>${a}</small><strong>${b}</strong><i>${icon(i)}</i></div>`).join('')}</div>
   <div class="dashboard-grid"><section class="panel"><div class="panel-head"><div><div class="panel-title">최근 등록 성충</div><div class="panel-sub">개체를 선택하면 상세정보와 가로형 계통도를 볼 수 있습니다.</div></div><button class="link-arrow" data-nav="registry">전체 보기 ${icon('arrow')}</button></div>${adultsTable(db.adults.slice(0,5),true)}</section><section class="panel"><div class="panel-head"><div><div class="panel-title">등록된 라인</div><div class="panel-sub">수컷과 암컷을 연결한 교배 라인</div></div><button class="link-arrow" data-nav="archive">전체 라인 ${icon('arrow')}</button></div><div class="right-panel">${db.lines.map(l=>`<div class="line-item" data-nav="line/${attr(l.id)}" role="button" tabindex="0"><div><strong>${esc(l.name)}</strong><small>${esc(adult(l.father)?.code||'부 미등록')} ♂ × ${esc(adult(l.mother)?.code||'모 미등록')} ♀</small></div><div class="count">${db.larvae.filter(v=>v.lineId===l.id).length}<small>유충</small></div></div>`).join('')}<div class="notice"><strong>첫 번째 버전 안내</strong> 현재 승인 회원의 KML 전용 데이터베이스에 연결되어 있습니다. BeetleLog 자동 연동과 엑셀 업로드는 다음 단계입니다.</div></div></section></div>`;}
-  function adultsPage(){const years=[...new Set(db.adults.map(x=>String(x.emerged||'').slice(0,4)).filter(Boolean))].sort().reverse();const mine=route().page!=='registry';return `${pageHead('SPECIMEN REGISTRY',mine?'내 성충 관리':'전체 성충 목록',mine?'내가 보유한 성충을 등록·검색·정렬합니다.':'다른 브리더의 성충과 혈통을 함께 조회합니다.',mine?button('성충 등록','new-adult','btn-dark','plus')+button('BeetleLog 가져오기','beetle-import','btn-light','download').replace('data-action="beetle-import"','data-action="beetle-import" data-type="adults"'):'')}<div class="data-tools"><label class="searchbox">${icon('search')}<input id="adult-search" value="${attr(ui.search)}" placeholder="관리번호 · 혈통 · 브리더 검색" autocomplete="off" /></label><select id="sex-filter" class="filter-select" aria-label="성별">${[['all','전체 성별'],['M','수컷 ♂'],['F','암컷 ♀']].map(([v,t])=>`<option value="${v}" ${ui.sex===v?'selected':''}>${t}</option>`).join('')}</select><select id="year-filter" class="filter-select" aria-label="우화 연도"><option value="all">전체 연도</option>${years.map(y=>`<option ${ui.year===y?'selected':''}>${y}</option>`).join('')}</select><select id="status-filter" class="filter-select" aria-label="상태">${[['all','전체 상태'],['보유','보유'],['분양','분양'],['사망','사망']].map(([v,t])=>`<option value="${v}" ${ui.status===v?'selected':''}>${t}</option>`).join('')}</select><select id="sort-filter" class="filter-select" aria-label="정렬">${[['code','관리번호순'],['size-desc','체장 큰순'],['size-asc','체장 작은순'],['date-desc','최근 우화순']].map(([v,t])=>`<option value="${v}" ${ui.sort===v?'selected':''}>${t}</option>`).join('')}</select></div><section class="panel"><div class="result-meta"><strong id="adult-count">검색 결과 ${filteredAdults().length}개체</strong><span>관리번호를 누르면 상세 페이지로 이동합니다.</span></div><div id="adult-table">${adultsTable(filteredAdults())}</div></section><p class="section-caption">승인된 계정만 접근할 수 있으며 등록 내용은 KML 데이터베이스에 저장됩니다.</p>`;}
+  // Reuses Labeling/index.html's canvas renderer and the unmodified template.png.
+// Label drafts are scoped to the signed-in member and specimen; they never write records.
+const LABEL_TEMPLATE_PATH='assets/label-template.png';
+const LABEL_FONT='"Noto Serif KR", serif';
+const labelDrafts=new Map();
+const detailLabelState={key:'',kind:'',id:'',view:'label',editorOpen:false,saving:false,frame:0,returnUntil:0};
+let labelImagePromise=null,labelFontPromise=null;
+const labelText=value=>value===null||value===undefined?'':String(value);
+const labelSex=value=>/^(M|m|male|♂|수컷)$/.test(labelText(value))?'m':/^(F|f|female|♀|암컷)$/.test(labelText(value))?'f':'';
+const labelIsPudding=record=>record?.pudding===true||record?.pudding==='true'||/푸딩/.test(labelText(record?.bottleSize));
+function larvaBottleRecords(v){
+  const source=Array.isArray(v?.sourceData?.bottleRecords)?v.sourceData.bottleRecords:[];
+  const rows=Array.isArray(v?.records)?v.records:[];
+  return rows.length?rows.map((row,i)=>({...source[i],date:labelText(row?.[0]),feedBrand:labelText(row?.[1]),feedType:'',bottleSize:labelText(row?.[2]),weight:labelText(row?.[3])})):source.map(r=>({...r}));
+}
+function labelRecordContext(kind,id){
+  if(kind==='larva'){
+    const v=byId(db.larvae,id);if(!v)return null;
+    const line=byId(db.lines,v.lineId);if(!line)return null;
+    return {kind,record:v,line,father:adult(line.father),mother:adult(line.mother),breeder:line.createdBy};
+  }
+  const a=adult(id);if(!a)return null;
+  const candidates=a.father&&a.mother?db.lines.filter(l=>l.father===a.father&&l.mother===a.mother&&(!a.generation||!l.generation||l.generation===a.generation)):[];
+  return {kind:'adult',record:a,line:candidates.length===1?candidates[0]:null,father:adult(a.father),mother:adult(a.mother),breeder:a.breeder};
+}
+function initialLabelValues(kind,id){
+  const c=labelRecordContext(kind,id);if(!c)return null;
+  const r=c.record;
+  const lineage=p=>p?[p.lineage,p.code].filter(Boolean).join(' '):'';
+  const d={sex:labelSex(r.sex),no:labelText(kind==='larva'?r.number:r.code),line:labelText(c.line?.name||(kind==='adult'?r.lineage:'')),gen:labelText(kind==='larva'?c.line?.generation:r.generation),mSize:labelText(c.father?.size),mLine:lineage(c.father),fSize:labelText(c.mother?.size),fLine:lineage(c.mother),pudDate:'',pudFeed:'',head:'',pupaDate:'',pupaW:'',adultDate:labelText(r.emerged),adult:labelText(r.size),breeder:member(c.breeder)?.nickname||''};
+  for(let i=0;i<5;i++)for(const key of ['fd','ff','fv','fw'])d[key+i]='';
+  if(kind==='larva'){
+    const records=larvaBottleRecords(r).slice().sort((a,b)=>labelText(a.date).localeCompare(labelText(b.date)));
+    const pudding=records.find(labelIsPudding),bottles=records.filter(row=>!labelIsPudding(row));
+    const feed=row=>labelText(row?.feedBrand||row?.feedType).trim();
+    const volume=value=>{const s=labelText(value).trim();return !s?'':/^\d+(?:\.\d+)?$/.test(s)?s+'CC':s.replace(/cc$/i,'CC');};
+    d.pudDate=labelText(pudding?.date);d.pudFeed=feed(pudding);
+    const head=records.slice().reverse().find(row=>labelText(row.headWidth).trim()!=='');d.head=labelText(head?.headWidth);
+    d.pupaDate=labelText(r.sourceData?.pupation?.pupaDate);d.pupaW=labelText(r.sourceData?.pupation?.pupaWeight);
+    d.adultDate=d.adultDate||labelText(r.sourceData?.eclosion?.date);d.adult=d.adult||labelText(r.sourceData?.eclosion?.totalLength);
+    for(let i=0;i<5;i++){const row=bottles[i];if(!row)continue;d['fd'+i]=labelText(row.date);d['ff'+i]=feed(row);d['fv'+i]=volume(row.bottleSize);d['fw'+i]=labelText(row.weight);}
+  }
+  return d;
+}
+function labelDraftKey(kind,id){return [db.currentUser||'',kind,id].join(':');}
+function prepareDetailLabel(kind,id){
+  const key=labelDraftKey(kind,id);
+  if(detailLabelState.key!==key){Object.assign(detailLabelState,{key,kind,id,view:'label',editorOpen:false});}
+  let draft=labelDrafts.get(key);
+  if(!draft||!draft.edited){draft={values:initialLabelValues(kind,id),edited:false};labelDrafts.set(key,draft);}
+  if(labelDrafts.size>50){const oldest=labelDrafts.keys().next().value;if(oldest!==key)labelDrafts.delete(oldest);}
+  return draft;
+}
+function leaveSpecimenDetail(){Object.assign(detailLabelState,{key:'',kind:'',id:'',view:'label',editorOpen:false,returnUntil:0});}
+function clearDetailLabels(){labelDrafts.clear();leaveSpecimenDetail();}
+function preserveSpecimenDetail(){return !!detailLabelState.key&&(detailLabelState.saving||detailLabelState.editorOpen||Date.now()<detailLabelState.returnUntil);}
+const LABEL_FIELD_GROUPS=[
+  ['기본 정보',[['no','No.'],['sex','성별','sex'],['line','라인명'],['gen','누대수']]],
+  ['종충',[['mSize','♂ 크기 (mm)'],['mLine','♂ 혈통'],['fSize','♀ 크기 (mm)'],['fLine','♀ 혈통']]],
+  ['Breeding Data',[['pudDate','푸딩 날짜','date'],['pudFeed','푸딩 먹이원'],['head','두폭 (mm)']]]
+];
+function labelInput(field,values){
+  const [name,title,type='text']=field,value=labelText(values?.[name]);
+  const options=[['','미구분'],['m','♂ 수컷'],['f','♀ 암컷']];
+  const list=name==='gen'?' list="label-generation-list"':name==='pudFeed'||/^ff\d$/.test(name)?' list="label-feed-list"':/^fv\d$/.test(name)?' list="label-volume-list"':'';
+  const numeric=['mSize','fSize','head','pupaW','adult'].includes(name)||/^fw\d$/.test(name);
+  return '<label class="label-field"><span>'+title+'</span>'+(type==='sex'?'<select data-label-field="sex">'+options.map(([v,t])=>'<option value="'+v+'" '+(v===value?'selected':'')+'>'+t+'</option>').join('')+'</select>':'<input type="'+type+'" data-label-field="'+name+'" value="'+attr(value)+'" '+(numeric?'inputmode="decimal" ':'')+'maxlength="160" autocomplete="off"'+list+'>')+'</label>';
+}
+function specimenLabelEditor(values){
+  let html=LABEL_FIELD_GROUPS.map(([title,fields])=>'<h3>'+title+'</h3><div class="label-field-grid">'+fields.map(f=>labelInput(f,values)).join('')+'</div>').join('');
+  for(let i=0;i<5;i++)html+='<div class="label-feed-heading"><strong>'+['1st','2nd','3rd','4th','5th'][i]+'</strong><button type="button" class="btn btn-light btn-sm" data-action="clear-label-feed" data-feed="'+i+'">비우기</button></div><div class="label-field-grid">'+[[`fd${i}`,'날짜','date'],[`ff${i}`,'먹이원'],[`fv${i}`,'용량'],[`fw${i}`,'체중 (g)']].map(f=>labelInput(f,values)).join('')+'</div>';
+  html+='<h3>용화 · 우화</h3><div class="label-field-grid">'+[['pupaDate','용화 날짜','date'],['pupaW','용화 체중 (g)'],['adultDate','우화 날짜','date'],['adult','우화 크기 (mm)'],['breeder','브리더']].map(f=>labelInput(f,values)).join('')+'</div>';
+  return html+'<p class="label-date-warning" data-label-date-warning role="alert" hidden>날짜 순서를 확인하세요. 푸딩 → 교체 → 용화 → 우화 순서보다 이른 날짜가 있습니다.</p><div class="label-editor-actions"><button type="button" class="btn btn-light btn-sm" data-action="reset-label-inputs">라벨 입력 초기화</button><button type="button" class="btn btn-light btn-sm" data-action="refill-specimen-label">개체 기록으로 채우기</button></div><datalist id="label-generation-list">'+['WD','WF1','WF2','WF3','F1','F2','F3','F4','CB','CBF1','CBF2','CBF3'].map(x=>'<option value="'+x+'">').join('')+'</datalist><datalist id="label-feed-list"><option value="S8K"><option value="균사"><option value="발효톱밥"></datalist><datalist id="label-volume-list">'+['500CC','800CC','1100CC','1500CC','2300CC','3000CC'].map(x=>'<option value="'+x+'">').join('')+'</datalist>';
+}
+function specimenTools(kind,id,pedigreeHTML){
+  const draft=prepareDetailLabel(kind,id),tree=detailLabelState.view==='tree';
+  const v=kind==='larva'?byId(db.larvae,id):null,extra=v?larvaBottleRecords(v).filter(r=>!labelIsPudding(r)).length:0;
+  return '<section class="panel specimen-tools" data-specimen-tools data-detail-key="'+attr(detailLabelState.key)+'"><div class="specimen-tools-head"><h2 data-detail-panel-title>'+(tree?'계통도':'사육 라벨')+'</h2><div class="specimen-view-tabs" role="tablist" aria-label="상세 보기 전환"><button type="button" id="specimen-label-tab" role="tab" aria-controls="specimen-label-view" aria-selected="'+!tree+'" data-action="detail-specimen-view" data-view="label">'+icon('file')+'라벨</button><button type="button" id="specimen-tree-tab" role="tab" aria-controls="specimen-tree-view" aria-selected="'+tree+'" data-action="detail-specimen-view" data-view="tree">'+icon('family')+'계통도</button></div></div><div class="specimen-stage"><div id="specimen-label-view" role="tabpanel" aria-labelledby="specimen-label-tab" '+(tree?'hidden':'')+'><canvas class="specimen-label-canvas" data-specimen-label-canvas width="1444" height="1032" aria-label="국균연구소 사육 라벨 미리보기">국균연구소 사육 라벨</canvas><p class="label-load-state" data-label-load-state aria-live="polite">라벨을 불러오는 중…</p></div><div id="specimen-tree-view" role="tabpanel" aria-labelledby="specimen-tree-tab" '+(!tree?'hidden':'')+'><div class="pedigree-legend"><span><b class="p-legend-m" aria-hidden="true">♂</b> 수컷</span><span><b class="p-legend-f" aria-hidden="true">♀</b> 암컷</span></div>'+pedigreeHTML+'</div></div><div data-label-tools '+(tree?'hidden':'')+'><div class="specimen-label-actions"><span class="section-caption" data-label-draft-state>'+(draft.edited?'라벨 내용 수정됨':'개체 기록에서 채움')+'</span><button type="button" class="btn btn-dark" data-action="save-specimen-label" '+(detailLabelState.saving?'disabled':'')+'>'+icon('download')+'이미지 저장</button></div>'+(extra>5?'<p class="label-record-limit">라벨에는 1~5병까지 표시합니다. 전체 '+extra+'병 기록은 아래 사육 기록에서 확인할 수 있습니다.</p>':'')+'<details class="specimen-label-editor" '+(detailLabelState.editorOpen?'open':'')+'><summary>라벨 내용 수정</summary><div class="specimen-label-fields"><p class="section-caption">수정 내용은 라벨에만 반영됩니다.</p>'+specimenLabelEditor(draft.values)+'</div></details></div></section>';
+}
+function ensureLabelImage(){
+  if(!labelImagePromise)labelImagePromise=new Promise((resolve,reject)=>{const image=new Image();image.onload=()=>resolve(image);image.onerror=()=>{labelImagePromise=null;reject(Error('라벨지 이미지를 불러오지 못했습니다. 새로고침해 주세요.'));};image.src=LABEL_TEMPLATE_PATH;});
+  return labelImagePromise;
+}
+function ensureLabelFont(){
+  if(!labelFontPromise)labelFontPromise=new Promise(resolve=>{let link=document.getElementById('kml-label-font');if(link){resolve();return;}link=document.createElement('link');link.id='kml-label-font';link.rel='stylesheet';link.href='https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700&display=swap';link.onload=()=>resolve();link.onerror=()=>resolve();document.head.appendChild(link);});
+  return labelFontPromise;
+}
+async function ensureLabelGlyphs(values){
+  await ensureLabelFont();
+  if(document.fonts?.load)try{const text=Object.values(values).join('')+'0123456789.mmgCCV ';await Promise.all([document.fonts.load('700 34px '+LABEL_FONT,text),document.fonts.load('700 46px '+LABEL_FONT,text)]);}catch{}
+}
+function drawLabelCanvas(cv,d,template){
+  const ctx=cv.getContext('2d');if(!ctx)throw Error('이 기기에서 라벨 그리기를 사용할 수 없습니다.');
+  const tpl=template,SERIF=LABEL_FONT,state={sex:d.sex};
+  // ---------- 포맷 ----------
+  const yymmdd = v => {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v || '');
+    return m ? `${m[1].slice(2)}.${m[2]}.${m[3]}` : '';
+  };
+  const withUnit = (v, u) => (v = (v||'').trim()) ? `${v} ${u}` : '';
+  const join = arr => arr.filter(Boolean).join('   ');
+
+  // ---------- 캔버스 그리기 ----------
+  function fitFont(text, maxW, size, weight){
+    let s = size;
+    ctx.font = `${weight} ${s}px ${SERIF}`;
+    while(ctx.measureText(text).width > maxW && s > 14){
+      s -= 1; ctx.font = `${weight} ${s}px ${SERIF}`;
+    }
+    return s;
+  }
+  // 셀 가운데 정렬 (x0~x1, y0~y1)
+  function cell(text, x0, y0, x1, y1, size=34, weight=700){
+    if(!text) return;
+    fitFont(text, (x1 - x0) - 24, size, weight);
+    ctx.fillStyle = '#000';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(text, (x0 + x1) / 2, (y0 + y1) / 2 + 2);
+  }
+
+  function draw(d){
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    if(tpl.complete && tpl.naturalWidth) ctx.drawImage(tpl, 0, 0, cv.width, cv.height);
+
+
+    // No.
+    if(d.no) cell(d.no.trim(), 1246, 82, 1406, 134, 40, 700);
+
+    // 성별 체크
+    // 체크 표시: 글자 실제 외곽 기준으로 칸 정중앙에 배치
+    const checkAt = (cx, cy) => {
+      ctx.font = `700 34px ${SERIF}`;
+      ctx.fillStyle = '#000'; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+      const m = ctx.measureText('V');
+      const w = m.actualBoundingBoxLeft + m.actualBoundingBoxRight;
+      const h = m.actualBoundingBoxAscent + m.actualBoundingBoxDescent;
+      ctx.fillText('V', cx - w / 2 + m.actualBoundingBoxLeft, cy - h / 2 + m.actualBoundingBoxAscent);
+    };
+    if(state.sex === 'm') checkAt(1222.5, 193.5);
+    if(state.sex === 'f') checkAt(1371.5, 193.5);
+
+    // 종충
+    cell(d.line, 269, 283, 758, 331);
+    cell(d.gen, 897, 283, 1412, 331);
+    cell(withUnit(d.mSize, 'mm'), 269, 334, 477, 388);
+    cell(d.mLine, 480, 334, 1412, 388);
+    cell(withUnit(d.fSize, 'mm'), 269, 391, 477, 449);
+    cell(d.fLine, 480, 391, 1412, 449);
+
+    // Breeding Data
+    cell(join([yymmdd(d.pudDate), d.pudFeed.trim()]), 188, 518, 758, 563);
+    cell(withUnit(d.head, 'mm'), 1007, 518, 1412, 563);
+    const rows = [[566,609],[612,656],[659,705],[708,754],[756,803]];
+    // 1st~5th: 왼쪽 정렬 + 항목별 열 맞춤 (날짜 / 먹이 / 용량 / 체중)
+    const feedCols = rows.map((_, i) => [yymmdd(d[`fd${i}`]), d[`ff${i}`].trim(), d[`fv${i}`].trim(), withUnit(d[`fw${i}`], 'g')]);
+    const PAD = 56, GAP = 44, X0 = 188, X1 = 1412;
+    let fs = 34, colW;
+    const measureCols = () => {
+      ctx.font = `700 ${fs}px ${SERIF}`;
+      colW = [0,1,2,3].map(c => Math.max(0, ...feedCols.map(r => r[c] ? ctx.measureText(r[c]).width : 0)));
+      const used = colW.filter(w => w > 0);
+      return used.reduce((a, b) => a + b, 0) + GAP * Math.max(0, used.length - 1);
+    };
+    while(measureCols() > (X1 - X0) - PAD * 2 && fs > 16) fs--;
+    ctx.fillStyle = '#000'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    rows.forEach(([y0,y1], i) => {
+      let x = X0 + PAD;
+      feedCols[i].forEach((t, c) => {
+        if(!colW[c]) return;
+        if(t) ctx.fillText(t, x, (y0 + y1) / 2 + 2);
+        x += colW[c] + GAP;
+      });
+    });
+    cell(join([yymmdd(d.pupaDate), withUnit(d.pupaW, 'g')]), 188, 806, 758, 854);
+    cell(join([yymmdd(d.adultDate), withUnit(d.adult, 'mm')]), 1007, 806, 1412, 854);
+
+    // Breeder
+    if(d.breeder) cell(d.breeder.trim(), 250, 880, 1192, 936, 40, 700);
+  }
+
+
+  draw(d);
+}
+function labelDatesInvalid(values){
+  const dates=[values.pudDate,...Array.from({length:5},(_,i)=>values['fd'+i]),values.pupaDate,values.adultDate].filter(Boolean);
+  return dates.some((date,i)=>i>0&&date<dates[i-1]);
+}
+function paintMountedLabel(){
+  const canvas=document.querySelector('[data-specimen-label-canvas]'),key=detailLabelState.key,draft=labelDrafts.get(key);
+  if(!canvas||!draft?.values)return;
+  const host=canvas.closest('[data-specimen-tools]');if(host?.dataset.detailKey!==key)return;
+  const warning=host.querySelector('[data-label-date-warning]');if(warning)warning.hidden=!labelDatesInvalid(draft.values);
+  const version=(canvas.labelVersion||0)+1;canvas.labelVersion=version;
+  const current=()=>canvas.isConnected&&canvas.labelVersion===version&&detailLabelState.key===key;
+  const paint=image=>{if(!current())return;try{drawLabelCanvas(canvas,labelDrafts.get(key).values,image);const message=host.querySelector('[data-label-load-state]');if(message)message.hidden=true;}catch(error){const message=host.querySelector('[data-label-load-state]');if(message){message.hidden=false;message.textContent=error.message;}}};
+  ensureLabelImage().then(image=>{paint(image);return ensureLabelGlyphs(labelDrafts.get(key)?.values||draft.values).then(()=>paint(image));}).catch(error=>{if(current()){const message=host.querySelector('[data-label-load-state]');if(message){message.hidden=false;message.textContent=error.message;}}});
+}
+function queueLabelPaint(){
+  if(detailLabelState.frame)return;
+  detailLabelState.frame=requestAnimationFrame(()=>{detailLabelState.frame=0;paintMountedLabel();});
+}
+function mountSpecimenTools(){
+  const host=document.querySelector('[data-specimen-tools]');if(!host)return;
+  const editor=host.querySelector('.specimen-label-editor');editor?.addEventListener('toggle',()=>{if(host.dataset.detailKey===detailLabelState.key)detailLabelState.editorOpen=editor.open;});
+  paintMountedLabel();
+}
+function switchSpecimenView(view){
+  if(!['label','tree'].includes(view))return;
+  const host=document.querySelector('[data-specimen-tools]');if(!host||host.dataset.detailKey!==detailLabelState.key)return;
+  detailLabelState.view=view;const tree=view==='tree';
+  host.querySelector('#specimen-label-view').hidden=tree;host.querySelector('#specimen-tree-view').hidden=!tree;host.querySelector('[data-label-tools]').hidden=tree;
+  host.querySelector('[data-detail-panel-title]').textContent=tree?'계통도':'사육 라벨';
+  host.querySelectorAll('[data-action="detail-specimen-view"]').forEach(button=>button.setAttribute('aria-selected',String(button.dataset.view===view)));
+  if(!tree)queueLabelPaint();
+}
+function markLabelDraft(){
+  const draft=labelDrafts.get(detailLabelState.key);if(!draft)return;draft.edited=true;
+  const status=document.querySelector('[data-label-draft-state]');if(status)status.textContent='라벨 내용 수정됨';queueLabelPaint();
+}
+function updateLabelInput(event){
+  const input=event.target.closest?.('[data-label-field]');if(!input)return;
+  const host=input.closest('[data-specimen-tools]'),draft=labelDrafts.get(detailLabelState.key),field=input.dataset.labelField;
+  if(!draft?.values||host?.dataset.detailKey!==detailLabelState.key||!Object.hasOwn(draft.values,field)||draft.values[field]===input.value)return;
+  draft.values[field]=input.value;markLabelDraft();
+}
+function setLabelInputs(values,edited){
+  const draft=labelDrafts.get(detailLabelState.key);if(!draft)return;draft.values={...values};draft.edited=edited;
+  const host=document.querySelector('[data-specimen-tools]');host?.querySelectorAll('[data-label-field]').forEach(input=>{input.value=labelText(values[input.dataset.labelField]);});
+  const status=host?.querySelector('[data-label-draft-state]');if(status)status.textContent=edited?'라벨 내용 수정됨':'개체 기록에서 채움';queueLabelPaint();
+}
+function clearLabelFeed(index){
+  const i=Number(index),draft=labelDrafts.get(detailLabelState.key);if(!Number.isInteger(i)||i<0||i>4||!draft?.values)return;
+  const next={...draft.values};for(const key of ['fd','ff','fv','fw'])next[key+i]='';setLabelInputs(next,true);
+}
+function refillSpecimenLabel(){
+  const draft=labelDrafts.get(detailLabelState.key);if(!draft)return;
+  if(draft.edited&&!confirm('라벨 수정 내용을 지우고 개체 기록으로 다시 채울까요?'))return;
+  setLabelInputs(initialLabelValues(detailLabelState.kind,detailLabelState.id),false);
+}
+function resetLabelInputs(){
+  const draft=labelDrafts.get(detailLabelState.key);if(!draft?.values||!confirm('라벨 입력만 모두 비울까요? 개체 기록은 유지됩니다.'))return;
+  setLabelInputs(Object.fromEntries(Object.keys(draft.values).map(key=>[key,''])),true);
+}
+async function saveSpecimenLabel(button){
+  const draft=labelDrafts.get(detailLabelState.key);if(detailLabelState.saving||!draft?.values)return;
+  const values={...draft.values};let nativeExport=false;detailLabelState.saving=true;if(button)button.disabled=true;
+  try{
+    const [image]=await Promise.all([ensureLabelImage(),ensureLabelGlyphs(values)]);
+    const canvas=document.createElement('canvas');canvas.width=1444;canvas.height=1032;drawLabelCanvas(canvas,values,image);
+    const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));if(!blob)throw Error('라벨 이미지를 만들지 못했습니다. 다시 시도해 주세요.');
+    const name=['KML',values.line,values.no?'No'+values.no:''].filter(Boolean).join('_').replace(/[\\/:*?"<>|\s]+/g,'_')+'.png';
+    const file=new File([blob],name,{type:'image/png'}),mobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+    nativeExport=mobile;if(mobile)detailLabelState.returnUntil=Date.now()+2000;
+    if(mobile&&navigator.canShare?.({files:[file]})){try{await navigator.share({files:[file],title:name});return;}catch(error){if(error.name==='AbortError')return;}}
+    const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),4000);
+  }catch(error){notify('라벨 저장 실패: '+(error.message||String(error)));}
+  finally{detailLabelState.saving=false;if(nativeExport)detailLabelState.returnUntil=Date.now()+2000;document.querySelectorAll('[data-action="save-specimen-label"]').forEach(control=>{control.disabled=false;});}
+}
+document.addEventListener('input',updateLabelInput);
+document.addEventListener('change',updateLabelInput);
+document.addEventListener('keydown',event=>{
+  const button=event.target.closest?.('[data-action="detail-specimen-view"]');if(!button||!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;
+  event.preventDefault();const view=event.key==='Home'?'label':event.key==='End'?'tree':detailLabelState.view==='label'?'tree':'label';switchSpecimenView(view);document.querySelector('[data-action="detail-specimen-view"][data-view="'+view+'"]').focus();
+});
+function adultsPage(){const years=[...new Set(db.adults.map(x=>String(x.emerged||'').slice(0,4)).filter(Boolean))].sort().reverse();const mine=route().page!=='registry';return `${pageHead('SPECIMEN REGISTRY',mine?'내 성충 관리':'전체 성충 목록',mine?'내가 보유한 성충을 등록·검색·정렬합니다.':'다른 브리더의 성충과 혈통을 함께 조회합니다.',mine?button('성충 등록','new-adult','btn-dark','plus')+button('BeetleLog 가져오기','beetle-import','btn-light','download').replace('data-action="beetle-import"','data-action="beetle-import" data-type="adults"'):'')}<div class="data-tools"><label class="searchbox">${icon('search')}<input id="adult-search" value="${attr(ui.search)}" placeholder="관리번호 · 혈통 · 브리더 검색" autocomplete="off" /></label><select id="sex-filter" class="filter-select" aria-label="성별">${[['all','전체 성별'],['M','수컷 ♂'],['F','암컷 ♀']].map(([v,t])=>`<option value="${v}" ${ui.sex===v?'selected':''}>${t}</option>`).join('')}</select><select id="year-filter" class="filter-select" aria-label="우화 연도"><option value="all">전체 연도</option>${years.map(y=>`<option ${ui.year===y?'selected':''}>${y}</option>`).join('')}</select><select id="status-filter" class="filter-select" aria-label="상태">${[['all','전체 상태'],['보유','보유'],['분양','분양'],['사망','사망']].map(([v,t])=>`<option value="${v}" ${ui.status===v?'selected':''}>${t}</option>`).join('')}</select><select id="sort-filter" class="filter-select" aria-label="정렬">${[['code','관리번호순'],['size-desc','체장 큰순'],['size-asc','체장 작은순'],['date-desc','최근 우화순']].map(([v,t])=>`<option value="${v}" ${ui.sort===v?'selected':''}>${t}</option>`).join('')}</select></div><section class="panel"><div class="result-meta"><strong id="adult-count">검색 결과 ${filteredAdults().length}개체</strong><span>관리번호를 누르면 상세 페이지로 이동합니다.</span></div><div id="adult-table">${adultsTable(filteredAdults())}</div></section><p class="section-caption">승인된 계정만 접근할 수 있으며 등록 내용은 KML 데이터베이스에 저장됩니다.</p>`;}
   function updateAdultsTable(){const c=document.getElementById('adult-count'),t=document.getElementById('adult-table');if(c)c.textContent=`검색 결과 ${filteredAdults().length}개체`;if(t)t.innerHTML=adultsTable(filteredAdults());}
   function pedigreeBreeder(id){
     const m=member(id);
@@ -217,12 +482,34 @@
     return '<div class="pedigree-scroll"><div class="pedigree" role="group" aria-label="조부모까지의 3세대 계통도">'+cols.join('')+'</div></div>';
   }
   function adultDetail(id){const a=adult(id);if(!a)return `${pageHead('NOT FOUND','개체를 찾을 수 없습니다.','삭제되거나 등록되지 않은 개체입니다.')}<button class="btn btn-light" data-nav="adults">성충 목록</button>`;const user=current();const linked=db.lines.filter(l=>l.father===id||l.mother===id);const comments=db.comments.filter(x=>x.adultId===id);const transfers=db.transfers.filter(t=>t.adultId===id);return `<button class="backlink" data-nav="${mineAdult(a)?'adults':'registry'}">${icon('back')} ${mineAdult(a)?'내 성충':'전체 성충'} 목록으로</button>${pageHead('SPECIMEN DETAIL',deathName(a.code,a.status),`${a.lineage?esc(a.lineage)+' · ':''}${a.sex==='M'?'수컷':'암컷'} · ${fmtSize(a.size)}`,(mineAdult(a)||isAdmin()?button('개체 수정','edit-adult','btn-light','edit').replace('data-action="edit-adult"','data-action="edit-adult" data-id="'+attr(a.id)+'"'):''))}
-  <div class="detail-layout"><section class="panel"><div class="detail-photo"><img src="${attr(specimenPhotoUrl(a))}" alt="${attr(a.code)} 성충 이미지" loading="lazy" /></div><div class="detail-card"><div class="detail-subhead">개체 기본 정보 ${status(a.status)}</div><div class="detail-facts ${isDead(a.status)?'dead-facts':''}">${[['관리번호',a.code],['성별',a.sex==='M'?'♂ 수컷':'♀ 암컷'],['체장',fmtSize(a.size)],['혈통',a.lineage||'—'],['누대수',a.generation||'—'],['우화일',a.emerged||'—'],['입수 경로',a.source||'—'],['브리더',memberName(a.breeder)],['현재 소유자',memberName(a.owner)]].map(([k,v])=>`<div class="fact"><small>${k}</small><strong>${esc(v)}</strong></div>`).join('')}</div>${a.note?`<p class="section-caption">${esc(a.note)}</p>`:''}<div class="helper-row">${(mineAdult(a)||isAdmin()?button('소유자 변경','transfer','btn-light','users').replace('data-action="transfer"','data-action="transfer" data-id="'+attr(a.id)+'"'):'')}</div></div></section><section class="panel section-pad"><div class="detail-subhead">${icon('family')} 계통도</div><div class="pedigree-legend"><span><b class="p-legend-m" aria-hidden="true">♂</b> 수컷</span><span><b class="p-legend-f" aria-hidden="true">♀</b> 암컷</span></div>${pedigree(a)}</section></div>
+  <div class="detail-layout"><section class="panel"><div class="detail-photo"><img src="${attr(specimenPhotoUrl(a))}" alt="${attr(a.code)} 성충 이미지" loading="lazy" /></div><div class="detail-card"><div class="detail-subhead">개체 기본 정보 ${status(a.status)}</div><div class="detail-facts ${isDead(a.status)?'dead-facts':''}">${[['관리번호',a.code],['성별',a.sex==='M'?'♂ 수컷':'♀ 암컷'],['체장',fmtSize(a.size)],['혈통',a.lineage||'—'],['누대수',a.generation||'—'],['우화일',a.emerged||'—'],['입수 경로',a.source||'—'],['브리더',memberName(a.breeder)],['현재 소유자',memberName(a.owner)]].map(([k,v])=>`<div class="fact"><small>${k}</small><strong>${esc(v)}</strong></div>`).join('')}</div>${a.note?`<p class="section-caption">${esc(a.note)}</p>`:''}<div class="helper-row">${(mineAdult(a)||isAdmin()?button('소유자 변경','transfer','btn-light','users').replace('data-action="transfer"','data-action="transfer" data-id="'+attr(a.id)+'"'):'')}</div></div></section>${specimenTools('adult',a.id,pedigree(a))}</div>
   <div class="below-detail"><section class="panel section-pad"><div class="detail-subhead">${icon('layers')} 교배 라인 / 개체 이동 이력</div><div class="section-caption">해당 개체가 부 또는 모로 연결된 모든 라인입니다.</div><div style="margin-top:18px">${linked.length?linked.map(l=>`<div class="small-detail-card" data-nav="line/${attr(l.id)}" role="button"><span><b>${esc(l.name)}</b><br><small>${esc(l.year)}년 · ${a.sex==='M'?'부 ♂':'모 ♀'}</small></span>${icon('chevron')}</div>`).join(''):'<div class="empty-mini">연결된 교배 라인이 없습니다.</div>'}</div><div class="section-caption" style="margin-top:22px">소유자 이동 기록</div>${transfers.length?transfers.map(t=>`<div class="small-detail-card" style="cursor:default"><span>${esc(memberName(t.from))} → <b>${esc(memberName(t.to))}</b></span><small>${esc(t.date)}</small></div>`).join(''):'<div class="empty-mini">이동 기록이 없습니다.</div>'}</section><section class="panel section-pad"><div class="detail-subhead">${icon('message')} 개체 댓글 <span class="tag">${comments.length}</span></div><div class="section-caption">승인된 브리더이 개체에 대한 의견과 사육 메모를 남기는 기능입니다.</div><div id="comments">${comments.length?comments.map(c=>{const m=member(c.memberId);return `<div class="comment">${avatar(m)}<div style="min-width:0;flex:1"><div class="comment-meta"><strong>${esc(memberName(c.memberId))}</strong><span>${esc(c.date)}</span>${c.memberId===db.currentUser?`<button class="icon-btn" style="margin-left:auto" data-action="delete-comment" data-id="${attr(c.id)}" aria-label="댓글 삭제">${icon('close')}</button>`:''}</div><p>${esc(c.body)}</p></div></div>`}).join(''):'<div class="empty-mini">아직 댓글이 없습니다.</div>'}</div><form class="comment-compose" id="comment-form" data-adult-id="${attr(a.id)}"><textarea name="body" placeholder="개체에 대한 의견이나 사육 메모를 입력하세요." maxlength="1500" required></textarea><button type="submit" class="btn btn-dark">${icon('message')} 댓글 등록</button></form></section></div>`;}
   function linesPage(){const mine=route().page!=='archive';const ls=db.lines.filter(x=>!mine||mineLine(x)).filter(x=>[x.name,x.generation,x.year].some(s=>String(s||'').toLowerCase().includes(ui.lineSearch.toLowerCase())));return `${pageHead('BREEDING LINES',mine?'내 라인 관리':'전체 라인 목록',mine?'내가 생성한 교배 라인을 관리합니다.':'브리더들의 교배 라인을 검색하고 조회합니다.',mine?button('라인 생성','new-line','btn-dark','plus')+button('BeetleLog 가져오기','beetle-import','btn-light','download').replace('data-action="beetle-import"','data-action="beetle-import" data-type="lines"'):'')}<div class="data-tools"><label class="searchbox">${icon('search')}<input id="line-search" value="${attr(ui.lineSearch)}" placeholder="라인명 · 시즌 · 메모 검색" /></label></div><div class="line-cards" id="line-cards">${ls.length?ls.map(l=>lineCard(l)).join(''):'<div class="panel section-pad">등록된 라인이 없습니다.</div>'}</div>`;}
   function lineCard(l){const f=adult(l.father),m=adult(l.mother);return `<button type="button" class="line-card" data-nav="line/${attr(l.id)}"><div class="line-card-top"><span class="tag gold">${esc(l.year||'연도 미등록')}</span><span class="tag">${esc(memberName(l.createdBy))} · 유충 ${db.larvae.filter(v=>v.lineId===l.id).length}마리</span></div><strong>${esc(l.name)}${l.isWild?' <span class="tag gold">Wild</span>':''}</strong><p>${esc(l.generation||'누대수 미입력')} · ${esc(l.note||'')}</p><div class="pair"><span><em>♂ ${esc(f?.code||(l.isWild?'Wild':'미등록'))}</em><br>${fmtSize(f?.size)}</span><span><em>♀ ${esc(m?.code||'미등록')}</em><br>${fmtSize(m?.size)}</span></div></button>`;}
-  function lineDetail(id){const l=byId(db.lines,id);if(!l)return pageHead('NOT FOUND','라인을 찾을 수 없습니다.','');const f=adult(l.father),m=adult(l.mother),list=db.larvae.filter(v=>v.lineId===id),bottles=Array.from({length:Math.max(3,...list.map(v=>v.records.length))},(_,i)=>i);return `<button class="backlink" data-nav="${mineLine(l)?'lines':'archive'}">${icon('back')} ${mineLine(l)?'내 라인':'전체 라인'} 목록으로</button>${pageHead('LINE DETAIL',esc(l.name),`${esc(l.year||'')} 시즌 · ${l.isWild?'Wild · ':''}${esc(l.generation||'누대수 미입력')} · 유충 ${list.length}개체`,mineLine(l)||isAdmin()?`<button class="btn btn-light" data-action="edit-line" data-id="${attr(l.id)}">${icon('edit')} 라인 수정</button>`:'')}<section class="panel"><div class="line-detail-head"><div><span class="eyebrow">BREEDING PAIR</span><h2>${esc(l.name)}</h2><p>${esc(l.note||'')}</p></div><span class="tag gold">등록된 라인</span></div><div class="section-pad" style="padding-top:0"><div class="info-tiles"><div class="info-tile"><small>부 ♂</small><strong>${f?`<button class="plain-link" data-nav="adult/${attr(f.id)}">${esc(f.code)} · ${fmtSize(f.size)}</button>`:(l.isWild?'Wild · 부 미상':'미등록')}</strong></div><div class="info-tile"><small>모 ♀</small><strong>${m?`<button class="plain-link" data-nav="adult/${attr(m.id)}">${esc(m.code)} · ${fmtSize(m.size)}</button>`:'미등록'}</strong></div><div class="info-tile"><small>기록 개체</small><strong>${list.length}마리</strong></div></div></div></section><section class="panel" style="margin-top:19px"><div class="panel-head"><div><div class="panel-title">라인 유충 전체 보기</div><div class="panel-sub">관리번호는 라인 내 번호로 관리합니다. 병별 기록은 가로로 표시됩니다.</div></div><div class="actions"><button class="btn btn-light btn-sm" data-action="download-line" data-id="${attr(l.id)}">${icon('download')} CSV 내보내기</button><button class="btn btn-light btn-sm" data-action="excel-not-ready">${icon('upload')} Excel 업로드 (예정)</button></div></div><div class="datatable-wrap"><table class="datatable"><thead><tr><th>번호</th><th>성별</th><th>상태</th>${bottles.map(i=>`<th>${i+1}병</th>`).join('')}<th>우화일</th><th>체장</th></tr></thead><tbody>${list.length?list.map(v=>`<tr class="${isDead(v.sourceData?.status)?'dead-record':''}"><td><strong>${esc(v.number)}</strong></td><td>${sex(v.sex)}</td><td class="state-cell">${status(v.sourceData?.status||'—',true)}</td>${bottles.map(i=>`<td class="bottle-cell">${v.records[i]?`<span>${esc(v.records[i][0]||'—')}</span><br><span>${esc(v.records[i][1]||'—')}</span><br><span>${v.records[i][2]!==''&&v.records[i][2]!=null?esc(v.records[i][2])+' cc':'—'}</span><br><span>${v.records[i][3]!==''&&v.records[i][3]!=null?esc(v.records[i][3])+' g':'—'}</span>`:'—'}</td>`).join('')}<td>${esc(v.emerged||'—')}</td><td>${fmtSize(v.size)}</td></tr>`).join(''):'<tr><td colspan="${bottles.length+5}" class="empty-table">유충 기록이 아직 없습니다. BeetleLog에서 이 라인을 가져오면 소속 유충도 함께 등록됩니다.</td></tr>'}</tbody></table></div></section>`;}
-  function membersPage(){if(!isAdmin())return pageHead('FORBIDDEN','관리자 전용','브리더 목록은 관리자만 볼 수 있습니다.');return `${pageHead('BREEDERS CLUB','브리더','승인된 브리더들의 프로필 사진과 닉네임을 확인할 수 있습니다.')}<div class="members-grid">${db.members.map(m=>`<div class="member-card">${avatar(m,true)}<strong>${esc(m.nickname)}</strong><p>${esc(m.intro||'소개가 없습니다.')}</p><div class="helper-row"><span class="tag ${m.role==='관리자'?'gold':'green'}">${esc(m.role)}</span><small>${db.adults.filter(x=>x.owner===m.id).length}개체 보유</small></div></div>`).join('')}</div><div class="notice"><strong>Google 인증 회원 목록</strong> 실제 서비스에서는 관리자가 허가한 Google 계정만 로그인할 수 있도록 데이터베이스 권한까지 제한합니다. Google 인증 후 관리자에게 승인받은 계정만 KML 데이터에 접근할 수 있습니다.</div>`;}
+  function lineDetail(id){const l=byId(db.lines,id);if(!l)return pageHead('NOT FOUND','라인을 찾을 수 없습니다.','');const f=adult(l.father),m=adult(l.mother),list=db.larvae.filter(v=>v.lineId===id),bottles=Array.from({length:Math.max(3,...list.map(v=>v.records.length))},(_,i)=>i);return `<button class="backlink" data-nav="${mineLine(l)?'lines':'archive'}">${icon('back')} ${mineLine(l)?'내 라인':'전체 라인'} 목록으로</button>${pageHead('LINE DETAIL',esc(l.name),`${esc(l.year||'')} 시즌 · ${l.isWild?'Wild · ':''}${esc(l.generation||'누대수 미입력')} · 유충 ${list.length}개체`,mineLine(l)||isAdmin()?`<button class="btn btn-light" data-action="edit-line" data-id="${attr(l.id)}">${icon('edit')} 라인 수정</button>`:'')}<section class="panel"><div class="line-detail-head"><div><span class="eyebrow">BREEDING PAIR</span><h2>${esc(l.name)}</h2><p>${esc(l.note||'')}</p></div><span class="tag gold">등록된 라인</span></div><div class="section-pad" style="padding-top:0"><div class="info-tiles"><div class="info-tile"><small>부 ♂</small><strong>${f?`<button class="plain-link" data-nav="adult/${attr(f.id)}">${esc(f.code)} · ${fmtSize(f.size)}</button>`:(l.isWild?'Wild · 부 미상':'미등록')}</strong></div><div class="info-tile"><small>모 ♀</small><strong>${m?`<button class="plain-link" data-nav="adult/${attr(m.id)}">${esc(m.code)} · ${fmtSize(m.size)}</button>`:'미등록'}</strong></div><div class="info-tile"><small>기록 개체</small><strong>${list.length}마리</strong></div></div></div></section><section class="panel" style="margin-top:19px"><div class="panel-head"><div><div class="panel-title">라인 유충 전체 보기</div><div class="panel-sub">관리번호는 라인 내 번호로 관리합니다. 병별 기록은 가로로 표시됩니다.</div></div><div class="actions"><button class="btn btn-light btn-sm" data-action="download-line" data-id="${attr(l.id)}">${icon('download')} CSV 내보내기</button><button class="btn btn-light btn-sm" data-action="excel-not-ready">${icon('upload')} Excel 업로드 (예정)</button></div></div><div class="datatable-wrap"><table class="datatable"><thead><tr><th>번호</th><th>성별</th><th>상태</th>${bottles.map(i=>`<th>${i+1}병</th>`).join('')}<th>우화일</th><th>체장</th></tr></thead><tbody>${list.length?list.map(v=>`<tr class="${isDead(v.sourceData?.status)?'dead-record':''}"><td><button type="button" class="plain-link id-link" data-nav="larva/${attr(v.id)}">${esc(v.number)}</button></td><td>${sex(v.sex)}</td><td class="state-cell">${status(v.sourceData?.status||'—',true)}</td>${bottles.map(i=>`<td class="bottle-cell">${v.records[i]?`<span>${esc(v.records[i][0]||'—')}</span><br><span>${esc(v.records[i][1]||'—')}</span><br><span>${v.records[i][2]!==''&&v.records[i][2]!=null?esc(v.records[i][2])+' cc':'—'}</span><br><span>${v.records[i][3]!==''&&v.records[i][3]!=null?esc(v.records[i][3])+' g':'—'}</span>`:'—'}</td>`).join('')}<td>${esc(v.emerged||'—')}</td><td>${fmtSize(v.size)}</td></tr>`).join(''):'<tr><td colspan="${bottles.length+5}" class="empty-table">유충 기록이 아직 없습니다. BeetleLog에서 이 라인을 가져오면 소속 유충도 함께 등록됩니다.</td></tr>'}</tbody></table></div></section>`;}
+  function larvaPedigree(v,line){
+  const records=larvaBottleRecords(v).filter(r=>!labelIsPudding(r));
+  const last=records.slice().sort((a,b)=>labelText(a.date).localeCompare(labelText(b.date))).reverse().find(r=>labelText(r.weight)!=='');
+  const symbol=v.sex==='M'?'♂':v.sex==='F'?'♀':'—',sexClass=v.sex==='M'?'m':v.sex==='F'?'f':'';
+  const value=v.size!==''&&v.size!==null&&v.size!==undefined?fmtSize(v.size):last?esc(last.weight)+' g':'—';
+  const dead=isDead(v.sourceData?.status),title=dead?'<span class="dead-text">'+esc(v.number)+'</span> <span class="death-mark" role="img" aria-label="사망">★</span>':esc(v.number);
+  const lineage=[line.name,line.generation].filter(Boolean).join(' · ');
+  const child='<div class="p-cell '+sexClass+' '+(dead?'dead-record':'')+'"><span class="p-sex" role="img" aria-label="'+(v.sex==='M'?'수컷':v.sex==='F'?'암컷':'미구분')+'">'+symbol+'</span><span class="p-size">'+value+'</span><span class="p-detail p-lineage" title="'+attr(lineage)+'">'+esc(lineage)+'</span><span class="p-detail p-code">'+title+'</span>'+pedigreeBreeder(line.createdBy)+'</div>';
+  const parents=[line.father||'',line.mother||''];
+  const grandparents=parents.flatMap(id=>[adult(id)?.father||'',adult(id)?.mother||'']);
+  return '<div class="pedigree-scroll"><div class="pedigree" role="group" aria-label="조부모까지의 3세대 계통도"><div class="p-body">'+child+'</div><div class="p-body">'+parents.map((id,i)=>pedCell(id,i%2===0?'M':'F')).join('')+'</div><div class="p-body">'+grandparents.map((id,i)=>pedCell(id,i%2===0?'M':'F')).join('')+'</div></div></div>';
+}
+function larvaDetail(id){
+  const v=byId(db.larvae,id),line=v?byId(db.lines,v.lineId):null;
+  if(!v||!line)return pageHead('NOT FOUND','유충을 찾을 수 없습니다.','라인이나 개체가 삭제되었을 수 있습니다.');
+  const records=larvaBottleRecords(v),bottles=records.filter(r=>!labelIsPudding(r));
+  const last=bottles.slice().sort((a,b)=>labelText(a.date).localeCompare(labelText(b.date))).reverse().find(r=>labelText(r.weight)!=='');
+  const s=v.sourceData?.status||'사육중';
+  const facts=[['관리번호',v.number],['성별',v.sex==='M'?'♂ 수컷':v.sex==='F'?'♀ 암컷':'미구분'],['라인',line.name],['누대수',line.generation||'—'],['최근 무게',last?labelText(last.weight)+' g':'—'],['우화일',v.emerged||'—'],['체장',v.size!==''&&v.size!==null&&v.size!==undefined?fmtSize(v.size):'—']];
+  let bottle=0;const rows=records.map(r=>{const label=labelIsPudding(r)?'푸딩':String(++bottle)+'병';return '<tr><td>'+label+'</td><td>'+esc(r.date||'—')+'</td><td>'+esc(r.feedBrand||r.feedType||'—')+'</td><td>'+(labelText(r.bottleSize)!==''?esc(r.bottleSize)+(/^\d+(?:\.\d+)?$/.test(String(r.bottleSize))?' cc':''):'—')+'</td><td>'+(labelText(r.weight)!==''?esc(r.weight)+' g':'—')+'</td></tr>';}).join('');
+  return '<button type="button" class="backlink" data-nav="line/'+attr(line.id)+'">'+icon('back')+' '+esc(line.name)+' 라인으로</button>'+pageHead('LARVA DETAIL',esc(v.number),esc(line.name)+' · '+esc(line.generation||'')+' · '+(v.sex==='M'?'수컷':v.sex==='F'?'암컷':'성별 미구분'))+'<div class="detail-layout"><section class="panel"><div class="detail-card"><div class="detail-subhead">유충 기본 정보 '+status(s,true)+'</div><div class="detail-facts '+(isDead(s)?'dead-facts':'')+'">'+facts.map(([k,value])=>'<div class="fact"><small>'+k+'</small><strong>'+esc(value)+'</strong></div>').join('')+'<div class="fact"><small>브리더 / 라인 등록자</small><strong>'+pedigreeBreeder(line.createdBy)+'</strong></div></div></section>'+specimenTools('larva',v.id,larvaPedigree(v,line))+'</div><section class="panel larva-records"><div class="panel-head"><div class="panel-title">사육 기록</div><span class="tag">'+bottles.length+'병</span></div><div class="datatable-wrap"><table class="datatable"><thead><tr><th>병</th><th>날짜</th><th>먹이원</th><th>용량</th><th>무게</th></tr></thead><tbody>'+(rows||'<tr><td colspan="5" class="empty-table">사육 기록이 아직 없습니다.</td></tr>')+'</tbody></table></div></section>';
+}
+function membersPage(){if(!isAdmin())return pageHead('FORBIDDEN','관리자 전용','브리더 목록은 관리자만 볼 수 있습니다.');return `${pageHead('BREEDERS CLUB','브리더','승인된 브리더들의 프로필 사진과 닉네임을 확인할 수 있습니다.')}<div class="members-grid">${db.members.map(m=>`<div class="member-card">${avatar(m,true)}<strong>${esc(m.nickname)}</strong><p>${esc(m.intro||'소개가 없습니다.')}</p><div class="helper-row"><span class="tag ${m.role==='관리자'?'gold':'green'}">${esc(m.role)}</span><small>${db.adults.filter(x=>x.owner===m.id).length}개체 보유</small></div></div>`).join('')}</div><div class="notice"><strong>Google 인증 회원 목록</strong> 실제 서비스에서는 관리자가 허가한 Google 계정만 로그인할 수 있도록 데이터베이스 권한까지 제한합니다. Google 인증 후 관리자에게 승인받은 계정만 KML 데이터에 접근할 수 있습니다.</div>`;}
   function profilePage(){const m=current();return `${pageHead('MY ACCOUNT','내 프로필','닉네임, 프로필 사진과 소개를 변경합니다.')}<section class="profile-top">${avatar(m,true)}<div><h2>${esc(m.nickname)}</h2><p>${esc(m.role)} · Google 인증 계정</p></div></section><section class="panel profile-edit"><form id="profile-form"><div class="profile-photo-field"><label for="profile-photo">프로필 사진</label><div class="profile-photo-row">${avatar(m,true)}<div><input id="profile-photo" type="file" name="photo" accept="image/jpeg,image/png,image/webp" /><small class="field-hint">JPG·PNG·WEBP 지원. 사진은 256px 정사각형으로 압축되어 저장됩니다.</small><button type="button" class="btn btn-light btn-sm" data-action="reset-profile-photo">사진 초기화</button></div></div></div><div class="form-grid"><div class="field"><label for="profile-name">닉네임 *</label><input id="profile-name" name="nickname" maxlength="30" required value="${attr(m.nickname)}"/><small class="field-hint">변경해도 개체의 브리더·소유자 연결은 유지됩니다.</small></div><div class="field"><label>프로필 사진 적용</label><small class="field-hint">사진을 변경하지 않으면 기존 이미지가 유지됩니다. 저장 버튼을 눌러 적용하세요.</small></div><div class="field full"><label for="profile-intro">소개</label><textarea id="profile-intro" name="intro" maxlength="400">${esc(m.intro||'')}</textarea></div></div><div class="helper-row"><span class="section-caption">회원 프로필은 KML 서버에 저장됩니다.</span><button class="btn btn-dark" type="submit">저장</button></div></form></section>`;}
   function dataPage(){return `${pageHead('DATA CENTER','데이터 연결','KML과 BeetleLog가 공유하는 Google 계정과 데이터 연결 상태를 확인합니다.')}<section class="panel section-pad" style="margin-bottom:20px"><div class="detail-subhead">${icon('shield')} BeetleLog 계정 연결 확인</div><p class="section-caption">같은 Google 계정으로 저장된 BeetleLog 개인 기록을 조회할 수 있는지 확인합니다. 개인 데이터는 변경하지 않으며, KML은 왕사슴벌레 데이터만 사용합니다.</p><div class="helper-row"><button class="btn btn-light" data-action="check-beetle">연결 상태 확인</button><span class="section-caption">읽기 전용 테스트</span></div><div id="beetle-connect-result" class="section-caption">아직 확인하지 않았습니다.</div></section><div class="dashboard-grid"><section class="panel section-pad"><div class="detail-subhead">${icon('file')} 라인 엑셀 업로드</div><p class="section-caption">계획: KML에서 성충과 라인을 먼저 생성 → 라인명 기재된 단일 시트 업로드 → 같은 라인 검증 → 유충별 신규·변경 건 미리보기 → 저장.</p><div class="notice"><strong>현재 단계: 업로드 기능 미구현</strong> 실제 엑셀 양식이 확정되면 필드 매핑과 검증 로직을 연결합니다. 버튼이 없어도 파일 업로드가 완료된 것으로 오해하지 않도록 구분했습니다.</div></section><section class="panel section-pad"><div class="detail-subhead">${icon('layers')} BeetleLog 연동</div><p class="section-caption">BeetleLog 앱의 설정 → 국균연구소 KML 연동에서 승인 계정으로 KML 공통 성충·라인을 직접 조회·등록할 수 있습니다. 본인의 기존 BeetleLog 성충·라인을 KML의 각 관리 탭에서 체크하여 선택 가져오기 할 수 있습니다. 선택한 라인의 부모 성충과 유충·병별 기록도 함께 가져옵니다.</p><div class="notice"><strong>공통 KML DB 연결 완료 · 기존 개인 데이터 원본 보존</strong> 수동 선택 가져오기만 지원하며 원본 개인 사육기록은 변경되지 않습니다. 병갈이 이력의 양방향 동기화는 별도 단계입니다.</div></section></div>`;}
   const opt=(items,current,empty='선택 안 함')=>`<option value="">${empty}</option>${items.map(x=>`<option value="${attr(x.id)}" ${x.id===current?'selected':''}>${esc(x.code||x.nickname)}${x.size?' · '+x.size+'mm':''}</option>`).join('')}`;
@@ -474,7 +761,7 @@ function adultModal(id){const a=adult(id),t=a||{code:'',lineage:'',generation:''
       document.documentElement.classList.remove('kml-modal-open');
     }
   }
-  function render(){if(!allowed){gate();return;}const r=route();if(r.page==='members'&&!isAdmin()){go('dashboard');return;}app.innerHTML=shell(r.page);document.getElementById('page-content').innerHTML= r.page==='dashboard'?dashboard():r.page==='mypage'?myPage():r.page==='adults'||r.page==='registry'?adultsPage():r.page==='adult'?adultDetail(r.id):r.page==='lines'||r.page==='archive'?linesPage():r.page==='line'?lineDetail(r.id):r.page==='members'&&isAdmin()?membersPage():r.page==='profile'?profilePage():r.page==='data'?dataPage():dashboard();renderModal();document.title=`KML | ${({dashboard:'국균연구소 DB',adults:'성충 관리',adult:'개체 상세',lines:'라인 관리',line:'라인 상세',members:'브리더 목록',mypage:'마이페이지',registry:'전체 성충',archive:'전체 라인',profile:'내 프로필',data:'데이터 관리'})[r.page]||'국균연구소'}`;}
+  function render(){if(!allowed){gate();return;}const r=route();if(r.page==='members'&&!isAdmin()){go('dashboard');return;}if(!['adult','larva'].includes(r.page))leaveSpecimenDetail();app.innerHTML=shell(r.page);document.getElementById('page-content').innerHTML= r.page==='dashboard'?dashboard():r.page==='mypage'?myPage():r.page==='adults'||r.page==='registry'?adultsPage():r.page==='adult'?adultDetail(r.id):r.page==='larva'?larvaDetail(r.id):r.page==='lines'||r.page==='archive'?linesPage():r.page==='line'?lineDetail(r.id):r.page==='members'&&isAdmin()?membersPage():r.page==='profile'?profilePage():r.page==='data'?dataPage():dashboard();renderModal();mountSpecimenTools();document.title=`KML | ${({dashboard:'국균연구소 DB',adults:'성충 관리',adult:'개체 상세',larva:'유충 상세',lines:'라인 관리',line:'라인 상세',members:'브리더 목록',mypage:'마이페이지',registry:'전체 성충',archive:'전체 라인',profile:'내 프로필',data:'데이터 관리'})[r.page]||'국균연구소'}`;}
   function openModal(kind,id=''){ui.modal={kind,id};ui.adultPhotoPreview=null;ui.adultPhotoReset=false;renderModal();}
   function closeModal(){ui.modal=null;ui.adultPhotoPreview=null;ui.adultPhotoReset=false;renderModal();}
   function downloadCSV(id){const l=byId(db.lines,id);if(!l)return;
@@ -488,6 +775,11 @@ function adultModal(id){const a=adult(id),t=a||{code:'',lineage:'',generation:''
     const nav=event.target.closest('[data-nav]');if(nav){go(nav.dataset.nav);return;}
     const a=event.target.closest('[data-action]');if(!a)return;
     const act=a.dataset.action;
+    if(act==='detail-specimen-view'){switchSpecimenView(a.dataset.view);return;}
+    if(act==='save-specimen-label'){await saveSpecimenLabel(a);return;}
+    if(act==='clear-label-feed'){clearLabelFeed(a.dataset.feed);return;}
+    if(act==='refill-specimen-label'){refillSpecimenLabel();return;}
+    if(act==='reset-label-inputs'){resetLabelInputs();return;}
     if(act==='year-step'){stepYear(a);return;}
     if(act==='toggle-menu'){ui.menu=!ui.menu;render();}
     if(act==='close-menu'){ui.menu=false;render();}
@@ -563,7 +855,7 @@ function adultModal(id){const a=adult(id),t=a||{code:'',lineage:'',generation:''
     if(act==='excel-not-ready')notify('엑셀 업로드는 다음 개발 단계에서 연결합니다. 현재는 미구현 기능입니다.');
     if(act==='download-line')downloadCSV(a.dataset.id);
     if(act==='google-login'){if(!supa)return;const redirectTo=location.origin+location.pathname;const {error:e}=await supa.auth.signInWithOAuth({provider:'google',options:{redirectTo}});if(e)notify('Google 로그인 오류: '+e.message);}
-    if(act==='sign-out'){await supa?.auth.signOut();allowed=false;authUser=null;db={members:[],adults:[],lines:[],larvae:[],comments:[],transfers:[],currentUser:null};gate();}
+    if(act==='sign-out'){clearDetailLabels();await supa?.auth.signOut();allowed=false;authUser=null;db={members:[],adults:[],lines:[],larvae:[],comments:[],transfers:[],currentUser:null};gate();}
   });  document.addEventListener('input',e=>{
     if(e.target.matches('#line-form [name="generation"]')){
       e.target.dataset.manual=e.target.value.trim()?'true':'false';return;
@@ -669,7 +961,7 @@ function adultModal(id){const a=adult(id),t=a||{code:'',lineage:'',generation:''
   let crossAppRefreshBusy=false;
   let crossAppRefreshLast=0;
   async function refreshLinkedRecords(){
-    if(crossAppRefreshBusy||!allowed||ui.modal||document.hidden||
+    if(crossAppRefreshBusy||!allowed||ui.modal||detailLabelState.saving||detailLabelState.editorOpen||document.hidden||
        Date.now()-crossAppRefreshLast<3000)return;
     const target=document.activeElement;
     if(target&&target.matches?.('input,select,textarea,[contenteditable="true"]'))return;
