@@ -30,6 +30,7 @@ jobs:
           node scripts/build.mjs --check
           node tests/kml-import-ui.cjs
           node tests/year-picker.cjs
+          node tests/pedigree-ui.cjs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
