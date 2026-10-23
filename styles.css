@@ -69,6 +69,11 @@
 .profile-photo-row .field-hint{display:block;margin-bottom:13px;line-height:1.6}
 @media(max-width:600px){.profile-photo-row{align-items:flex-start}.profile-photo-row>div{min-width:180px}}
 
+
+/* Profile photos beside breeder and current owner names in adult tables. */
+.datatable .table-member{display:inline-flex;align-items:center;gap:8px;vertical-align:middle;white-space:nowrap}
+.datatable .table-member .mini-avatar{width:24px;height:24px;flex:0 0 24px;font-size:11px;font-weight:700;line-height:1}
+.dead-record .table-member-name{text-decoration:line-through;text-decoration-thickness:1px}
 /* Selective BeetleLog import: desktop and mobile */
 .beetle-import-dialog{width:min(840px,calc(100vw - 28px));max-height:min(90vh,940px);display:flex;flex-direction:column;overflow:hidden}
 .beetle-import-dialog .modal-head{flex-shrink:0}
