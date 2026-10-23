@@ -1,0 +1,34 @@
+{
+  "javascript": [
+    "src/core/state.js",
+    "src/ui/icons.js",
+    "src/data/records.js",
+    "src/auth/session.js",
+    "src/ui/navigation.js",
+    "src/pages/adult-list.js",
+    "src/pages/home.js",
+    "src/pages/adult-detail.js",
+    "src/pages/lines.js",
+    "src/pages/account.js",
+    "src/ui/modal-frame.js",
+    "src/features/beetlelog-import.js",
+    "src/ui/year-picker.js",
+    "src/forms/specimens.js",
+    "src/ui/dialog.js",
+    "src/data/export.js",
+    "src/events/actions.js",
+    "src/events/input-photos.js",
+    "src/events/forms.js",
+    "src/core/lifecycle.js"
+  ],
+  "styles": [
+    "src/styles/base.css",
+    "src/styles/responsive.css",
+    "src/styles/account.css",
+    "src/styles/beetlelog-import.css",
+    "src/styles/dialogs.css",
+    "src/styles/specimens-home.css",
+    "src/styles/mobile-state.css",
+    "src/styles/year-picker.css"
+  ]
+}

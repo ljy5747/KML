@@ -1,0 +1,3 @@
+const opt=(items,current,empty='선택 안 함')=>`<option value="">${empty}</option>${items.map(x=>`<option value="${attr(x.id)}" ${x.id===current?'selected':''}>${esc(x.code||x.nickname)}${x.size?' · '+x.size+'mm':''}</option>`).join('')}`;
+  function modalFrame(title,desc,body,footer){return `<div class="modal-backdrop" data-action="modal-backdrop"><div class="modal" role="dialog" aria-modal="true" aria-label="${attr(title)}"><div class="modal-head"><div><h2>${esc(title)}</h2><p>${esc(desc)}</p></div><button type="button" class="icon-btn modal-close-btn" data-action="close-modal" aria-label="창 닫기" title="닫기">${icon('close')}</button></div>${body}${footer||''}</div></div>`;}
+  
