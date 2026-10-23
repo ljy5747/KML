@@ -271,3 +271,9 @@ html.kml-modal-open body{overscroll-behavior:none}
  .sidebar-user{min-width:0}
  .sidebar-user strong{overflow-wrap:anywhere}
 }
+
+.wild-line-toggle{display:flex;align-items:center;gap:10px;cursor:pointer;min-height:44px}
+.modal .wild-line-field .wild-line-toggle input[type="checkbox"]{display:inline-block;width:22px;height:22px;min-width:22px;min-height:22px;flex:0 0 22px;padding:0;accent-color:#a68653}
+.line-generation-controls{display:flex;align-items:center;gap:8px;min-width:0}
+.line-generation-controls input{flex:1;min-width:0}
+.line-generation-controls .btn{flex:none;height:42px}
