@@ -237,3 +237,10 @@
 .kml-home{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;padding:0 4px;border:0;border-radius:5px;background:transparent;color:inherit;font:inherit;cursor:pointer}
 .kml-home:hover{color:#997844}
 .brand-home:focus-visible,.kml-home:focus-visible{outline:2px solid #c5a46e;outline-offset:3px}
+
+/* Dead specimens keep their records and are marked with a star and strike-through. */
+.dead-text,.dead-record td:not(.state-cell):not(.control-cell),.dead-record td:not(.control-cell) .id-link,.dead-facts .fact strong,.p-cell.dead-record .p-size,.p-cell.dead-record .p-detail{text-decoration:line-through;text-decoration-thickness:1px}
+.dead-record td:not(.state-cell):not(.control-cell),.dead-facts .fact strong{color:#9b9488}
+.death-mark{display:inline-block;color:#9a7b4c;font-size:13px;text-decoration:none}
+.bottle-cell{min-width:170px;white-space:normal;line-height:1.8}
+.delete-record{margin-right:auto}
