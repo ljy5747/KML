@@ -5,7 +5,7 @@
   // Publishable key is intentionally public. All KML records are secured with Supabase RLS.
   const PUBLISHABLE_KEY = 'sb_publishable_IwNmQESmOgj-DHR0sxOIlw_4EKsa4wu';
   const OFFICIAL_LOGO = 'assets/kml-official-logo.svg';
-  const DEFAULT_ADULT_PHOTO = 'assets/king-stag-default.svg';
+  const DEFAULT_ADULT_PHOTO = 'assets/king-stag-default.jpg';
   const specimenPhotoUrl = a => (/^(https:\/\/|data:image\/(jpeg|png|webp);base64,)/i.test(String(a?.photoUrl||'')) ? a.photoUrl : DEFAULT_ADULT_PHOTO);
   const app = document.getElementById('app');
   const toastEl = document.getElementById('toast');
