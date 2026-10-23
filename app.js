@@ -439,5 +439,24 @@
   });
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&ui.modal)closeModal();const box=e.target.closest('[data-nav][role="button"]');if(box&&(e.key==='Enter'||e.key===' ')){e.preventDefault();go(box.dataset.nav);}});
   window.addEventListener('hashchange',()=>{render();window.scrollTo(0,0);});
+  // Cross-app updates become visible without page reload. Do not interrupt edits.
+  let crossAppRefreshBusy=false;
+  let crossAppRefreshLast=0;
+  async function refreshLinkedRecords(){
+    if(crossAppRefreshBusy||!allowed||ui.modal||document.hidden||
+       Date.now()-crossAppRefreshLast<3000)return;
+    const target=document.activeElement;
+    if(target&&target.matches?.('input,select,textarea,[contenteditable="true"]'))return;
+    crossAppRefreshBusy=true;
+    crossAppRefreshLast=Date.now();
+    try{await loadRemote();if(allowed&&!ui.modal)render();}
+    catch(e){/* Retain the last rendered data while offline. */}
+    finally{crossAppRefreshBusy=false;}
+  }
+  setInterval(refreshLinkedRecords,8000);
+  window.addEventListener('focus',refreshLinkedRecords);
+  document.addEventListener('visibilitychange',()=>{
+    if(!document.hidden)refreshLinkedRecords();
+  });
   boot();
 })();
