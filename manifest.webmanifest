@@ -1,0 +1,19 @@
+{
+  "id": "./",
+  "name": "국균연구소 KML",
+  "short_name": "KML",
+  "description": "국균연구소 왕사슴벌레 혈통·사육기록 데이터베이스",
+  "start_url": "./#/dashboard",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f7f6f2",
+  "theme_color": "#171717",
+  "icons": [
+    {
+      "src": "assets/kml-official-logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

@@ -146,9 +146,19 @@
       }
     }catch(e){loginError='인증 또는 데이터 조회 오류: '+(e.message||e);allowed=false;}
     authReady=true;
-    if(allowed)render();else gate();
+    if(allowed){showStandaloneHome(false);render();}else gate();
   }
   function route(){const p=(location.hash||'#/').replace(/^#\/?/,'').split('/').filter(Boolean);return {page:p[0]||'dashboard',id:p[1]||''};}
+  const isStandaloneApp=()=>window.navigator?.standalone===true||window.matchMedia?.('(display-mode: standalone)')?.matches===true;
+  function showStandaloneHome(renderPage=true){
+    // Do not discard an edit or a native photo-picker round trip.
+    if(!isStandaloneApp()||ui.modal)return;
+    const changed=location.hash!=='#/dashboard'||ui.menu;
+    ui.menu=false;
+    history.replaceState(history.state,'',location.pathname+location.search+'#/dashboard');
+    if(renderPage&&allowed&&changed)render();
+    window.scrollTo({top:0,left:0,behavior:'instant'});
+  }
   const go=(target)=>{ui.menu=false;const hash='#/'+target;if(location.hash===hash){render();window.scrollTo(0,0);}else location.hash=hash;};
   const activeNav=(page,key)=>page===key;
   const navBtn=(key,label,ico,page)=>`<button class="nav-item ${activeNav(page,key)?'active':''}" data-nav="${key}">${icon(ico)}<span>${label}</span>${activeNav(page,key)?icon('chevron'):''}</button>`;
@@ -553,7 +563,10 @@
   setInterval(refreshLinkedRecords,8000);
   window.addEventListener('focus',refreshLinkedRecords);
   document.addEventListener('visibilitychange',()=>{
-    if(!document.hidden)refreshLinkedRecords();
+    if(!document.hidden){showStandaloneHome();refreshLinkedRecords();}
+  });
+  window.addEventListener('pageshow',event=>{
+    if(event.persisted)showStandaloneHome();
   });
   boot();
 })();
