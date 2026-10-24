@@ -57,3 +57,8 @@
  .specimen-stage{padding:10px}
  .specimen-label-canvas{max-width:360px}
 }
+
+/* Adult labels and proportionally smaller pedigrees stay visible together. */
+.adult-pedigree-section{border-top:1px solid var(--line)}
+.adult-pedigree-stage .pedigree{width:620px;min-width:620px;zoom:.68;margin-inline:auto}
+.adult-pedigree-stage .pedigree-scroll{margin-top:10px}
