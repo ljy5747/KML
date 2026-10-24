@@ -140,7 +140,7 @@ function mountSocial(){
  if(!social.loaded&&!social.loading&&!social.timer)social.timer=setTimeout(()=>{social.timer=0;refreshSocial();},0);
  if(route().page==='adult'){
   refreshCommentReactions();const anchor=route().tab;
-  if(anchor?.startsWith('comment-'))document.getElementById(anchor)?.scrollIntoView?.({block:'center',behavior:'smooth'});
+  if(anchor?.startsWith('comment-'))requestAnimationFrame(()=>{document.getElementById(anchor)?.scrollIntoView?.({block:'center',behavior:'smooth'});});
  }
 }
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&social.open){event.preventDefault();closeInbox(true);}});
