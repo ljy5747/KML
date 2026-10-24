@@ -22,6 +22,9 @@ assert.throws(()=>table([['관리번호','code'],['A','B']]),/중복/);assert.th
 function workerRead(buffer,kind,override){let result;const api=Object.create(X);if(override)api.read=(data,opts)=>override(X.read(data,opts));const sandbox={XLSX:api,importScripts(){},self:{postMessage:value=>result=value}};vm.runInNewContext(fs.readFileSync(__dirname+'/../assets/excel-worker.js','utf8'),sandbox);sandbox.self.onmessage({data:{buffer,kind}});return result;}
 for(const kind of ['adults','larvae']){
  const bytes=fs.readFileSync(__dirname+'/../assets/templates/KML_'+kind+'_template.xlsx');const blank=workerRead(bytes,kind);assert.ok(!blank.error);assert.throws(()=>t.excelTable(blank,kind),/입력된 데이터/);
+ const withInput=workerRead(bytes,kind,book=>{const sheet=book.Sheets[kind==='adults'?'성충':'유충'];for(const key of Object.keys(book.Sheets['예시']))if(/^[A-Z]+2$/.test(key))sheet[key.replace(/2$/,'3')]={...book.Sheets['예시'][key]};return book;});
+ const input=t.excelTable(withInput,kind);assert.equal(input.rows[0].row,3);assert.equal(input.rows.length,1);assert.equal(input.rows[0].values.code,kind==='adults'?'EX-M001':'001');
+ const ordinary=kind==='adults'?[['관리번호','혈통','성별'],['EX-M001','꼴통A','수컷']]:[['라인명','관리번호'],['내라인','001']];assert.equal(table(ordinary,kind).rows.length,1);
  const sample=workerRead(bytes,kind,book=>{book.Sheets[kind==='adults'?'성충':'유충']=book.Sheets['예시'];return book;});assert.ok(!sample.error);const parsed=t.excelTable(sample,kind);assert.ok(parsed.rows.length);if(kind==='larvae'){assert.equal(parsed.rows[0].values.code,'001');assert.equal(parsed.rows[0].values['bottle.0.weight'],0);}else assert.equal(parsed.rows[0].values.emerged,'2026-06-15');
  const formulas=workerRead(bytes,kind,book=>{book.Sheets[kind==='adults'?'성충':'유충'].A2={t:'n',v:2,f:'1+1'};return book;});assert.ok(formulas.error.includes('수식'));
 }
