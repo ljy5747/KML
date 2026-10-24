@@ -1,6 +1,6 @@
   document.addEventListener('change',e=>{const map={'sex-filter':'sex','year-filter':'year','status-filter':'status','sort-filter':'sort'};if(map[e.target.id]){ui[map[e.target.id]]=e.target.value;updateAdultsTable();}});
   document.addEventListener('submit',async e=>{
-    const form=e.target;const formId=form.getAttribute('id');if(!['adult-form','line-form','profile-form','transfer-form','comment-form'].includes(formId))return;e.preventDefault();const f=new FormData(form);const data=Object.fromEntries(f.entries());
+    const form=e.target;const formId=form.getAttribute('id');if(!['adult-form','line-form','profile-form','transfer-form','comment-form','larva-form'].includes(formId))return;e.preventDefault();if(formId==='larva-form'){await saveLarvaEditor(form);return;}const f=new FormData(form);const data=Object.fromEntries(f.entries());
     if(formId==='adult-form'){
        if(data.id){const x=adult(data.id);if(!x||(!mineAdult(x)&&!isAdmin()))return notify('본인 소유 개체만 수정할 수 있습니다.');}
       const code=String(data.code||'').trim(),lineage=String(data.lineage||'').trim();if(!code||!lineage)return notify('관리번호와 혈통을 입력하세요.');

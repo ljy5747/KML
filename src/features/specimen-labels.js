@@ -11,7 +11,7 @@ const labelIsPudding=record=>record?.pudding===true||record?.pudding==='true'||/
 function larvaBottleRecords(v){
   const source=Array.isArray(v?.sourceData?.bottleRecords)?v.sourceData.bottleRecords:[];
   const rows=Array.isArray(v?.records)?v.records:[];
-  return rows.length?rows.map((row,i)=>({...source[i],date:labelText(row?.[0]),feedBrand:labelText(row?.[1]),feedType:'',bottleSize:labelText(row?.[2]),weight:labelText(row?.[3])})):source.map(r=>({...r}));
+  return rows.length?rows.map((row,i)=>({...source[i],date:labelText(row?.[0]),feedBrand:labelText(row?.[1]),feedType:labelText(source[i]?.feedType),bottleSize:labelText(row?.[2]),weight:labelText(row?.[3])})):source.map(r=>({...r}));
 }
 function labelRecordContext(kind,id){
   if(kind==='larva'){

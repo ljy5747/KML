@@ -1,7 +1,10 @@
 document.addEventListener('click',async event=>{
-    const nav=event.target.closest('[data-nav]');if(nav){go(nav.dataset.nav);return;}
+    const nav=event.target.closest('[data-nav]');if(nav){if(event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;event.preventDefault();go(nav.dataset.nav);return;}
     const a=event.target.closest('[data-action]');if(!a)return;
     const act=a.dataset.action;
+    if(act==='edit-larva'){const v=byId(db.larvae,a.dataset.id);if(v&&canEditLarvaLine(byId(db.lines,v.lineId)))openModal('larva',v.id);else notify('본인 라인의 유충만 수정할 수 있습니다.');return;}
+    if(act==='add-larva-record'){addLarvaEditorRow();return;}
+    if(act==='remove-larva-record'){if(confirm('이 병 기록을 제거할까요? 저장하면 반영됩니다.'))a.closest('[data-larva-record]').remove();return;}
     if(act==='detail-specimen-view'){switchSpecimenView(a.dataset.view);return;}
     if(act==='save-specimen-label'){await saveSpecimenLabel(a);return;}
     if(act==='clear-label-feed'){clearLabelFeed(a.dataset.feed);return;}

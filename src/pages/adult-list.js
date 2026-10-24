@@ -1,7 +1,4 @@
-function tableMember(id){
-    const m=member(id);if(!m)return esc(memberName(id));
-    return '<div class="table-member">'+avatar(m).replace('<img ','<img loading="lazy" decoding="async" ')+'<span class="table-member-name">'+esc(memberName(id))+'</span></div>';
-  }
+  function tableMember(id){return breederLink(id,'table-member');}
   function adultRows(items){
     if(!items.length) return `<tr><td colspan="10" class="empty-table">조건에 맞는 개체가 없습니다. 필터를 변경하거나 새 개체를 등록하세요.</td></tr>`;
     return items.map(x=>`<tr class="${isDead(x.status)?'dead-record':''}"><td><button type="button" class="plain-link id-link" data-nav="adult/${attr(x.id)}">${esc(x.code)}</button></td><td>${sex(x.sex)}</td><td><strong>${fmtSize(x.size)}</strong></td><td>${esc(x.lineage||'—')}</td><td>${esc(x.generation||'—')}</td><td>${tableMember(x.breeder)}</td><td>${tableMember(x.owner)}</td><td>${esc(x.emerged||'—')}</td><td class="state-cell">${status(x.status)}</td><td class="control-cell">${mineAdult(x)||isAdmin()?`<button class="icon-btn" data-action="edit-adult" data-id="${attr(x.id)}" aria-label="수정">${icon('edit')}</button>`:'<small class="read-only">조회 전용</small>'}</td></tr>`).join('');

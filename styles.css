@@ -240,6 +240,22 @@
 
 /* Home totals remain a single row of two cards on all screen sizes. */
 .stat-grid.home-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+.breeder-link{display:inline-flex;align-items:center;gap:6px;max-width:100%;min-width:0;text-decoration:none;color:inherit;vertical-align:middle}
+.breeder-link:hover .breeder-link-name{text-decoration:underline;text-underline-offset:3px}
+.breeder-link:focus-visible{outline:2px solid #a98752;outline-offset:3px;border-radius:4px}
+.breeder-link .mini-avatar{width:24px;height:24px;flex:0 0 24px;font-size:11px;margin:0}
+.breeder-link-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.p-breeder .breeder-link-name{font-size:inherit}
+.breeder-profile{font-size:20px;font-weight:800}.breeder-profile .mini-avatar{width:48px;height:48px;flex-basis:48px;font-size:20px}
+.breeder-counts{display:flex;gap:20px;flex-wrap:wrap;font-size:14px}.breeder-counts b{margin-left:6px}
+.breeder-lines{margin-top:22px}.line-card{cursor:pointer}.line-card .breeder-link{font-size:12px}.line-card .tag{white-space:normal}
+.sidebar-avatar .mini-avatar{width:36px;height:36px;flex-basis:36px}.sidebar-user .breeder-name{color:inherit}
+.larva-edit-record{border:1px solid #ded8cd;border-radius:8px;margin:0 0 16px;padding:14px;min-width:0}
+.larva-edit-record legend{font-weight:700;padding:0 5px}.larva-pudding{display:inline-flex;align-items:center;gap:8px;min-height:44px}.larva-pudding input{width:18px;height:18px}
+#larva-form .field input,#larva-form .field select,#larva-form .field textarea{font-size:16px}
+.larva-save-error{color:#a53f31;line-height:1.6;font-size:14px}
+
+.p-cell.dead-record .breeder-link-name{text-decoration:line-through}
 /* Both KML brand areas are home controls, including keyboard and touch use. */
 .brand-home{width:100%;border:0;border-bottom:1px solid #393731;background:transparent;color:inherit;text-align:left;cursor:pointer}
 .brand-home .brand-mark{display:block}
