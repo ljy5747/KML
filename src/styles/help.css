@@ -1,0 +1,8 @@
+.help-topics{max-width:900px;display:grid;gap:12px}
+.help-topic summary{padding:19px 22px;min-height:56px;cursor:pointer;font-size:16px;font-weight:750;color:#302d27}
+.help-topic summary:focus-visible{outline:2px solid #a98752;outline-offset:-3px}
+.help-topic-content{padding:0 22px 18px;font-size:15px;line-height:1.9;color:#514a3e}
+.help-topic-content p{margin:0 0 12px}.help-topic-content p:last-child{margin-bottom:0}
+.sidebar-bottom .build-tag{margin-top:12px}.sidebar-help{margin-top:12px;border-top:1px solid #393731;border-radius:0;padding-top:10px;min-height:48px}
+.line-file-tools{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px;padding-top:18px;border-top:1px solid var(--line)}
+@media(max-width:680px){.help-topic summary{padding:17px 18px}.help-topic-content{padding:0 18px 18px}.line-file-tools .btn{min-height:44px}}

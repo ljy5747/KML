@@ -120,3 +120,7 @@ node tests/specimen-labels.cjs
 ## 알림과 성충 보내기
 
 `src/features/notifications.js`와 `src/styles/notifications.css`는 앱 내 알림함, 수신 확인을 거치는 성충 보내기, 댓글 좋아요를 담당합니다. 설치와 동작·권한·검증은 [NOTIFICATIONS.md](NOTIFICATIONS.md)를 참고합니다.
+
+## 도움말과 화면 설명
+
+`src/pages/help.js`는 화면별 사용 설명을 모은 도움말이며 왼쪽 메뉴 맨 아래에서 열 수 있습니다. 페이지·입력창 제목 아래 일반 안내와 반복 설명은 출력하지 않고, 개체 메모·상태·입력 오류 등 실제 기록과 필수 안내는 유지합니다. 라인의 파일 기능은 기존 라인의 수정 창 안으로 옮겼으며 Excel 업로드는 준비 중으로 비활성화합니다. 도움말 스타일은 `src/styles/help.css`에서 관리합니다.

@@ -7,6 +7,7 @@
     "src/ui/navigation.js",
     "src/pages/breeder.js",
     "src/pages/adult-list.js",
+    "src/pages/help.js",
     "src/pages/home.js",
     "src/features/specimen-labels.js",
     "src/pages/adult-detail.js",
@@ -36,6 +37,7 @@
     "src/styles/mobile-state.css",
     "src/styles/year-picker.css",
     "src/styles/specimen-labels.css",
-    "src/styles/notifications.css"
+    "src/styles/notifications.css",
+    "src/styles/help.css"
   ]
 }

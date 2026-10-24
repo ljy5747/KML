@@ -52,7 +52,7 @@ function importEligibility(item,kind){
       <button class="btn btn-light btn-sm" type="button" data-action="beetle-all">모두 선택</button><button class="btn btn-light btn-sm" type="button" data-action="beetle-none">선택 해제</button>
      </div>
      <div class="beetle-import-scroll" id="beetle-import-list">${beetleImportRows()}</div>
-     <p class="section-caption">라인을 선택하면 부모 성충과 해당 라인의 유충·병별 기록을 함께 가져옵니다. 이미 가져온 라인도 다시 선택하면 누락된 유충만 추가됩니다.</p>
+     
      ${state.result?`<div class="notice"><strong>가져오기 결과</strong> 성충 ${Number(state.result.imported_adults||0)}건 · 라인 ${Number(state.result.imported_lines||0)}건 · 유충 ${Number(state.result.imported_larvae||0)}마리 등록 / 유충 ${Number(state.result.skipped_larvae||0)}마리 건너뜀 / 성충 ${Number(state.result.skipped_adults||0)}건 · 라인 ${Number(state.result.skipped_lines||0)}건 건너뜀${Array.isArray(state.result.issues)&&state.result.issues.length?`<p>${state.result.issues.slice(0,12).map(x=>esc(x)).join(' / ')}</p>`:''}</div>`:''}`;
   const foot=`<div class="modal-actions"><span class="beetle-import-selection">선택: 성충 ${state.selectedAdults.size} · 라인 ${state.selectedLines.size}</span><button class="btn btn-light" type="button" data-action="close-modal">닫기</button><button class="btn btn-dark" type="button" data-action="beetle-save" ${state.loading||state.saving||!!state.error||!picked?'disabled':''}>${state.saving?'가져오는 중…':'선택한 기록 가져오기'}</button></div>`;
   return modalFrame('BeetleLog에서 가져오기','같은 Google 계정의 기록 중 KML에 추가할 항목만 선택하세요.',`<div class="modal-content beetle-import-content">${content}</div>`,foot).replace('<div class="modal"','<div class="modal beetle-import-dialog"');
