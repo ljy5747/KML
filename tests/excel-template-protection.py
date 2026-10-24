@@ -1,4 +1,4 @@
-"""Verify native XLSX protection, editable inputs, and frozen example rows."""
+"""Verify native XLSX protection, editable inputs, and normal scrolling."""
 from pathlib import Path
 import zipfile
 import xml.etree.ElementTree as ET
@@ -12,7 +12,7 @@ for kind in ('adults','larvae'):
         assert protection is not None and protection.get('sheet')=='1'
         assert protection.get('deleteRows')=='1' and protection.get('insertRows')=='1'
         assert protection.get('password')
-        assert sheet.find('.//x:pane',NS).get('ySplit')=='2'
+        assert sheet.find('.//x:pane',NS) is None
         def locked(style):
             p=xfs[int(style)].find('x:protection',NS)
             return p is None or p.get('locked')!='0'
@@ -24,4 +24,4 @@ for kind in ('adults','larvae'):
         assert all(not locked(c.get('style','0')) for c in sheet.findall('x:cols/x:col',NS))
         assert 'KML 고정 예시' in ''.join(sheet.itertext())
         assert b'<x:sheetProtection' not in z.read('xl/worksheets/sheet2.xml')
-    print(f'PASS: {kind} protected example/header, 500 editable rows, editable column defaults, frozen two rows')
+    print(f'PASS: {kind} protected example/header, 500 editable rows, editable column defaults, no frozen/split panes')
