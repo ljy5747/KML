@@ -32,7 +32,7 @@ function adultModal(id){const a=adult(id),t=a||{code:'',lineage:'',generation:''
   function lineModal(id){
     const l=byId(db.lines,id),wild=!!l?.isWild;
     const suggested=suggestLineGeneration(adult(l?.father),adult(l?.mother),wild);
-    const body=`<form id="line-form"><input type="hidden" name="id" value="${attr(l?.id||'')}"/><div class="modal-content"><div class="form-grid">
+    const body=`<form id="line-form"><input type="hidden" name="id" value="${attr(l?.id||'')}"/><input type="hidden" name="version" value="${attr(l?.updatedAt||'')}"/><div class="modal-content"><div class="form-grid">
       <div class="field"><label>라인명 *</label><input name="name" required maxlength="80" value="${attr(l?.name||'')}" placeholder="예: YG26-A"/></div>
       <div class="field"><label>시즌 (연도)</label>${yearPicker({name:"year",value:l?.year,label:"시즌 연도"})}</div>
       <div class="field full wild-line-field"><label class="wild-line-toggle"><input type="checkbox" name="isWild" ${wild?'checked':''}/><span>Wild</span></label></div>
@@ -40,7 +40,7 @@ function adultModal(id){const a=adult(id),t=a||{code:'',lineage:'',generation:''
       <div class="field"><label>모 ♀ *</label><select name="mother" required>${opt(db.adults.filter(x=>x.sex==='F'),l?.mother||'','암컷 개체 선택')}</select></div>
       <div class="field full"><label>누대수</label><div class="line-generation-controls"><input name="generation" maxlength="30" value="${attr(l?.generation||suggested)}" data-manual="${l?.generation?'true':'false'}" placeholder="예: WF1, F3, CBF1"/><button type="button" class="btn btn-light btn-sm" data-action="line-generation-auto">자동 계산</button></div><small class="field-hint" data-line-generation-hint>${suggested?'자동 계산값: '+esc(suggested)+' · 직접 수정할 수 있습니다.':'부모의 혈통·누대수를 확인하거나 직접 입력하세요.'}</small></div>
       <div class="field full"><label>메모</label><textarea name="note" maxlength="700" placeholder="산란 세팅, 교배 이력 등">${esc(l?.note||'')}</textarea></div>
-      </div>${l?`<div class="line-file-tools"><button type="button" class="btn btn-light btn-sm" data-action="download-line" data-id="${attr(l.id)}">${icon('download')} CSV 내보내기</button><button type="button" class="btn btn-light btn-sm" data-action="excel-not-ready" disabled title="현재 준비 중입니다">${icon('upload')} Excel 업로드 (준비 중)</button></div>`:''}</div>
+      </div>${l?`<div class="line-file-tools"><button type="button" class="btn btn-light btn-sm" data-action="download-line" data-id="${attr(l.id)}">${icon('download')} CSV 내보내기</button><button type="button" class="btn btn-light btn-sm" data-action="excel-import" data-kind="larvae" data-line-id="${attr(l.id)}">${icon('upload')} Excel 가져오기</button></div>`:''}</div>
       <div class="modal-actions">${l?`<button type="button" class="btn btn-red delete-record" data-action="delete-line" data-id="${attr(l.id)}">삭제</button>`:''}<button type="button" class="btn btn-light" data-action="close-modal">취소</button><button class="btn btn-dark" type="submit">${l?'변경사항 저장':'라인 생성'}</button></div></form>`;
     return modalFrame(l?'라인 정보 수정':'새 라인 생성','등록된 성충으로 일반·Wild 라인을 관리합니다.',body);
   }

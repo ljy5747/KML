@@ -124,3 +124,7 @@ node tests/specimen-labels.cjs
 ## 도움말과 화면 설명
 
 `src/pages/help.js`는 화면별 사용 설명을 모은 도움말이며 왼쪽 메뉴 맨 아래에서 열 수 있습니다. 페이지·입력창 제목 아래 일반 안내와 반복 설명은 출력하지 않고, 개체 메모·상태·입력 오류 등 실제 기록과 필수 안내는 유지합니다. 라인의 파일 기능은 기존 라인의 수정 창 안으로 옮겼으며 Excel 업로드는 준비 중으로 비활성화합니다. 도움말 스타일은 `src/styles/help.css`에서 관리합니다.
+
+## Excel 가져오기
+
+`src/features/excel-import.js`와 `assets/excel-worker.js`가 파일 읽기·검증·미리보기·저장을 담당합니다. 성충·유충 양식은 `assets/templates/`, 읽기 전용 파서는 `assets/vendor/`에 두고 파일 선택 시에만 불러옵니다. 데이터 보호·설치·검증은 [EXCEL-IMPORT.md](EXCEL-IMPORT.md)를 참고합니다.

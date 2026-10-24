@@ -22,6 +22,7 @@
     "src/data/export.js",
     "src/features/larva-editor.js",
     "src/features/notifications.js",
+    "src/features/excel-import.js",
     "src/events/actions.js",
     "src/events/input-photos.js",
     "src/events/forms.js",
@@ -38,6 +39,7 @@
     "src/styles/year-picker.css",
     "src/styles/specimen-labels.css",
     "src/styles/notifications.css",
-    "src/styles/help.css"
+    "src/styles/help.css",
+    "src/styles/excel-import.css"
   ]
 }

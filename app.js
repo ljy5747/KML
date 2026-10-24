@@ -196,7 +196,7 @@ function breederPage(id){
  ['성충 등록 · 계통도','<p>성충 관리에서 관리번호, 혈통, 누대수, 성별, 체장, 우화일, 브리더·보유자, 부모, 입수 경로와 상태를 등록합니다. 관리번호는 중복할 수 없습니다. 신규 성충은 내 보유 목록에 등록됩니다.</p><p>사진이 없으면 성별에 맞는 기본 이미지가 표시됩니다. 사망한 성충은 기록에 줄을 긋고 사망으로 표시합니다. 계통도는 조부모까지 표시하며, 성별 기호 색상과 브리더 사진으로 구분합니다.</p><p>연도 입력은 당해 연도 앞뒤 5년을 선택할 수 있고 ▲·▼로 한 해씩 바꿀 수 있습니다. 기존 기록이 범위 밖이면 해당 연도를 보존합니다.</p>'],
  ['라인 · 유충 기록','<p>일반 라인은 부·모 성충이 필요합니다. Wild를 체크하면 암컷만으로 라인을 만들 수 있습니다. 누대수는 부모의 혈통·누대수를 기준으로 자동 계산하거나 직접 입력할 수 있습니다.</p><p>라인 유충 리스트는 병별 날짜, 먹이원, 용량과 무게를 가로로 표시합니다. 번호를 누르면 유충 상세로 이동하며, 기록 수정에서 병 추가·제거와 용화·우화 정보를 편집합니다. 무게 0과 빈 값은 구분됩니다.</p><p>유충의 사망은 ★와 줄긋기로 표시합니다. 수정은 본인 라인 또는 관리자만 할 수 있습니다. 삭제는 라인·성충의 수정 창에서 진행하며, 라인을 삭제하면 소속 유충 기록도 삭제되므로 확인이 필요합니다.</p>'],
  ['BeetleLog 가져오기 · 동기화','<p>같은 Google 계정으로 저장한 왕사슴벌레 성충·라인을 선택하여 가져올 수 있습니다. 라인을 선택하면 부모 성충과 유충·병별 기록도 함께 가져옵니다. 이미 가져온 라인은 누락된 유충만 추가합니다.</p><p>연결된 성충·라인·유충 기록은 KML과 BeetleLog에서 수정하면 서로 반영됩니다. 라벨 전용 수정은 사육 기록을 변경하지 않습니다. 다른 앱에서 같은 항목을 동시에 수정하면 저장을 중단하고 최신 내용을 확인하도록 안내합니다.</p><p>활성 화면은 약 8초마다 최신 기록을 확인합니다. 편집 중에는 입력을 보호하며, 네트워크가 없으면 서버 반영이 완료되지 않습니다. 새 기능 배포 후에는 앱을 새로고침해 주세요.</p>'],
- ['CSV 내보내기 · Excel','<p>개인 라인 상세의 <strong>라인 수정</strong> 창 안에서 <strong>CSV 내보내기</strong>를 사용할 수 있습니다. 저장된 유충·병별 기록을 파일로 내려받습니다. 수정 창에서 아직 저장하지 않은 내용은 파일에 포함되지 않습니다.</p><p><strong>Excel 업로드는 준비 중</strong>입니다. 라인 수정 창의 버튼도 현재 비활성화되어 있으며 실제 업로드가 실행되지 않습니다.</p>'],
+ ['CSV · Excel 가져오기','<p>내 라인 관리와 성충 관리 상단의 <strong>Excel 가져오기</strong>에서 파일을 넣습니다. 기존 라인의 수정 창에서도 유충 파일을 넣을 수 있습니다. 각 창의 양식 다운로드로 성충·유충 전용 XLSX를 받을 수 있습니다.</p><p>양식의 성충 또는 유충 시트에 입력하세요. 예시·안내 시트는 가져오지 않습니다. 유충은 라인을 먼저 만들고 라인명을 입력하거나 대상 라인을 선택합니다. XLSX·XLS·UTF-8 CSV를 지원하며 한 번에 최대 500개체·5MB입니다.</p><p>같은 관리번호는 기본적으로 건너뜁니다. 수정하려면 기존 개체도 수정을 체크하고 미리보기를 확인하세요. 빈칸은 기존 값 유지, [비우기]는 선택 항목 삭제입니다. 번호·보유자 변경은 개체 수정·성충 보내기를 이용합니다. 수식은 값으로 붙여넣어 주세요.</p><p>오류가 있으면 저장하지 않으며, 저장 중 충돌이 나도 파일 일부만 반영하지 않습니다. 기존 사진과 입력하지 않은 병·추가 정보는 유지됩니다. 신규 기록은 KML에 등록되고 기존 BeetleLog 연결 기록의 수정은 원본에도 반영됩니다.</p><p>라인 수정의 CSV 내보내기는 저장된 유충 기록을 내려받습니다. 현재 입력 중인 라인 수정 내용은 포함하지 않습니다. 이 CSV도 다시 가져올 수 있습니다.</p>'],
  ['라벨 · 이미지 저장','<p>성충·유충 상세는 라벨을 먼저 표시합니다. 라벨·계통도 버튼으로 같은 영역을 전환합니다. 사육 기록에서 확인되는 값만 라벨에 채우며, 원본 라벨 형식에 맞춰 일반 병은 1~5병까지 표시합니다. 전체 사육 기록은 상세 표에서 확인할 수 있습니다.</p><p>라벨 내용 수정은 라벨 전용이며 개체의 원본 기록을 변경하지 않습니다. 수정 초안은 현재 접속 중에 유지되고 새로고침·로그아웃하면 사라집니다. 개체 기록으로 채우기를 누르면 원래 기록을 다시 적용합니다.</p><p>이미지 저장은 원본 크기 1444×1032 PNG를 만듭니다. 지원하는 모바일에서는 공유 메뉴를 사용합니다. 화면의 미리보기 크기는 저장 이미지 해상도에 영향을 주지 않습니다.</p>'],
  ['성충 보내기 · 알림 · 좋아요','<p>성충 상세에서 성충 보내기를 누르고 받을 KML 승인 회원을 선택합니다. 상대가 KML에 로그인해 프로필을 만들어야 회원 목록에 표시됩니다.</p><p>수락 전에는 발신자가 계속 보유합니다. 상대가 알림에서 수락하면 보유 목록이 이동하고 관리번호·브리더·계통은 유지됩니다. 받는 회원은 거절, 보낸 회원은 수락 전 취소할 수 있습니다. 같은 성충에 대기 요청을 중복해서 만들 수 없습니다.</p><p>상단 종에서 받은 알림을 확인하고 읽음 처리합니다. 읽은 알림도 이력에 남으며, 전체 알림에서 이전 기록과 보낸 성충을 볼 수 있습니다. 댓글은 성충 보유자·브리더에게, 좋아요는 댓글 작성자에게 알립니다. 본인 행동과 반복 재좋아요 알림은 제외합니다.</p>'],
  ['프로필 · 계정','<p>프로필에서 닉네임·사진·소개를 바꿀 수 있습니다. 닉네임을 바꿔도 성충의 브리더·보유자 연결은 유지됩니다. JPG·PNG·WEBP 사진을 사용할 수 있으며, 프로필 사진은 256px 정사각형으로 저장됩니다.</p><p>프로필 사진을 바꾼 후 저장을 눌러 적용합니다. Google 로그인과 KML 승인이 모두 필요하며, 다른 사람의 기록은 정해진 권한 범위에서만 수정할 수 있습니다.</p>']
@@ -480,7 +480,7 @@ document.addEventListener('keydown',event=>{
   const button=event.target.closest?.('[data-action="detail-specimen-view"]');if(!button||!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;
   event.preventDefault();const view=event.key==='Home'?'label':event.key==='End'?'tree':detailLabelState.view==='label'?'tree':'label';switchSpecimenView(view);document.querySelector('[data-action="detail-specimen-view"][data-view="'+view+'"]').focus();
 });
-function adultsPage(){const years=[...new Set(db.adults.map(x=>String(x.emerged||'').slice(0,4)).filter(Boolean))].sort().reverse();const mine=route().page!=='registry';return `${pageHead('SPECIMEN REGISTRY',mine?'내 성충 관리':'전체 성충 목록',mine?'내가 보유한 성충을 등록·검색·정렬합니다.':'다른 브리더의 성충과 혈통을 함께 조회합니다.',mine?button('성충 등록','new-adult','btn-dark','plus')+button('BeetleLog 가져오기','beetle-import','btn-light','download').replace('data-action="beetle-import"','data-action="beetle-import" data-type="adults"'):'')}<div class="data-tools"><label class="searchbox">${icon('search')}<input id="adult-search" value="${attr(ui.search)}" placeholder="관리번호 · 혈통 · 브리더 검색" autocomplete="off" /></label><select id="sex-filter" class="filter-select" aria-label="성별">${[['all','전체 성별'],['M','수컷 ♂'],['F','암컷 ♀']].map(([v,t])=>`<option value="${v}" ${ui.sex===v?'selected':''}>${t}</option>`).join('')}</select><select id="year-filter" class="filter-select" aria-label="우화 연도"><option value="all">전체 연도</option>${years.map(y=>`<option ${ui.year===y?'selected':''}>${y}</option>`).join('')}</select><select id="status-filter" class="filter-select" aria-label="상태">${[['all','전체 상태'],['보유','보유'],['분양','분양'],['사망','사망']].map(([v,t])=>`<option value="${v}" ${ui.status===v?'selected':''}>${t}</option>`).join('')}</select><select id="sort-filter" class="filter-select" aria-label="정렬">${[['code','관리번호순'],['size-desc','체장 큰순'],['size-asc','체장 작은순'],['date-desc','최근 우화순']].map(([v,t])=>`<option value="${v}" ${ui.sort===v?'selected':''}>${t}</option>`).join('')}</select></div><section class="panel"><div class="result-meta"><strong id="adult-count">검색 결과 ${filteredAdults().length}개체</strong></div><div id="adult-table">${adultsTable(filteredAdults())}</div></section>`;}
+function adultsPage(){const years=[...new Set(db.adults.map(x=>String(x.emerged||'').slice(0,4)).filter(Boolean))].sort().reverse();const mine=route().page!=='registry';return `${pageHead('SPECIMEN REGISTRY',mine?'내 성충 관리':'전체 성충 목록',mine?'내가 보유한 성충을 등록·검색·정렬합니다.':'다른 브리더의 성충과 혈통을 함께 조회합니다.',mine?button('성충 등록','new-adult','btn-dark','plus')+button('Excel 가져오기','excel-import','btn-light','upload').replace('data-action="excel-import"','data-action="excel-import" data-kind="adults"')+button('BeetleLog 가져오기','beetle-import','btn-light','download').replace('data-action="beetle-import"','data-action="beetle-import" data-type="adults"'):'')}<div class="data-tools"><label class="searchbox">${icon('search')}<input id="adult-search" value="${attr(ui.search)}" placeholder="관리번호 · 혈통 · 브리더 검색" autocomplete="off" /></label><select id="sex-filter" class="filter-select" aria-label="성별">${[['all','전체 성별'],['M','수컷 ♂'],['F','암컷 ♀']].map(([v,t])=>`<option value="${v}" ${ui.sex===v?'selected':''}>${t}</option>`).join('')}</select><select id="year-filter" class="filter-select" aria-label="우화 연도"><option value="all">전체 연도</option>${years.map(y=>`<option ${ui.year===y?'selected':''}>${y}</option>`).join('')}</select><select id="status-filter" class="filter-select" aria-label="상태">${[['all','전체 상태'],['보유','보유'],['분양','분양'],['사망','사망']].map(([v,t])=>`<option value="${v}" ${ui.status===v?'selected':''}>${t}</option>`).join('')}</select><select id="sort-filter" class="filter-select" aria-label="정렬">${[['code','관리번호순'],['size-desc','체장 큰순'],['size-asc','체장 작은순'],['date-desc','최근 우화순']].map(([v,t])=>`<option value="${v}" ${ui.sort===v?'selected':''}>${t}</option>`).join('')}</select></div><section class="panel"><div class="result-meta"><strong id="adult-count">검색 결과 ${filteredAdults().length}개체</strong></div><div id="adult-table">${adultsTable(filteredAdults())}</div></section>`;}
   function updateAdultsTable(){const c=document.getElementById('adult-count'),t=document.getElementById('adult-table');if(c)c.textContent=`검색 결과 ${filteredAdults().length}개체`;if(t)t.innerHTML=adultsTable(filteredAdults());}
     function pedigreeBreeder(id){return breederLink(id,'p-breeder');}
   function pedCell(id,sexExpected){
@@ -501,7 +501,7 @@ function adultsPage(){const years=[...new Set(db.adults.map(x=>String(x.emerged|
   function adultDetail(id){const a=adult(id);if(!a)return `${pageHead('NOT FOUND','개체를 찾을 수 없습니다.','삭제되거나 등록되지 않은 개체입니다.')}<button class="btn btn-light" data-nav="adults">성충 목록</button>`;const user=current();const linked=db.lines.filter(l=>l.father===id||l.mother===id);const comments=db.comments.filter(x=>x.adultId===id);const transfers=db.transfers.filter(t=>t.adultId===id);return `<button class="backlink" data-nav="${mineAdult(a)?'adults':'registry'}">${icon('back')} ${mineAdult(a)?'내 성충':'전체 성충'} 목록으로</button>${pageHead('SPECIMEN DETAIL',deathName(a.code,a.status),`${a.lineage?esc(a.lineage)+' · ':''}${a.sex==='M'?'수컷':'암컷'} · ${fmtSize(a.size)}`,(mineAdult(a)||isAdmin()?button('개체 수정','edit-adult','btn-light','edit').replace('data-action="edit-adult"','data-action="edit-adult" data-id="'+attr(a.id)+'"'):''))}
   <div class="detail-layout"><section class="panel"><div class="detail-photo"><img src="${attr(specimenPhotoUrl(a))}" alt="${attr(a.code)} 성충 이미지" loading="lazy" /></div><div class="detail-card"><div class="detail-subhead">개체 기본 정보 ${status(a.status)}</div><div class="detail-facts ${isDead(a.status)?'dead-facts':''}">${[['관리번호',a.code],['성별',a.sex==='M'?'♂ 수컷':'♀ 암컷'],['체장',fmtSize(a.size)],['혈통',a.lineage||'—'],['누대수',a.generation||'—'],['우화일',a.emerged||'—'],['입수 경로',a.source||'—'],['브리더',memberName(a.breeder)],['현재 소유자',memberName(a.owner)]].map(([k,v])=>`<div class="fact"><small>${k}</small><strong>${k==='브리더'?tableMember(a.breeder):k==='현재 소유자'?tableMember(a.owner):esc(v)}</strong></div>`).join('')}</div>${a.note?`<p class="section-caption">${esc(a.note)}</p>`:''}<div data-adult-transfer-state="${attr(a.id)}"></div><div class="helper-row">${(mineAdult(a)||isAdmin()?button('성충 보내기','transfer','btn-light','users').replace('data-action="transfer"','data-action="transfer" data-id="'+attr(a.id)+'"'):'')}</div></div></section>${specimenTools('adult',a.id,pedigree(a))}</div>
   <div class="below-detail"><section class="panel section-pad"><div class="detail-subhead">${icon('layers')} 교배 라인 / 개체 이동 이력</div><div style="margin-top:18px">${linked.length?linked.map(l=>`<div class="small-detail-card" data-nav="line/${attr(l.id)}" role="button"><span><b>${esc(l.name)}</b><br><small>${esc(l.year)}년 · ${a.sex==='M'?'부 ♂':'모 ♀'}</small></span>${icon('chevron')}</div>`).join(''):'<div class="empty-mini">연결된 교배 라인이 없습니다.</div>'}</div><div class="detail-subhead" style="margin-top:18px">이동 이력</div>${transfers.length?transfers.map(t=>`<div class="small-detail-card" style="cursor:default"><span>${breederLink(t.from)} → ${breederLink(t.to)}</span><small>${esc(t.date)}</small></div>`).join(''):'<div class="empty-mini">이동 기록이 없습니다.</div>'}</section><section class="panel section-pad"><div class="detail-subhead">${icon('message')} 개체 댓글 <span class="tag">${comments.length}</span></div><div id="comments">${comments.length?comments.map(c=>{const m=member(c.memberId);return `<div class="comment" id="comment-${attr(c.id)}">${breederLink(c.memberId,'comment-breeder',avatar(m))}<div style="min-width:0;flex:1"><div class="comment-meta"><strong>${breederLink(c.memberId,'breeder-name',esc(memberName(c.memberId)))}</strong><span>${esc(c.date)}</span>${c.memberId===db.currentUser?`<button class="icon-btn" style="margin-left:auto" data-action="delete-comment" data-id="${attr(c.id)}" aria-label="댓글 삭제">${icon('close')}</button>`:''}</div><p>${esc(c.body)}</p><div data-comment-reaction="${attr(c.id)}">${commentReactionButton(c)}</div></div></div>`}).join(''):'<div class="empty-mini">아직 댓글이 없습니다.</div>'}</div><form class="comment-compose" id="comment-form" data-adult-id="${attr(a.id)}"><textarea name="body" placeholder="개체에 대한 의견이나 사육 메모를 입력하세요." maxlength="1500" required></textarea><button type="submit" class="btn btn-dark">${icon('message')} 댓글 등록</button></form></section></div>`;}
-  function linesPage(){const mine=route().page!=='archive';const ls=db.lines.filter(x=>!mine||mineLine(x)).filter(x=>[x.name,x.generation,x.year].some(s=>String(s||'').toLowerCase().includes(ui.lineSearch.toLowerCase())));return `${pageHead('BREEDING LINES',mine?'내 라인 관리':'전체 라인 목록',mine?'내가 생성한 교배 라인을 관리합니다.':'브리더들의 교배 라인을 검색하고 조회합니다.',mine?button('라인 생성','new-line','btn-dark','plus')+button('BeetleLog 가져오기','beetle-import','btn-light','download').replace('data-action="beetle-import"','data-action="beetle-import" data-type="lines"'):'')}<div class="data-tools"><label class="searchbox">${icon('search')}<input id="line-search" value="${attr(ui.lineSearch)}" placeholder="라인명 · 시즌 · 메모 검색" /></label></div><div class="line-cards" id="line-cards">${ls.length?ls.map(l=>lineCard(l)).join(''):'<div class="panel section-pad">등록된 라인이 없습니다.</div>'}</div>`;}
+  function linesPage(){const mine=route().page!=='archive';const ls=db.lines.filter(x=>!mine||mineLine(x)).filter(x=>[x.name,x.generation,x.year].some(s=>String(s||'').toLowerCase().includes(ui.lineSearch.toLowerCase())));return `${pageHead('BREEDING LINES',mine?'내 라인 관리':'전체 라인 목록',mine?'내가 생성한 교배 라인을 관리합니다.':'브리더들의 교배 라인을 검색하고 조회합니다.',mine?button('라인 생성','new-line','btn-dark','plus')+button('Excel 가져오기','excel-import','btn-light','upload').replace('data-action="excel-import"','data-action="excel-import" data-kind="larvae"')+button('BeetleLog 가져오기','beetle-import','btn-light','download').replace('data-action="beetle-import"','data-action="beetle-import" data-type="lines"'):'')}<div class="data-tools"><label class="searchbox">${icon('search')}<input id="line-search" value="${attr(ui.lineSearch)}" placeholder="라인명 · 시즌 · 메모 검색" /></label></div><div class="line-cards" id="line-cards">${ls.length?ls.map(l=>lineCard(l)).join(''):'<div class="panel section-pad">등록된 라인이 없습니다.</div>'}</div>`;}
   function lineCard(l){const f=adult(l.father),m=adult(l.mother);return `<article role="button" tabindex="0" class="line-card" data-nav="line/${attr(l.id)}"><div class="line-card-top"><span class="tag gold">${esc(l.year||'연도 미등록')}</span><span class="tag">${breederLink(l.createdBy)} · 유충 ${db.larvae.filter(v=>v.lineId===l.id).length}마리</span></div><strong>${esc(l.name)}${l.isWild?' <span class="tag gold">Wild</span>':''}</strong><p>${esc(l.generation||'누대수 미입력')} · ${esc(l.note||'')}</p><div class="pair"><span><em>♂ ${esc(f?.code||(l.isWild?'Wild':'미등록'))}</em><br>${fmtSize(f?.size)}</span><span><em>♀ ${esc(m?.code||'미등록')}</em><br>${fmtSize(m?.size)}</span></div></article>`;}
   function lineDetail(id){const l=byId(db.lines,id);if(!l)return pageHead('NOT FOUND','라인을 찾을 수 없습니다.','');const f=adult(l.father),m=adult(l.mother),list=db.larvae.filter(v=>v.lineId===id),bottles=Array.from({length:Math.max(3,...list.map(v=>v.records.length))},(_,i)=>i);return `<button class="backlink" data-nav="${mineLine(l)?'lines':'archive'}">${icon('back')} ${mineLine(l)?'내 라인':'전체 라인'} 목록으로</button>${pageHead('LINE DETAIL',esc(l.name),`${esc(l.year||'')} 시즌 · ${l.isWild?'Wild · ':''}${esc(l.generation||'누대수 미입력')} · 유충 ${list.length}개체`,mineLine(l)||isAdmin()?`<button class="btn btn-light" data-action="edit-line" data-id="${attr(l.id)}">${icon('edit')} 라인 수정</button>`:'')}<section class="panel"><div class="line-detail-head"><div><span class="eyebrow">BREEDING PAIR</span><h2>${esc(l.name)}</h2><p>${esc(l.note||'')}</p></div><span class="tag gold">${l.isWild?'Wild · ':''}${esc(l.year||'연도 미등록')} · ${esc(l.generation||'누대수 미입력')}</span></div><div class="section-pad" style="padding-top:0"><div class="info-tiles"><div class="info-tile"><small>부 ♂</small><strong>${f?`<button class="plain-link" data-nav="adult/${attr(f.id)}">${esc(f.code)} · ${fmtSize(f.size)}</button>`:(l.isWild?'Wild · 부 미상':'미등록')}</strong></div><div class="info-tile"><small>모 ♀</small><strong>${m?`<button class="plain-link" data-nav="adult/${attr(m.id)}">${esc(m.code)} · ${fmtSize(m.size)}</button>`:'미등록'}</strong></div><div class="info-tile"><small>기록 개체</small><strong>${list.length}마리</strong></div></div></div></section><section class="panel" style="margin-top:19px"><div class="panel-head"><div><div class="panel-title">라인 유충 리스트</div></div></div><div class="datatable-wrap"><table class="datatable"><thead><tr><th>번호</th><th>성별</th><th>상태</th>${bottles.map(i=>`<th>${i+1}병</th>`).join('')}<th>우화일</th><th>체장</th>${canEditLarvaLine(l)?'<th>수정</th>':''}</tr></thead><tbody>${list.length?list.map(v=>`<tr class="${isDead(v.sourceData?.status)?'dead-record':''}"><td><button type="button" class="plain-link id-link" data-nav="larva/${attr(v.id)}">${esc(v.number)}</button></td><td>${sex(v.sex)}</td><td class="state-cell">${status(v.sourceData?.status||'—',true)}</td>${bottles.map(i=>`<td class="bottle-cell">${v.records[i]?`<span>${esc(v.records[i][0]||'—')}</span><br><span>${esc(v.records[i][1]||'—')}</span><br><span>${v.records[i][2]!==''&&v.records[i][2]!=null?esc(v.records[i][2])+' cc':'—'}</span><br><span>${v.records[i][3]!==''&&v.records[i][3]!=null?esc(v.records[i][3])+' g':'—'}</span>`:'—'}</td>`).join('')}<td>${esc(v.emerged||'—')}</td><td>${fmtSize(v.size)}</td>${canEditLarvaLine(l)?`<td><button class="btn btn-light btn-sm" data-action="edit-larva" data-id="${attr(v.id)}">${icon('edit')} 기록 수정</button></td>`:''}</tr>`).join(''):'<tr><td colspan="${bottles.length+5+(canEditLarvaLine(l)?1:0)}" class="empty-table">등록된 유충이 없습니다.</td></tr>'}</tbody></table></div></section>`;}
   function larvaPedigree(v,line){
@@ -701,7 +701,7 @@ function adultModal(id){const a=adult(id),t=a||{code:'',lineage:'',generation:''
   function lineModal(id){
     const l=byId(db.lines,id),wild=!!l?.isWild;
     const suggested=suggestLineGeneration(adult(l?.father),adult(l?.mother),wild);
-    const body=`<form id="line-form"><input type="hidden" name="id" value="${attr(l?.id||'')}"/><div class="modal-content"><div class="form-grid">
+    const body=`<form id="line-form"><input type="hidden" name="id" value="${attr(l?.id||'')}"/><input type="hidden" name="version" value="${attr(l?.updatedAt||'')}"/><div class="modal-content"><div class="form-grid">
       <div class="field"><label>라인명 *</label><input name="name" required maxlength="80" value="${attr(l?.name||'')}" placeholder="예: YG26-A"/></div>
       <div class="field"><label>시즌 (연도)</label>${yearPicker({name:"year",value:l?.year,label:"시즌 연도"})}</div>
       <div class="field full wild-line-field"><label class="wild-line-toggle"><input type="checkbox" name="isWild" ${wild?'checked':''}/><span>Wild</span></label></div>
@@ -709,7 +709,7 @@ function adultModal(id){const a=adult(id),t=a||{code:'',lineage:'',generation:''
       <div class="field"><label>모 ♀ *</label><select name="mother" required>${opt(db.adults.filter(x=>x.sex==='F'),l?.mother||'','암컷 개체 선택')}</select></div>
       <div class="field full"><label>누대수</label><div class="line-generation-controls"><input name="generation" maxlength="30" value="${attr(l?.generation||suggested)}" data-manual="${l?.generation?'true':'false'}" placeholder="예: WF1, F3, CBF1"/><button type="button" class="btn btn-light btn-sm" data-action="line-generation-auto">자동 계산</button></div><small class="field-hint" data-line-generation-hint>${suggested?'자동 계산값: '+esc(suggested)+' · 직접 수정할 수 있습니다.':'부모의 혈통·누대수를 확인하거나 직접 입력하세요.'}</small></div>
       <div class="field full"><label>메모</label><textarea name="note" maxlength="700" placeholder="산란 세팅, 교배 이력 등">${esc(l?.note||'')}</textarea></div>
-      </div>${l?`<div class="line-file-tools"><button type="button" class="btn btn-light btn-sm" data-action="download-line" data-id="${attr(l.id)}">${icon('download')} CSV 내보내기</button><button type="button" class="btn btn-light btn-sm" data-action="excel-not-ready" disabled title="현재 준비 중입니다">${icon('upload')} Excel 업로드 (준비 중)</button></div>`:''}</div>
+      </div>${l?`<div class="line-file-tools"><button type="button" class="btn btn-light btn-sm" data-action="download-line" data-id="${attr(l.id)}">${icon('download')} CSV 내보내기</button><button type="button" class="btn btn-light btn-sm" data-action="excel-import" data-kind="larvae" data-line-id="${attr(l.id)}">${icon('upload')} Excel 가져오기</button></div>`:''}</div>
       <div class="modal-actions">${l?`<button type="button" class="btn btn-red delete-record" data-action="delete-line" data-id="${attr(l.id)}">삭제</button>`:''}<button type="button" class="btn btn-light" data-action="close-modal">취소</button><button class="btn btn-dark" type="submit">${l?'변경사항 저장':'라인 생성'}</button></div></form>`;
     return modalFrame(l?'라인 정보 수정':'새 라인 생성','등록된 성충으로 일반·Wild 라인을 관리합니다.',body);
   }
@@ -759,7 +759,7 @@ function adultModal(id){const a=adult(id),t=a||{code:'',lineage:'',generation:''
     }
     const modalKey=ui.modal?ui.modal.kind+':'+(ui.modal.id||''):'';
     const scrollTop=modalKey===lastModalKey?(root.querySelector('.modal-content')?.scrollTop||0):0;
-    root.innerHTML=ui.modal?.kind==='larva'?larvaModal(ui.modal.id):ui.modal?.kind==='adult'?adultModal(ui.modal.id):ui.modal?.kind==='line'?lineModal(ui.modal.id):ui.modal?.kind==='transfer'?transferModal(ui.modal.id):ui.modal?.kind==='beetle-import'?beetleImportModal():'';
+    root.innerHTML=ui.modal?.kind==='excel-import'?excelImportModal():ui.modal?.kind==='larva'?larvaModal(ui.modal.id):ui.modal?.kind==='adult'?adultModal(ui.modal.id):ui.modal?.kind==='line'?lineModal(ui.modal.id):ui.modal?.kind==='transfer'?transferModal(ui.modal.id):ui.modal?.kind==='beetle-import'?beetleImportModal():'';
     lastModalKey=modalKey;
     if(ui.modal){
       const content=root.querySelector('.modal-content');
@@ -780,7 +780,7 @@ function adultModal(id){const a=adult(id),t=a||{code:'',lineage:'',generation:''
   }
   function render(){if(!allowed){gate();return;}const r=route();if(r.page==='members'&&!isAdmin()){go('dashboard');return;}if(!['adult','larva'].includes(r.page))leaveSpecimenDetail();app.innerHTML=shell(r.page);document.getElementById('page-content').innerHTML= r.page==='help'?helpPage():r.page==='notifications'?notificationsPage():r.page==='dashboard'?dashboard():r.page==='mypage'?myPage():r.page==='adults'||r.page==='registry'?adultsPage():r.page==='breeder'?breederPage(r.id):r.page==='adult'?adultDetail(r.id):r.page==='larva'?larvaDetail(r.id):r.page==='lines'||r.page==='archive'?linesPage():r.page==='line'?lineDetail(r.id):r.page==='members'&&isAdmin()?membersPage():r.page==='profile'?profilePage():r.page==='data'?dataPage():dashboard();renderModal();mountSpecimenTools();mountSocial();document.title=`KML | ${({help:'도움말',notifications:'알림',breeder:'브리더 기록',dashboard:'국균연구소 DB',adults:'성충 관리',adult:'개체 상세',larva:'유충 상세',lines:'라인 관리',line:'라인 상세',members:'브리더 목록',mypage:'마이페이지',registry:'전체 성충',archive:'전체 라인',profile:'내 프로필',data:'데이터 관리'})[r.page]||'국균연구소'}`;}
   function openModal(kind,id=''){ui.modal={kind,id};ui.adultPhotoPreview=null;ui.adultPhotoReset=false;renderModal();}
-  function closeModal(){ui.modal=null;ui.adultPhotoPreview=null;ui.adultPhotoReset=false;renderModal();}
+  function closeModal(){if(ui.modal?.kind==='excel-import'&&closeExcelImport())return;ui.modal=null;ui.adultPhotoPreview=null;ui.adultPhotoReset=false;renderModal();}
   function downloadCSV(id){const l=byId(db.lines,id);if(!l)return;
     const list=db.larvae.filter(v=>v.lineId===id),bottles=Array.from({length:Math.max(3,...list.map(v=>v.records.length))},(_,i)=>i);
     const rows=[['라인명',l.name],[],['관리번호','성별','상태',...bottles.flatMap(i=>[`${i+1}병 날짜`,`${i+1}병 균사`,`${i+1}병 용량(cc)`,`${i+1}병 체중(g)`]),'우화일','체장(mm)'],
@@ -993,10 +993,173 @@ function mountSocial(){
 }
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&social.open){event.preventDefault();closeInbox(true);}});
 document.addEventListener('click',event=>{if(social.open&&!event.target.closest('#notification-root')&&!event.target.closest('#notification-bell'))closeInbox();});
+const EXCEL_ALIASES={
+ code:['관리번호','개체번호','코드','code','number'],lineage:['혈통','혈통명','lineage'],generation:['누대수','누대','세대','generation','gen'],sex:['성별','sex'],size:['체장','크기','성충크기','size','totallength'],emerged:['우화일','우화날짜','emerged','eclosiondate'],breeder:['브리더','브리더닉네임','breeder'],owner:['보유자','현재보유자','현재소유자','소유자','owner'],father:['부관리번호','부개체','부','수컷관리번호','father','sire'],mother:['모관리번호','모개체','모','암컷관리번호','mother','dam'],source:['입수경로','입수','source'],status:['상태','보유상태','status'],note:['메모','비고','note','memo'],line:['라인명','라인','라인코드','line','linename'],pupaDate:['용화일','용화날짜','pupadate'],prepupaDate:['전용일','전용날짜','prepupadate'],pupaWeight:['용화무게','용화체중','pupaweight'],species:['종','종명','species']
+};
+const excelNorm=value=>String(value??'').replace(/\([^)]*\)/g,'').replace(/[\s_*·.\-]/g,'').toLowerCase();
+const excelCell=value=>String(value??'').trim();
+const excelBlank=value=>['','—','-'].includes(excelCell(value));
+function excelHeader(value){
+ const key=excelNorm(value);for(const [field,aliases]of Object.entries(EXCEL_ALIASES))if(aliases.includes(key))return field;
+ const m=key.match(/^(\d+)(?:번)?(?:병|기록)(날짜|교체일|균사|먹이원|먹이|제품명|용량|체중|무게|두폭|먹이종류|종류|푸딩)(?:g|cc|mm)?$/);
+ if(m){const number=Number(m[1]);if(number<1||number>60)return '';const field=({날짜:'date',교체일:'date',균사:'feedBrand',먹이원:'feedBrand',먹이:'feedBrand',제품명:'feedBrand',용량:'bottleSize',체중:'weight',무게:'weight',두폭:'headWidth',먹이종류:'feedType',종류:'feedType',푸딩:'pudding'})[m[2]];return 'bottle.'+(number-1)+'.'+field;}
+ return '';
+}
+function excelDate(value,date1904=false){
+ if(excelCell(value)==='[비우기]')return null;
+ let text=excelCell(value);if(typeof value==='number'||/^\d{5}(?:\.\d+)?$/.test(text)){const serial=Number(value);if(!date1904&&serial===60)throw Error('잘못된 엑셀 날짜입니다.');text=new Date(Date.UTC(1899,11,30)+Math.floor(serial+(date1904?1462:serial<60?1:0))*86400000).toISOString().slice(0,10);}
+ const m=text.match(/^(\d{4})[.\/-](\d{1,2})[.\/-](\d{1,2})(?:\s.*)?$/);if(m)text=m[1]+'-'+m[2].padStart(2,'0')+'-'+m[3].padStart(2,'0');
+ if(!validLarvaDate(text))throw Error('날짜는 YYYY-MM-DD로 입력하세요.');return text;
+}
+function excelNumber(value,max=1000000){if(excelCell(value)==='[비우기]')return null;const number=Number(excelCell(value).replace(/,/g,'').replace(/\s*(mm|g|cc)$/i,''));if(!Number.isFinite(number)||number<0||number>max)throw Error('숫자 범위를 확인하세요.');return number;}
+function excelSex(value,larva=false){const text=excelCell(value);if(/^(m|수컷|수|♂|수컷\s*♂)$/i.test(text))return'M';if(/^(f|암컷|암|♀|암컷\s*♀)$/i.test(text))return'F';if(larva&&/^(u|미구분|미상|unknown)$/i.test(text))return'U';throw Error('성별은 수컷·암컷'+(larva?'·미구분':'')+'으로 입력하세요.');}
+function excelTable(parsed,kind){
+ const rows=parsed.rows||[];let defaultLine='',header=-1;
+ for(let i=0;i<Math.min(rows.length,10);i++){
+  const values=rows[i];if(values.slice(2).every(excelBlank)&&excelHeader(values[0])==='line'&&excelHeader(values[1])!=='code')defaultLine=excelCell(values[1]);
+  if(values.some(v=>excelHeader(v)==='code')){header=i;break;}
+ }
+ if(header<0)throw Error('관리번호 열을 찾을 수 없습니다. 양식의 첫 행을 유지해 주세요.');
+ const columns=rows[header].map(excelHeader),seen=new Set();for(const key of columns)if(key){if(seen.has(key))throw Error('같은 항목의 열이 중복되었습니다: '+key);seen.add(key);}
+ const data=[];for(let i=header+1;i<rows.length;i++){
+  const values=rows[i];if(values.every(excelBlank))continue;const row={row:i+1,values:Object.create(null)};
+  for(let j=0;j<values.length;j++)if(!excelBlank(values[j])){if(!columns[j])throw Error((i+1)+'행: 알 수 없는 열 '+excelCell(rows[header][j]||String(j+1)));row.values[columns[j]]=values[j];}
+  data.push(row);
+ }
+ if(!data.length)throw Error('입력된 데이터가 없습니다. 예시가 아닌 '+(kind==='adults'?'성충':'유충')+' 시트에 입력해 주세요.');if(data.length>500)throw Error('한 번에 최대 500개체를 넣을 수 있습니다.');
+ return{rows:data,date1904:!!parsed.date1904,defaultLine};
+}
+function excelPreviewValues(payload,prepared){
+ const labels={lineage:'혈통',generation:'누대수',sex:'성별',size:'체장',emerged:'우화일',breeder_id:'브리더',father_id:'부',mother_id:'모',source:'입수 경로',status:'상태',note:'메모',memo:'메모',pupaDate:'용화일',prepupaDate:'전용일',pupaWeight:'용화 무게',date:'날짜',feedBrand:'먹이원',feedType:'종류',bottleSize:'용량',weight:'무게',headWidth:'두폭',pudding:'푸딩'};
+ const value=(key,v)=>{if(v===null||v==='')return '(비우기)';if(key==='father_id'||key==='mother_id')return prepared.find(x=>x.id===v)?.code||adult(v)?.code||'연결 개체';if(key==='breeder_id')return memberName(v);if(key==='sex')return v==='M'?'수컷':v==='F'?'암컷':'미구분';return String(v).slice(0,160);};
+ const out=[];for(const [key,v]of Object.entries(payload))if(labels[key])out.push(labels[key]+': '+value(key,v));
+ for(const [key,v]of Object.entries(payload.source_patch||{})){if(key==='pupation'){for(const [field,text]of Object.entries(v))out.push(labels[field]+': '+value(field,text));}else out.push((labels[key]||key)+': '+value(key,v));}
+ for(const row of payload.bottle_changes||[])out.push((row.index+1)+'병 '+Object.entries(row.values).map(([key,v])=>(labels[key]||key)+' '+value(key,v)).join(' / '));
+ return out;
+}
+function excelPlan(table,kind,updateExisting=false,selectedLine=''){
+ const items=[],errors=[],preview=[],keys=new Set(),prepared=[],date1904=table.date1904;
+ const adultMap=new Map(db.adults.map(a=>[a.code.toLowerCase(),a]));
+ const clean=(value,max=3000)=>{const text=excelCell(value);if(text==='[비우기]')return '';if(text.length>max)throw Error('텍스트가 너무 깁니다.');return text;};
+ for(const row of table.rows){try{
+  const f=row.values,code=clean(f.code,80);if(!code||code==='[비우기]')throw Error('관리번호가 필요합니다.');
+  if(f.species&&!/왕사슴벌레|hopei|binodulosus|オオクワ/i.test(excelCell(f.species)))throw Error('왕사슴벌레 데이터만 넣을 수 있습니다.');
+  if(kind==='adults'){
+   const old=adultMap.get(code.toLowerCase());if(old&&!mineAdult(old))throw Error('다른 회원이 보유한 관리번호입니다.');
+   if(keys.has(code.toLowerCase()))throw Error('파일에 같은 관리번호가 중복되었습니다.');keys.add(code.toLowerCase());
+   const id=old?.id||uid();prepared.push({row,f,old,id,code});
+   if(!old)adultMap.set(code.toLowerCase(),{id,code,sex:f.sex?excelSex(f.sex):'',owner:db.currentUser});
+  }else{
+   const chosen=selectedLine?byId(db.lines,selectedLine):null,lineName=excelCell(f.line||table.defaultLine||chosen?.name),line=chosen||db.lines.find(l=>l.name.toLowerCase()===lineName.toLowerCase());
+   if(!line||!mineLine(line))throw Error('먼저 내 라인을 생성하고 정확한 라인명을 입력하세요.');if(lineName&&lineName.toLowerCase()!==line.name.toLowerCase())throw Error('선택한 라인과 파일의 라인명이 다릅니다.');
+   const key=line.id+':'+code;if(keys.has(key))throw Error('파일에 같은 라인·관리번호가 중복되었습니다.');keys.add(key);
+   const old=db.larvae.find(v=>v.lineId===line.id&&v.number===code);prepared.push({row,f,old,id:old?.id||uid(),code,line});
+  }
+ }catch(error){errors.push({row:row.row,message:error.message});}}
+ for(const entry of prepared){const {row,f,old,id,code,line}=entry;try{
+  if(old&&!updateExisting){preview.push({row:row.row,key:line?line.name+' / '+code:code,state:'기존 · 건너뜀',fields:''});continue;}
+  const payload={},fields=[];const put=(name,value,before,label)=>{if(!old||JSON.stringify(value)!==JSON.stringify(before)){payload[name]=value;fields.push(label);}};
+  if(kind==='adults'){
+   put('code',code,old?.code,'관리번호');
+   if(f.lineage!==undefined){const value=clean(f.lineage,120);if(!value)throw Error('혈통은 비울 수 없습니다.');put('lineage',lineageLabel(value),old?.lineage,'혈통');}else if(!old)throw Error('혈통이 필요합니다.');
+   if(f.sex!==undefined)put('sex',excelSex(f.sex),old?.sex,'성별');else if(!old)throw Error('성별이 필요합니다.');
+   if(f.generation!==undefined)put('generation',clean(f.generation,30).toUpperCase(),old?.generation||'','누대수');
+   if(f.size!==undefined)put('size',excelNumber(f.size,200),old?.size===''?null:Number(old?.size),'체장');
+   if(f.emerged!==undefined)put('emerged',excelDate(f.emerged,date1904),old?.emerged||null,'우화일');
+   if(f.note!==undefined)put('note',clean(f.note),old?.note||'','메모');
+   if(f.status!==undefined){const value=clean(f.status);if(!['보유','분양','사망'].includes(value))throw Error('보유 상태는 보유·분양·사망입니다.');put('status',value,old?.status,'상태');}
+   if(f.source!==undefined){const value=clean(f.source),normal=value==='자가'||value==='자체 우화'?'우화':value;if(!['우화','입양','채집'].includes(normal))throw Error('입수 경로는 우화·입양·채집입니다.');put('source',normal,old?.source,'입수 경로');}
+   if(f.owner!==undefined&&!['본인','나','me',memberName(db.currentUser)].includes(excelCell(f.owner)))throw Error('보유자 변경은 성충 보내기를 이용하세요.');
+   if(f.breeder!==undefined){const value=clean(f.breeder);let breeder=null;if(value){if(['본인','나','me'].includes(value))breeder=db.currentUser;else{const matches=db.members.filter(m=>m.nickname===value);if(matches.length!==1)throw Error('브리더 닉네임을 확인하세요. 같은 이름이 여러 명이면 개체 수정에서 선택해 주세요.');breeder=matches[0].id;}}put('breeder_id',breeder,old?.breeder||null,'브리더');}
+   for(const [field,sex]of [['father','M'],['mother','F']])if(f[field]!==undefined){const value=clean(f[field],80),parent=value?adultMap.get(value.toLowerCase()):null;if(value&&!parent)throw Error('부모 관리번호를 찾을 수 없습니다: '+value);const fileParent=prepared.find(x=>x.id===parent?.id);const gender=fileParent&&(!fileParent.old||updateExisting)&&fileParent.f.sex?excelSex(fileParent.f.sex):parent?.sex;if(parent&&gender!==sex)throw Error('부·모의 성별을 확인하세요.');if(parent?.id===id)throw Error('자신을 부모로 지정할 수 없습니다.');put(field+'_id',parent?.id||null,old?.[field]||null,field==='father'?'부':'모');}
+   if(!old){payload.source=payload.source||'우화';payload.status=payload.status||'보유';}
+  }else{
+   payload.line_id=line.id;put('number',code,old?.number,'관리번호');if(f.sex!==undefined)put('sex',excelSex(f.sex,true),old?.sex,'성별');else if(!old)payload.sex='U';
+   if(f.size!==undefined)put('size',excelNumber(f.size,200),old?.size===''?null:Number(old?.size),'체장');if(f.emerged!==undefined)put('emerged',excelDate(f.emerged,date1904),old?.emerged||null,'우화일');
+   const sourcePatch={};if(f.status!==undefined){let status=clean(f.status);if(status==='폐사')status='사망';if(!['유충','사육중','용화','우화','분양','사망'].includes(status))throw Error('유충 상태를 확인하세요.');if(status!==old?.sourceData?.status)sourcePatch.status=status;}
+   if(f.note!==undefined){const value=clean(f.note,2000);if(value!==(old?.sourceData?.memo||''))sourcePatch.memo=value;}
+   for(const field of ['prepupaDate','pupaDate','pupaWeight'])if(f[field]!==undefined){const value=field==='pupaWeight'?excelNumber(f[field]):excelDate(f[field],date1904),text=value===null?'':String(value);if(text!==String(old?.sourceData?.pupation?.[field]??''))(sourcePatch.pupation??={})[field]=text;}
+   if(Object.keys(sourcePatch).length){payload.source_patch=sourcePatch;fields.push('상태·메모·용화');}
+   const oldBottles=old?larvaBottleRecords(old):[],changes=new Map();
+   for(const [field,raw]of Object.entries(f))if(field.startsWith('bottle.')){
+    const [,number,name]=field.split('.'),index=Number(number);let value;
+    if(name==='date'){value=excelDate(raw,date1904);if(!value)throw Error('병별 날짜는 비울 수 없습니다.');}
+    else if(name==='weight'||name==='headWidth'){const n=excelNumber(raw);value=n===null?'':String(n);}
+    else if(name==='pudding'){if(!/^(true|false|y|n|예|아니오|1|0)$/i.test(excelCell(raw)))throw Error('푸딩은 예·아니오로 입력하세요.');value=/^(true|y|예|1)$/i.test(excelCell(raw));}
+    else value=clean(raw,name==='bottleSize'?40:160);
+    if(JSON.stringify(value)!==JSON.stringify(oldBottles[index]?.[name]??'')){if(!changes.has(index))changes.set(index,{});changes.get(index)[name]=value;}
+   }
+   const bottleChanges=[...changes].sort(([a],[b])=>a-b).map(([index,values])=>({index,values}));let count=oldBottles.length;
+   for(const change of bottleChanges){if(change.index>count)throw Error('병 기록은 앞 번호부터 빈칸 없이 입력하세요.');if(!change.values.date&&!oldBottles[change.index]?.date)throw Error((change.index+1)+'병 날짜가 필요합니다.');if(change.index===count)count++;}
+   if(bottleChanges.length){payload.bottle_changes=bottleChanges;fields.push('병별 기록 '+bottleChanges.length+'건');}
+  }
+  const meaningful=Object.keys(payload).filter(key=>key!=='line_id');if(old&&!meaningful.length){preview.push({row:row.row,key:line?line.name+' / '+code:code,state:'변경 없음',fields:''});continue;}
+  if(old&&!old.updatedAt)throw Error('최신 버전을 확인할 수 없습니다. 목록을 새로고침하세요.');
+  items.push({kind:kind==='adults'?'adults':'larvae',id,version:old?.updatedAt||null,payload});preview.push({row:row.row,key:line?line.name+' / '+code:code,state:old?'수정':'신규',fields:fields.join(' · '),values:excelPreviewValues(payload,prepared)});
+ }catch(error){errors.push({row:row.row,message:error.message});}}
+ // Check the final adult graph before offering a save button; DB repeats this check atomically.
+ if(kind==='adults'&&!errors.length){const graph=new Map(db.adults.map(a=>[a.id,{father:a.father,mother:a.mother}]));for(const item of items){const before=graph.get(item.id)||{};graph.set(item.id,{father:Object.hasOwn(item.payload,'father_id')?item.payload.father_id:before.father,mother:Object.hasOwn(item.payload,'mother_id')?item.payload.mother_id:before.mother});}const active=new Set(),done=new Set();const walk=id=>{if(!id||done.has(id))return false;if(active.has(id))return true;active.add(id);const a=graph.get(id);if(a&&(walk(a.father)||walk(a.mother)))return true;active.delete(id);done.add(id);return false;};for(const item of items)if(walk(item.id)){errors.push({row:0,message:'부모·자손 관계가 순환합니다.'});break;}}
+ return{items,errors,preview,newCount:items.filter(x=>!x.version).length,updateCount:items.filter(x=>x.version).length};
+}
+function excelImportModal(){
+ const state=ui.excelImport;if(!state)return'';const adultKind=state.kind==='adults',plan=state.plan,locked=state.reading||state.saving;
+ const options=db.lines.filter(mineLine).map(l=>'<option value="'+attr(l.id)+'" '+(state.lineId===l.id?'selected':'')+'>'+esc(l.name)+'</option>').join('');
+ const body='<div class="modal-content"><div class="excel-import-tools"><a class="btn btn-light" href="assets/templates/KML_'+(adultKind?'adults':'larvae')+'_template.xlsx" download>'+icon('download')+'양식 다운로드</a><label class="excel-file-picker">파일 선택<input type="file" id="excel-import-file" accept=".xlsx,.xls,.csv" '+(locked?'disabled':'')+'></label></div>'+(!adultKind?'<label class="field excel-target"><span>대상 라인</span><select id="excel-import-line" '+(locked||state.parent?'disabled':'')+'><option value="">파일의 라인명으로 구분</option>'+options+'</select></label>':'')+'<label class="excel-update-toggle"><input type="checkbox" id="excel-import-updates" '+(state.updateExisting?'checked':'')+' '+(locked?'disabled':'')+'> 기존 개체도 수정</label><div class="excel-policy">빈칸은 기존 값 유지 · 선택 항목 삭제는 [비우기]</div><p class="excel-file-state" role="status">'+esc(state.reading?'파일을 읽는 중…':state.fileName||'')+'</p>'+(state.error?'<div class="excel-import-error" role="alert">'+esc(state.error)+'</div>':'')+(plan?'<div class="excel-counts"><span>신규 <b>'+plan.newCount+'</b></span><span>수정 <b>'+plan.updateCount+'</b></span><span>오류 <b>'+plan.errors.length+'</b></span></div>'+(plan.errors.length?'<ul class="excel-errors" role="alert">'+plan.errors.slice(0,100).map(e=>'<li>'+(e.row?e.row+'행: ':'')+esc(e.message)+'</li>').join('')+'</ul>':'')+'<div class="datatable-wrap excel-preview"><table class="datatable"><thead><tr><th>행</th><th>개체</th><th>처리</th><th>변경 항목</th></tr></thead><tbody>'+plan.preview.slice(0,500).map(x=>'<tr><td>'+x.row+'</td><td>'+esc(x.key)+'</td><td>'+esc(x.state)+'</td><td>'+esc(x.fields||'—')+(x.values?.length?'<details class="excel-row-values"><summary>변경값 보기</summary><ul>'+x.values.map(value=>'<li>'+esc(value)+'</li>').join('')+'</ul></details>':'')+'</td></tr>').join('')+'</tbody></table></div>':'')+'</div><div class="modal-actions"><button type="button" class="btn btn-light" data-action="close-modal" '+(state.saving?'disabled':'')+'>'+(state.parent?'라인 수정으로':'닫기')+'</button><button type="button" class="btn btn-dark" data-action="save-excel-import" '+(locked||!plan||plan.errors.length||!plan.items.length?'disabled':'')+'>'+(state.saving?'저장 중…':(plan?plan.items.length+'개체 저장':'저장'))+'</button></div>';
+ return modalFrame(adultKind?'성충 Excel 가져오기':'라인 유충 Excel 가져오기','',body);
+}
+function rebuildExcelPreview(){const state=ui.excelImport;if(!state?.table)return;state.error='';try{state.plan=excelPlan(state.table,state.kind,state.updateExisting,state.lineId);}catch(error){state.error=error.message;state.plan=null;}renderModal();}
+function openExcelImport(kind,lineId=''){
+ let parent=null;
+ if(ui.modal?.kind==='line'){
+  const form=document.getElementById('line-form');if(form)parent={id:ui.modal.id,values:Object.fromEntries(new FormData(form)),manual:form.querySelector('[name="generation"]')?.dataset.manual,scroll:document.querySelector('#modal-root .modal-content')?.scrollTop||0};
+ }
+ ui.excelImport={kind:kind==='adults'?'adults':'larvae',user:db.currentUser,lineId,parent,updateExisting:false,reading:false,saving:false,fileName:'',error:'',table:null,plan:null,worker:null,token:0};openModal('excel-import');
+}
+function closeExcelImport(){
+ const state=ui.excelImport;if(!state)return false;if(state.saving)return true;
+ state.worker?.terminate();state.token++;ui.excelImport=null;
+ if(state.parent){openModal('line',state.parent.id);const form=document.getElementById('line-form');if(form){for(const field of form.querySelectorAll('[name]')){if(field.type==='checkbox')field.checked=state.parent.values[field.name]==='on';else if(Object.hasOwn(state.parent.values,field.name))field.value=state.parent.values[field.name];}const gen=form.querySelector('[name="generation"]');if(gen)gen.dataset.manual=state.parent.manual||'false';const father=form.querySelector('[name="father"]');if(father)father.required=!form.querySelector('[name="isWild"]').checked;const label=form.querySelector('[data-line-father-label]');if(label)label.textContent=father?.required?'부 ♂ *':'부 ♂ (선택)';}const content=document.querySelector('#modal-root .modal-content');if(content)content.scrollTop=state.parent.scroll;return true;}
+ return false;
+}
+async function readExcelFile(file){
+ const state=ui.excelImport;if(!state||state.saving||!file)return;
+ state.worker?.terminate();const token=++state.token;state.error='';state.plan=null;state.table=null;state.fileName=file.name;
+ if(!/\.(xlsx|xls|csv)$/i.test(file.name)){state.error='XLSX·XLS·CSV 파일을 선택하세요.';renderModal();return;}
+ if(file.size>5*1024*1024){state.error='파일은 5MB 이하로 나누어 주세요.';renderModal();return;}
+ state.reading=true;renderModal();
+ try{
+  const buffer=await file.arrayBuffer();if(ui.excelImport!==state||state.token!==token||state.user!==db.currentUser)return;
+  const worker=new Worker('assets/excel-worker.js?v=20261024');state.worker=worker;
+  const parsed=await new Promise((resolve,reject)=>{const timeout=setTimeout(()=>{worker.terminate();reject(Error('파일 읽기 시간이 초과되었습니다. 데이터를 나누어 주세요.'));},30000);worker.onmessage=e=>{clearTimeout(timeout);e.data.error?reject(Error(e.data.error)):resolve(e.data);};worker.onerror=()=>{clearTimeout(timeout);reject(Error('엑셀 읽기 도구를 불러오지 못했습니다. 새로고침 후 다시 선택하세요.'));};worker.postMessage({buffer,kind:state.kind},[buffer]);});
+  worker.terminate();state.worker=null;
+  if(ui.excelImport!==state||state.token!==token||state.user!==db.currentUser)return;
+  state.table=excelTable(parsed,state.kind);state.reading=false;rebuildExcelPreview();
+ }catch(error){if(ui.excelImport===state&&state.token===token){state.worker?.terminate();state.worker=null;state.error=error.message;state.reading=false;renderModal();}}
+}
+async function saveExcelImport(){
+ const state=ui.excelImport;if(!state||state.saving||state.reading||!state.plan?.items.length||state.plan.errors.length)return;
+ if(state.user!==db.currentUser)return notify('로그인 계정이 변경됐습니다. 파일을 다시 선택하세요.');
+ state.saving=true;state.error='';renderModal();let stored=false;
+ try{
+  const {data,error}=await supa.rpc('kml_import_excel',{p_items:state.plan.items});if(error)throw error;stored=true;
+  if(state.user!==db.currentUser)return;
+  let refreshed=true;try{await loadRemote();}catch(error){refreshed=false;}
+  state.saving=false;const parent=state.parent;closeModal();if(!parent)render();else{const content=document.getElementById('page-content'),r=route();if(content&&r.page==='line')content.innerHTML=lineDetail(r.id);else if(content&&['lines','archive'].includes(r.page))content.innerHTML=linesPage();}
+  notify('Excel 저장 완료 · 신규 '+Number(data?.inserted||0)+'개체 · 수정 '+Number(data?.updated||0)+'개체'+(refreshed?'':' · 목록 새로고침이 필요합니다.'));
+ }catch(error){if(ui.excelImport===state){state.error=(stored?'저장은 완료되었습니다. 목록을 새로고침해 주세요.':'저장하지 않았습니다: '+(error.message||String(error)));state.saving=false;renderModal();}}
+}
+document.addEventListener('change',event=>{
+ const state=ui.excelImport;if(!state||state.saving)return;
+ if(event.target.id==='excel-import-file')readExcelFile(event.target.files?.[0]);
+ if(event.target.id==='excel-import-updates'){state.updateExisting=event.target.checked;rebuildExcelPreview();}
+ if(event.target.id==='excel-import-line'){state.lineId=event.target.value;rebuildExcelPreview();}
+});
 document.addEventListener('click',async event=>{
     const nav=event.target.closest('[data-nav]');if(nav){if(event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;event.preventDefault();go(nav.dataset.nav);return;}
     const a=event.target.closest('[data-action]');if(!a)return;
     const act=a.dataset.action;
+    if(act==='excel-import'){openExcelImport(a.dataset.kind,a.dataset.lineId||'');return;}
+    if(act==='save-excel-import'){await saveExcelImport();return;}
     if(['toggle-inbox','close-inbox','open-notice','read-notice','read-all-notices','older-notifications','like-comment','resolve-transfer'].includes(act)){
       try{
         if(act==='toggle-inbox'){social.open=!social.open;renderInboxPopover();if(social.open){document.getElementById('notification-popover-title')?.focus();await refreshSocial();}}
@@ -1093,7 +1256,7 @@ document.addEventListener('click',async event=>{
     if(act==='excel-not-ready')notify('엑셀 업로드는 다음 개발 단계에서 연결합니다. 현재는 미구현 기능입니다.');
     if(act==='download-line')downloadCSV(a.dataset.id);
     if(act==='google-login'){if(!supa)return;const redirectTo=location.origin+location.pathname;const {error:e}=await supa.auth.signInWithOAuth({provider:'google',options:{redirectTo}});if(e)notify('Google 로그인 오류: '+e.message);}
-    if(act==='sign-out'){resetSocial();clearDetailLabels();await supa?.auth.signOut();allowed=false;authUser=null;db={members:[],adults:[],lines:[],larvae:[],comments:[],transfers:[],currentUser:null};gate();}
+    if(act==='sign-out'){ui.excelImport?.worker?.terminate();ui.excelImport=null;resetSocial();clearDetailLabels();await supa?.auth.signOut();allowed=false;authUser=null;db={members:[],adults:[],lines:[],larvae:[],comments:[],transfers:[],currentUser:null};gate();}
   });  document.addEventListener('input',e=>{
     if(e.target.matches('#line-form [name="generation"]')){
       e.target.dataset.manual=e.target.value.trim()?'true':'false';return;
@@ -1176,7 +1339,7 @@ document.addEventListener('click',async event=>{
       save();closeModal();go('adult/'+next.id);render();notify(data.id?'성충 정보를 수정했습니다.':'성충을 등록했습니다.');
     }
     if(formId==='line-form'){
-      const name=String(data.name||'').trim();const wild=data.isWild==='on';if(!name||!data.mother||(!wild&&!data.father))return notify(wild?'라인명과 모 성충을 선택하세요.':'라인명과 부모 개체를 선택하세요.');if(db.lines.some(x=>x.name.toLowerCase()===name.toLowerCase()&&x.id!==data.id))return notify('이미 같은 라인명이 있습니다.');if(data.father===data.mother)return notify('부모 개체를 서로 다르게 선택하세요.');const old=data.id?byId(db.lines,data.id):null;if(data.id&&(!old||(!mineLine(old)&&!isAdmin())))return notify('본인이 만든 라인만 수정할 수 있습니다.');const l={...(old||{}),id:data.id||uid(),name,father:data.father||'',mother:data.mother,year:data.year,generation:String(data.generation||'').trim().toUpperCase(),isWild:wild,method:old?.method||'',note:data.note,createdBy:old?.createdBy||db.currentUser};try{const stored=await persist('kml_lines',l.id,lineRecord(l),Boolean(data.id));l.updatedAt=stored.updated_at;}catch(err){return notify('라인 저장 실패: '+(err.message||err));}if(data.id){const index=db.lines.findIndex(x=>x.id===l.id);if(index>=0)db.lines[index]=l;}else db.lines.push(l);save();closeModal();go('line/'+l.id);render();notify(data.id?'라인을 수정했습니다.':'라인을 생성했습니다.');
+      const name=String(data.name||'').trim();const wild=data.isWild==='on';if(!name||!data.mother||(!wild&&!data.father))return notify(wild?'라인명과 모 성충을 선택하세요.':'라인명과 부모 개체를 선택하세요.');if(db.lines.some(x=>x.name.toLowerCase()===name.toLowerCase()&&x.id!==data.id))return notify('이미 같은 라인명이 있습니다.');if(data.father===data.mother)return notify('부모 개체를 서로 다르게 선택하세요.');const old=data.id?byId(db.lines,data.id):null;if(data.id&&(!old||(!mineLine(old)&&!isAdmin())))return notify('본인이 만든 라인만 수정할 수 있습니다.');if(data.id&&data.version&&data.version!==old.updatedAt)return notify('라인이 다른 앱에서 변경됐습니다. 최신 내용을 확인한 뒤 다시 수정하세요.');const l={...(old||{}),id:data.id||uid(),name,father:data.father||'',mother:data.mother,year:data.year,generation:String(data.generation||'').trim().toUpperCase(),isWild:wild,method:old?.method||'',note:data.note,createdBy:old?.createdBy||db.currentUser};try{const stored=await persist('kml_lines',l.id,lineRecord(l),Boolean(data.id));l.updatedAt=stored.updated_at;}catch(err){return notify('라인 저장 실패: '+(err.message||err));}if(data.id){const index=db.lines.findIndex(x=>x.id===l.id);if(index>=0)db.lines[index]=l;}else db.lines.push(l);save();closeModal();go('line/'+l.id);render();notify(data.id?'라인을 수정했습니다.':'라인을 생성했습니다.');
     }
     if(formId==='transfer-form'){await submitTransfer(form);return;}
     if(formId==='profile-form'){

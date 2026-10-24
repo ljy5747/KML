@@ -42,7 +42,7 @@ let modalScrollY=null;
     }
     const modalKey=ui.modal?ui.modal.kind+':'+(ui.modal.id||''):'';
     const scrollTop=modalKey===lastModalKey?(root.querySelector('.modal-content')?.scrollTop||0):0;
-    root.innerHTML=ui.modal?.kind==='larva'?larvaModal(ui.modal.id):ui.modal?.kind==='adult'?adultModal(ui.modal.id):ui.modal?.kind==='line'?lineModal(ui.modal.id):ui.modal?.kind==='transfer'?transferModal(ui.modal.id):ui.modal?.kind==='beetle-import'?beetleImportModal():'';
+    root.innerHTML=ui.modal?.kind==='excel-import'?excelImportModal():ui.modal?.kind==='larva'?larvaModal(ui.modal.id):ui.modal?.kind==='adult'?adultModal(ui.modal.id):ui.modal?.kind==='line'?lineModal(ui.modal.id):ui.modal?.kind==='transfer'?transferModal(ui.modal.id):ui.modal?.kind==='beetle-import'?beetleImportModal():'';
     lastModalKey=modalKey;
     if(ui.modal){
       const content=root.querySelector('.modal-content');
@@ -63,5 +63,5 @@ let modalScrollY=null;
   }
   function render(){if(!allowed){gate();return;}const r=route();if(r.page==='members'&&!isAdmin()){go('dashboard');return;}if(!['adult','larva'].includes(r.page))leaveSpecimenDetail();app.innerHTML=shell(r.page);document.getElementById('page-content').innerHTML= r.page==='help'?helpPage():r.page==='notifications'?notificationsPage():r.page==='dashboard'?dashboard():r.page==='mypage'?myPage():r.page==='adults'||r.page==='registry'?adultsPage():r.page==='breeder'?breederPage(r.id):r.page==='adult'?adultDetail(r.id):r.page==='larva'?larvaDetail(r.id):r.page==='lines'||r.page==='archive'?linesPage():r.page==='line'?lineDetail(r.id):r.page==='members'&&isAdmin()?membersPage():r.page==='profile'?profilePage():r.page==='data'?dataPage():dashboard();renderModal();mountSpecimenTools();mountSocial();document.title=`KML | ${({help:'도움말',notifications:'알림',breeder:'브리더 기록',dashboard:'국균연구소 DB',adults:'성충 관리',adult:'개체 상세',larva:'유충 상세',lines:'라인 관리',line:'라인 상세',members:'브리더 목록',mypage:'마이페이지',registry:'전체 성충',archive:'전체 라인',profile:'내 프로필',data:'데이터 관리'})[r.page]||'국균연구소'}`;}
   function openModal(kind,id=''){ui.modal={kind,id};ui.adultPhotoPreview=null;ui.adultPhotoReset=false;renderModal();}
-  function closeModal(){ui.modal=null;ui.adultPhotoPreview=null;ui.adultPhotoReset=false;renderModal();}
+  function closeModal(){if(ui.modal?.kind==='excel-import'&&closeExcelImport())return;ui.modal=null;ui.adultPhotoPreview=null;ui.adultPhotoReset=false;renderModal();}
   

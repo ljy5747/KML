@@ -2,6 +2,8 @@ document.addEventListener('click',async event=>{
     const nav=event.target.closest('[data-nav]');if(nav){if(event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;event.preventDefault();go(nav.dataset.nav);return;}
     const a=event.target.closest('[data-action]');if(!a)return;
     const act=a.dataset.action;
+    if(act==='excel-import'){openExcelImport(a.dataset.kind,a.dataset.lineId||'');return;}
+    if(act==='save-excel-import'){await saveExcelImport();return;}
     if(['toggle-inbox','close-inbox','open-notice','read-notice','read-all-notices','older-notifications','like-comment','resolve-transfer'].includes(act)){
       try{
         if(act==='toggle-inbox'){social.open=!social.open;renderInboxPopover();if(social.open){document.getElementById('notification-popover-title')?.focus();await refreshSocial();}}
@@ -98,5 +100,5 @@ document.addEventListener('click',async event=>{
     if(act==='excel-not-ready')notify('엑셀 업로드는 다음 개발 단계에서 연결합니다. 현재는 미구현 기능입니다.');
     if(act==='download-line')downloadCSV(a.dataset.id);
     if(act==='google-login'){if(!supa)return;const redirectTo=location.origin+location.pathname;const {error:e}=await supa.auth.signInWithOAuth({provider:'google',options:{redirectTo}});if(e)notify('Google 로그인 오류: '+e.message);}
-    if(act==='sign-out'){resetSocial();clearDetailLabels();await supa?.auth.signOut();allowed=false;authUser=null;db={members:[],adults:[],lines:[],larvae:[],comments:[],transfers:[],currentUser:null};gate();}
+    if(act==='sign-out'){ui.excelImport?.worker?.terminate();ui.excelImport=null;resetSocial();clearDetailLabels();await supa?.auth.signOut();allowed=false;authUser=null;db={members:[],adults:[],lines:[],larvae:[],comments:[],transfers:[],currentUser:null};gate();}
   });
