@@ -18,10 +18,7 @@
     if(formId==='line-form'){
       const name=String(data.name||'').trim();const wild=data.isWild==='on';if(!name||!data.mother||(!wild&&!data.father))return notify(wild?'라인명과 모 성충을 선택하세요.':'라인명과 부모 개체를 선택하세요.');if(db.lines.some(x=>x.name.toLowerCase()===name.toLowerCase()&&x.id!==data.id))return notify('이미 같은 라인명이 있습니다.');if(data.father===data.mother)return notify('부모 개체를 서로 다르게 선택하세요.');const old=data.id?byId(db.lines,data.id):null;if(data.id&&(!old||(!mineLine(old)&&!isAdmin())))return notify('본인이 만든 라인만 수정할 수 있습니다.');const l={...(old||{}),id:data.id||uid(),name,father:data.father||'',mother:data.mother,year:data.year,generation:String(data.generation||'').trim().toUpperCase(),isWild:wild,method:old?.method||'',note:data.note,createdBy:old?.createdBy||db.currentUser};try{const stored=await persist('kml_lines',l.id,lineRecord(l),Boolean(data.id));l.updatedAt=stored.updated_at;}catch(err){return notify('라인 저장 실패: '+(err.message||err));}if(data.id){const index=db.lines.findIndex(x=>x.id===l.id);if(index>=0)db.lines[index]=l;}else db.lines.push(l);save();closeModal();go('line/'+l.id);render();notify(data.id?'라인을 수정했습니다.':'라인을 생성했습니다.');
     }
-    if(formId==='transfer-form'){
-       if(data.id){const x=adult(data.id);if(!x||(!mineAdult(x)&&!isAdmin()))return notify('본인 소유 개체만 이동할 수 있습니다.');}
-      const a=adult(data.id);if(!a||!data.to||data.to===a.owner)return notify('변경할 소유자를 선택하세요.');const {error:te}=await supa.rpc('kml_transfer_adult',{p_adult_id:a.id,p_to_user:data.to,p_date:data.date,p_note:data.note||''});if(te)return notify('소유자 변경 실패: '+te.message); db.transfers.push({id:uid(),adultId:a.id,from:a.owner,to:data.to,date:data.date,note:data.note});a.owner=data.to;save();closeModal();render();notify('소유자 변경 이력을 저장했습니다.');
-    }
+    if(formId==='transfer-form'){await submitTransfer(form);return;}
     if(formId==='profile-form'){
       const me=current();const nickname=String(data.nickname||'').trim();if(!nickname)return notify('닉네임을 입력하세요.');const intro=String(data.intro||'');let avatar_url=me.avatar_url||'';
       try{if(ui.photoReset)avatar_url='';else if(ui.photoPreview)avatar_url=ui.photoPreview;else if(data.photo?.size)avatar_url=await photoToJpeg(data.photo);}catch(err){return notify('사진 처리 실패: '+(err.message||err));}

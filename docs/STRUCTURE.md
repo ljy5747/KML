@@ -116,3 +116,7 @@ node tests/specimen-labels.cjs
 ## 브리더 탐색과 유충 편집
 
 `src/pages/breeder.js`는 브리더 프로필과 성충·라인 목록, `src/features/larva-editor.js`는 원본 메타데이터를 유지하는 유충 편집을 담당합니다. 동기화 구조와 검증은 [BREEDERS-SYNC.md](BREEDERS-SYNC.md)를 참고합니다.
+
+## 알림과 성충 보내기
+
+`src/features/notifications.js`와 `src/styles/notifications.css`는 앱 내 알림함, 수신 확인을 거치는 성충 보내기, 댓글 좋아요를 담당합니다. 설치와 동작·권한·검증은 [NOTIFICATIONS.md](NOTIFICATIONS.md)를 참고합니다.

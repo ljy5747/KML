@@ -33,6 +33,7 @@ jobs:
           node tests/pedigree-ui.cjs
           node tests/specimen-labels.cjs
           node tests/breeders-larva-editor.cjs
+          node tests/notifications-ui.cjs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

@@ -2,6 +2,19 @@ document.addEventListener('click',async event=>{
     const nav=event.target.closest('[data-nav]');if(nav){if(event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;event.preventDefault();go(nav.dataset.nav);return;}
     const a=event.target.closest('[data-action]');if(!a)return;
     const act=a.dataset.action;
+    if(['toggle-inbox','close-inbox','open-notice','read-notice','read-all-notices','older-notifications','like-comment','resolve-transfer'].includes(act)){
+      try{
+        if(act==='toggle-inbox'){social.open=!social.open;renderInboxPopover();if(social.open){document.getElementById('notification-popover-title')?.focus();await refreshSocial();}}
+        if(act==='close-inbox')closeInbox(true);
+        if(act==='open-notice')await openNotice(a.dataset.id);
+        if(act==='read-notice')await markNoticesRead(a.dataset.id);
+        if(act==='read-all-notices')await markNoticesRead();
+        if(act==='older-notifications')await refreshSocial(true);
+        if(act==='like-comment')await toggleCommentLike(a.dataset.id);
+        if(act==='resolve-transfer')await resolveTransfer(a.dataset.id,a.dataset.choice);
+      }catch(error){notify('처리 실패: '+(error.message||String(error)));}
+      return;
+    }
     if(act==='edit-larva'){const v=byId(db.larvae,a.dataset.id);if(v&&canEditLarvaLine(byId(db.lines,v.lineId)))openModal('larva',v.id);else notify('본인 라인의 유충만 수정할 수 있습니다.');return;}
     if(act==='add-larva-record'){addLarvaEditorRow();return;}
     if(act==='remove-larva-record'){if(confirm('이 병 기록을 제거할까요? 저장하면 반영됩니다.'))a.closest('[data-larva-record]').remove();return;}
@@ -60,7 +73,7 @@ document.addEventListener('click',async event=>{
     if(act==='line-generation-auto'){updateLineGeneration(true);return;}
     if(act==='new-line')openModal('line');
     if(act==='edit-line'){const l=byId(db.lines,a.dataset.id||route().id);if(l&&(mineLine(l)||isAdmin()))openModal('line',l.id);else notify('본인이 만든 라인만 수정할 수 있습니다.');}
-    if(act==='transfer'){const x=adult(a.dataset.id);if(x&&(mineAdult(x)||isAdmin()))openModal('transfer',x.id);else notify('본인 소유 개체만 이동할 수 있습니다.');}
+    if(act==='transfer'){await openTransferModal(a.dataset.id);return;}
     if(act==='close-modal')closeModal();
     if(act==='modal-backdrop'&&event.target===a)closeModal();
     if(act==='delete-comment'){if(confirm('이 댓글을 삭제할까요?')){const {error:de}=await supa.from('kml_comments').delete().eq('id',a.dataset.id);if(de)return notify('댓글 삭제 실패: '+de.message);db.comments=db.comments.filter(c=>c.id!==a.dataset.id);render();notify('댓글을 삭제했습니다.');}}
@@ -85,5 +98,5 @@ document.addEventListener('click',async event=>{
     if(act==='excel-not-ready')notify('엑셀 업로드는 다음 개발 단계에서 연결합니다. 현재는 미구현 기능입니다.');
     if(act==='download-line')downloadCSV(a.dataset.id);
     if(act==='google-login'){if(!supa)return;const redirectTo=location.origin+location.pathname;const {error:e}=await supa.auth.signInWithOAuth({provider:'google',options:{redirectTo}});if(e)notify('Google 로그인 오류: '+e.message);}
-    if(act==='sign-out'){clearDetailLabels();await supa?.auth.signOut();allowed=false;authUser=null;db={members:[],adults:[],lines:[],larvae:[],comments:[],transfers:[],currentUser:null};gate();}
+    if(act==='sign-out'){resetSocial();clearDetailLabels();await supa?.auth.signOut();allowed=false;authUser=null;db={members:[],adults:[],lines:[],larvae:[],comments:[],transfers:[],currentUser:null};gate();}
   });

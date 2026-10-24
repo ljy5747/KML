@@ -20,6 +20,7 @@
     "src/ui/dialog.js",
     "src/data/export.js",
     "src/features/larva-editor.js",
+    "src/features/notifications.js",
     "src/events/actions.js",
     "src/events/input-photos.js",
     "src/events/forms.js",
@@ -34,6 +35,7 @@
     "src/styles/specimens-home.css",
     "src/styles/mobile-state.css",
     "src/styles/year-picker.css",
-    "src/styles/specimen-labels.css"
+    "src/styles/specimen-labels.css",
+    "src/styles/notifications.css"
   ]
 }

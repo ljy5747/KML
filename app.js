@@ -31,6 +31,8 @@
   const uid=()=>crypto.randomUUID();
   const svg=(paths)=>`<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths}</svg>`;
   const I={
+    bell:'<path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/>',
+    heart:'<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/>',
     home:'<path d="m3 10 9-7 9 7"/><path d="M5 9v12h14V9"/><path d="M9 21v-7h6v7"/>',
     bug:'<path d="M12 9v13M8 9h8M7 14H3m18 0h-4M7 18l-3 2m13-2 3 2M8 7 6 4m10 3 2-3"/><rect x="7" y="8" width="10" height="14" rx="5"/><circle cx="12" cy="6" r="3"/>',
     layers:'<path d="m12 2 9 5-9 5-9-5 9-5ZM3 12l9 5 9-5M3 17l9 5 9-5"/>',
@@ -161,12 +163,12 @@
     if(renderPage&&allowed&&changed)render();
     window.scrollTo({top:0,left:0,behavior:'instant'});
   }
-  const go=(target)=>{ui.menu=false;const hash='#/'+target;if(location.hash===hash){render();window.scrollTo(0,0);}else location.hash=hash;};
+  const go=(target)=>{ui.menu=false;closeInbox();const hash='#/'+target;if(location.hash===hash){render();window.scrollTo(0,0);}else location.hash=hash;};
   const activeNav=(page,key)=>page===key;
   const navBtn=(key,label,ico,page)=>`<button class="nav-item ${activeNav(page,key)?'active':''}" data-nav="${key}">${icon(ico)}<span>${label}</span>${activeNav(page,key)?icon('chevron'):''}</button>`;
   function shell(page){
     const c=current();
-    return `<div class="app-shell"><div class="sidebar-overlay ${ui.menu?'open':''}" data-action="close-menu"></div><aside class="sidebar ${ui.menu?'open':''}"><button type="button" class="brand brand-home" data-nav="dashboard" aria-label="KML 홈으로 이동"><span class="brand-mark brand-mark--official"><img src="${OFFICIAL_LOGO}" class="brand-official-logo" alt="" /></span><span class="brand-name">KML<small>국균연구소 · BREEDERS CLUB</small></span></button><div class="nav-label">HOME</div>${navBtn('dashboard','국균연구소 DB','home',page)}<div class="nav-label">MY PAGE</div>${navBtn('adults','성충 관리','bug',page)}${navBtn('lines','라인 관리','layers',page)}${navBtn('profile','프로필','user',page)}<div class="sidebar-bottom"><div class="sidebar-foot">${breederLink(c.id,'sidebar-avatar',avatar(c))}<div class="sidebar-user"><strong>${breederLink(c.id,'breeder-name',esc(c.nickname))}</strong><span>KML 승인 회원 · ${esc(c.role)}</span></div></div><div class="build-tag">KML · BREEDER HUB</div></div></aside><div class="main-wrap"><header class="topbar"><div class="breadcrumb"><button class="icon-btn mobile-menu" data-action="toggle-menu" aria-label="메뉴 열기">${icon('menu')}</button><button type="button" class="kml-home" data-nav="dashboard" aria-label="KML 홈으로 이동">KML</button>${icon('chevron')}<b>${esc({breeder:'브리더 기록',dashboard:'국균연구소 DB',adults:'성충 관리',adult:'개체 상세',larva:'유충 상세',lines:'라인 관리',line:'라인 상세',members:'브리더 목록',mypage:'마이페이지',registry:'전체 성충',archive:'전체 라인',profile:'내 프로필',data:'데이터 관리'}[page]||'페이지')}</b></div><div class="top-actions"><span class="demo-ribbon">승인된 브리더 전용</span><button class="icon-btn" data-action="sign-out" title="로그아웃">${icon('logout')}</button><button class="top-profile" data-nav="breeder/${attr(c.id)}" aria-label="내 성충과 라인 보기">${avatar(c)}<span>${esc(c.nickname)}</span></button></div></header><main class="page" id="page-content"></main></div></div><div id="modal-root"></div>`;
+    return `<div class="app-shell"><div class="sidebar-overlay ${ui.menu?'open':''}" data-action="close-menu"></div><aside class="sidebar ${ui.menu?'open':''}"><button type="button" class="brand brand-home" data-nav="dashboard" aria-label="KML 홈으로 이동"><span class="brand-mark brand-mark--official"><img src="${OFFICIAL_LOGO}" class="brand-official-logo" alt="" /></span><span class="brand-name">KML<small>국균연구소 · BREEDERS CLUB</small></span></button><div class="nav-label">HOME</div>${navBtn('dashboard','국균연구소 DB','home',page)}<div class="nav-label">MY PAGE</div>${navBtn('adults','성충 관리','bug',page)}${navBtn('lines','라인 관리','layers',page)}${navBtn('profile','프로필','user',page)}<div class="sidebar-bottom"><div class="sidebar-foot">${breederLink(c.id,'sidebar-avatar',avatar(c))}<div class="sidebar-user"><strong>${breederLink(c.id,'breeder-name',esc(c.nickname))}</strong><span>KML 승인 회원 · ${esc(c.role)}</span></div></div><div class="build-tag">KML · BREEDER HUB</div></div></aside><div class="main-wrap"><header class="topbar"><div class="breadcrumb"><button class="icon-btn mobile-menu" data-action="toggle-menu" aria-label="메뉴 열기">${icon('menu')}</button><button type="button" class="kml-home" data-nav="dashboard" aria-label="KML 홈으로 이동">KML</button>${icon('chevron')}<b>${esc({notifications:'알림',breeder:'브리더 기록',dashboard:'국균연구소 DB',adults:'성충 관리',adult:'개체 상세',larva:'유충 상세',lines:'라인 관리',line:'라인 상세',members:'브리더 목록',mypage:'마이페이지',registry:'전체 성충',archive:'전체 라인',profile:'내 프로필',data:'데이터 관리'}[page]||'페이지')}</b></div><div class="top-actions"><span class="demo-ribbon">승인된 브리더 전용</span><button class="icon-btn" data-action="sign-out" title="로그아웃">${icon('logout')}</button>${notificationBell()}<button class="top-profile" data-nav="breeder/${attr(c.id)}" aria-label="내 성충과 라인 보기">${avatar(c)}<span>${esc(c.nickname)}</span></button></div></header><main class="page" id="page-content"></main></div></div><div id="modal-root"></div><div id="notification-root"></div>`;
   }
   const pageHead=(eyebrow,title,desc,actions='')=>`<div class="page-title"><div><div class="eyebrow">${eyebrow}</div><h1>${title}</h1><div class="subline">${desc}</div></div><div class="actions">${actions}</div></div>`;
   const button=(name,action,cls='btn-dark',ico='plus')=>`<button type="button" class="btn ${cls}" data-action="${action}">${icon(ico)} ${name}</button>`;
@@ -485,8 +487,8 @@ function adultsPage(){const years=[...new Set(db.adults.map(x=>String(x.emerged|
     return '<div class="pedigree-scroll"><div class="pedigree" role="group" aria-label="조부모까지의 3세대 계통도">'+cols.join('')+'</div></div>';
   }
   function adultDetail(id){const a=adult(id);if(!a)return `${pageHead('NOT FOUND','개체를 찾을 수 없습니다.','삭제되거나 등록되지 않은 개체입니다.')}<button class="btn btn-light" data-nav="adults">성충 목록</button>`;const user=current();const linked=db.lines.filter(l=>l.father===id||l.mother===id);const comments=db.comments.filter(x=>x.adultId===id);const transfers=db.transfers.filter(t=>t.adultId===id);return `<button class="backlink" data-nav="${mineAdult(a)?'adults':'registry'}">${icon('back')} ${mineAdult(a)?'내 성충':'전체 성충'} 목록으로</button>${pageHead('SPECIMEN DETAIL',deathName(a.code,a.status),`${a.lineage?esc(a.lineage)+' · ':''}${a.sex==='M'?'수컷':'암컷'} · ${fmtSize(a.size)}`,(mineAdult(a)||isAdmin()?button('개체 수정','edit-adult','btn-light','edit').replace('data-action="edit-adult"','data-action="edit-adult" data-id="'+attr(a.id)+'"'):''))}
-  <div class="detail-layout"><section class="panel"><div class="detail-photo"><img src="${attr(specimenPhotoUrl(a))}" alt="${attr(a.code)} 성충 이미지" loading="lazy" /></div><div class="detail-card"><div class="detail-subhead">개체 기본 정보 ${status(a.status)}</div><div class="detail-facts ${isDead(a.status)?'dead-facts':''}">${[['관리번호',a.code],['성별',a.sex==='M'?'♂ 수컷':'♀ 암컷'],['체장',fmtSize(a.size)],['혈통',a.lineage||'—'],['누대수',a.generation||'—'],['우화일',a.emerged||'—'],['입수 경로',a.source||'—'],['브리더',memberName(a.breeder)],['현재 소유자',memberName(a.owner)]].map(([k,v])=>`<div class="fact"><small>${k}</small><strong>${k==='브리더'?tableMember(a.breeder):k==='현재 소유자'?tableMember(a.owner):esc(v)}</strong></div>`).join('')}</div>${a.note?`<p class="section-caption">${esc(a.note)}</p>`:''}<div class="helper-row">${(mineAdult(a)||isAdmin()?button('소유자 변경','transfer','btn-light','users').replace('data-action="transfer"','data-action="transfer" data-id="'+attr(a.id)+'"'):'')}</div></div></section>${specimenTools('adult',a.id,pedigree(a))}</div>
-  <div class="below-detail"><section class="panel section-pad"><div class="detail-subhead">${icon('layers')} 교배 라인 / 개체 이동 이력</div><div class="section-caption">해당 개체가 부 또는 모로 연결된 모든 라인입니다.</div><div style="margin-top:18px">${linked.length?linked.map(l=>`<div class="small-detail-card" data-nav="line/${attr(l.id)}" role="button"><span><b>${esc(l.name)}</b><br><small>${esc(l.year)}년 · ${a.sex==='M'?'부 ♂':'모 ♀'}</small></span>${icon('chevron')}</div>`).join(''):'<div class="empty-mini">연결된 교배 라인이 없습니다.</div>'}</div><div class="section-caption" style="margin-top:22px">소유자 이동 기록</div>${transfers.length?transfers.map(t=>`<div class="small-detail-card" style="cursor:default"><span>${breederLink(t.from)} → ${breederLink(t.to)}</span><small>${esc(t.date)}</small></div>`).join(''):'<div class="empty-mini">이동 기록이 없습니다.</div>'}</section><section class="panel section-pad"><div class="detail-subhead">${icon('message')} 개체 댓글 <span class="tag">${comments.length}</span></div><div class="section-caption">승인된 브리더이 개체에 대한 의견과 사육 메모를 남기는 기능입니다.</div><div id="comments">${comments.length?comments.map(c=>{const m=member(c.memberId);return `<div class="comment">${breederLink(c.memberId,'comment-breeder',avatar(m))}<div style="min-width:0;flex:1"><div class="comment-meta"><strong>${breederLink(c.memberId,'breeder-name',esc(memberName(c.memberId)))}</strong><span>${esc(c.date)}</span>${c.memberId===db.currentUser?`<button class="icon-btn" style="margin-left:auto" data-action="delete-comment" data-id="${attr(c.id)}" aria-label="댓글 삭제">${icon('close')}</button>`:''}</div><p>${esc(c.body)}</p></div></div>`}).join(''):'<div class="empty-mini">아직 댓글이 없습니다.</div>'}</div><form class="comment-compose" id="comment-form" data-adult-id="${attr(a.id)}"><textarea name="body" placeholder="개체에 대한 의견이나 사육 메모를 입력하세요." maxlength="1500" required></textarea><button type="submit" class="btn btn-dark">${icon('message')} 댓글 등록</button></form></section></div>`;}
+  <div class="detail-layout"><section class="panel"><div class="detail-photo"><img src="${attr(specimenPhotoUrl(a))}" alt="${attr(a.code)} 성충 이미지" loading="lazy" /></div><div class="detail-card"><div class="detail-subhead">개체 기본 정보 ${status(a.status)}</div><div class="detail-facts ${isDead(a.status)?'dead-facts':''}">${[['관리번호',a.code],['성별',a.sex==='M'?'♂ 수컷':'♀ 암컷'],['체장',fmtSize(a.size)],['혈통',a.lineage||'—'],['누대수',a.generation||'—'],['우화일',a.emerged||'—'],['입수 경로',a.source||'—'],['브리더',memberName(a.breeder)],['현재 소유자',memberName(a.owner)]].map(([k,v])=>`<div class="fact"><small>${k}</small><strong>${k==='브리더'?tableMember(a.breeder):k==='현재 소유자'?tableMember(a.owner):esc(v)}</strong></div>`).join('')}</div>${a.note?`<p class="section-caption">${esc(a.note)}</p>`:''}<div data-adult-transfer-state="${attr(a.id)}"></div><div class="helper-row">${(mineAdult(a)||isAdmin()?button('성충 보내기','transfer','btn-light','users').replace('data-action="transfer"','data-action="transfer" data-id="'+attr(a.id)+'"'):'')}</div></div></section>${specimenTools('adult',a.id,pedigree(a))}</div>
+  <div class="below-detail"><section class="panel section-pad"><div class="detail-subhead">${icon('layers')} 교배 라인 / 개체 이동 이력</div><div class="section-caption">해당 개체가 부 또는 모로 연결된 모든 라인입니다.</div><div style="margin-top:18px">${linked.length?linked.map(l=>`<div class="small-detail-card" data-nav="line/${attr(l.id)}" role="button"><span><b>${esc(l.name)}</b><br><small>${esc(l.year)}년 · ${a.sex==='M'?'부 ♂':'모 ♀'}</small></span>${icon('chevron')}</div>`).join(''):'<div class="empty-mini">연결된 교배 라인이 없습니다.</div>'}</div><div class="section-caption" style="margin-top:22px">소유자 이동 기록</div>${transfers.length?transfers.map(t=>`<div class="small-detail-card" style="cursor:default"><span>${breederLink(t.from)} → ${breederLink(t.to)}</span><small>${esc(t.date)}</small></div>`).join(''):'<div class="empty-mini">이동 기록이 없습니다.</div>'}</section><section class="panel section-pad"><div class="detail-subhead">${icon('message')} 개체 댓글 <span class="tag">${comments.length}</span></div><div class="section-caption">승인된 브리더이 개체에 대한 의견과 사육 메모를 남기는 기능입니다.</div><div id="comments">${comments.length?comments.map(c=>{const m=member(c.memberId);return `<div class="comment" id="comment-${attr(c.id)}">${breederLink(c.memberId,'comment-breeder',avatar(m))}<div style="min-width:0;flex:1"><div class="comment-meta"><strong>${breederLink(c.memberId,'breeder-name',esc(memberName(c.memberId)))}</strong><span>${esc(c.date)}</span>${c.memberId===db.currentUser?`<button class="icon-btn" style="margin-left:auto" data-action="delete-comment" data-id="${attr(c.id)}" aria-label="댓글 삭제">${icon('close')}</button>`:''}</div><p>${esc(c.body)}</p><div data-comment-reaction="${attr(c.id)}">${commentReactionButton(c)}</div></div></div>`}).join(''):'<div class="empty-mini">아직 댓글이 없습니다.</div>'}</div><form class="comment-compose" id="comment-form" data-adult-id="${attr(a.id)}"><textarea name="body" placeholder="개체에 대한 의견이나 사육 메모를 입력하세요." maxlength="1500" required></textarea><button type="submit" class="btn btn-dark">${icon('message')} 댓글 등록</button></form></section></div>`;}
   function linesPage(){const mine=route().page!=='archive';const ls=db.lines.filter(x=>!mine||mineLine(x)).filter(x=>[x.name,x.generation,x.year].some(s=>String(s||'').toLowerCase().includes(ui.lineSearch.toLowerCase())));return `${pageHead('BREEDING LINES',mine?'내 라인 관리':'전체 라인 목록',mine?'내가 생성한 교배 라인을 관리합니다.':'브리더들의 교배 라인을 검색하고 조회합니다.',mine?button('라인 생성','new-line','btn-dark','plus')+button('BeetleLog 가져오기','beetle-import','btn-light','download').replace('data-action="beetle-import"','data-action="beetle-import" data-type="lines"'):'')}<div class="data-tools"><label class="searchbox">${icon('search')}<input id="line-search" value="${attr(ui.lineSearch)}" placeholder="라인명 · 시즌 · 메모 검색" /></label></div><div class="line-cards" id="line-cards">${ls.length?ls.map(l=>lineCard(l)).join(''):'<div class="panel section-pad">등록된 라인이 없습니다.</div>'}</div>`;}
   function lineCard(l){const f=adult(l.father),m=adult(l.mother);return `<article role="button" tabindex="0" class="line-card" data-nav="line/${attr(l.id)}"><div class="line-card-top"><span class="tag gold">${esc(l.year||'연도 미등록')}</span><span class="tag">${breederLink(l.createdBy)} · 유충 ${db.larvae.filter(v=>v.lineId===l.id).length}마리</span></div><strong>${esc(l.name)}${l.isWild?' <span class="tag gold">Wild</span>':''}</strong><p>${esc(l.generation||'누대수 미입력')} · ${esc(l.note||'')}</p><div class="pair"><span><em>♂ ${esc(f?.code||(l.isWild?'Wild':'미등록'))}</em><br>${fmtSize(f?.size)}</span><span><em>♀ ${esc(m?.code||'미등록')}</em><br>${fmtSize(m?.size)}</span></div></article>`;}
   function lineDetail(id){const l=byId(db.lines,id);if(!l)return pageHead('NOT FOUND','라인을 찾을 수 없습니다.','');const f=adult(l.father),m=adult(l.mother),list=db.larvae.filter(v=>v.lineId===id),bottles=Array.from({length:Math.max(3,...list.map(v=>v.records.length))},(_,i)=>i);return `<button class="backlink" data-nav="${mineLine(l)?'lines':'archive'}">${icon('back')} ${mineLine(l)?'내 라인':'전체 라인'} 목록으로</button>${pageHead('LINE DETAIL',esc(l.name),`${esc(l.year||'')} 시즌 · ${l.isWild?'Wild · ':''}${esc(l.generation||'누대수 미입력')} · 유충 ${list.length}개체`,mineLine(l)||isAdmin()?`<button class="btn btn-light" data-action="edit-line" data-id="${attr(l.id)}">${icon('edit')} 라인 수정</button>`:'')}<section class="panel"><div class="line-detail-head"><div><span class="eyebrow">BREEDING PAIR</span><h2>${esc(l.name)}</h2><p>${esc(l.note||'')}</p></div><span class="tag gold">등록된 라인</span></div><div class="section-pad" style="padding-top:0"><div class="info-tiles"><div class="info-tile"><small>부 ♂</small><strong>${f?`<button class="plain-link" data-nav="adult/${attr(f.id)}">${esc(f.code)} · ${fmtSize(f.size)}</button>`:(l.isWild?'Wild · 부 미상':'미등록')}</strong></div><div class="info-tile"><small>모 ♀</small><strong>${m?`<button class="plain-link" data-nav="adult/${attr(m.id)}">${esc(m.code)} · ${fmtSize(m.size)}</button>`:'미등록'}</strong></div><div class="info-tile"><small>기록 개체</small><strong>${list.length}마리</strong></div></div></div></section><section class="panel" style="margin-top:19px"><div class="panel-head"><div><div class="panel-title">라인 유충 전체 보기</div><div class="panel-sub">관리번호는 라인 내 번호로 관리합니다. 병별 기록은 가로로 표시됩니다.</div></div><div class="actions"><button class="btn btn-light btn-sm" data-action="download-line" data-id="${attr(l.id)}">${icon('download')} CSV 내보내기</button><button class="btn btn-light btn-sm" data-action="excel-not-ready">${icon('upload')} Excel 업로드 (예정)</button></div></div><div class="datatable-wrap"><table class="datatable"><thead><tr><th>번호</th><th>성별</th><th>상태</th>${bottles.map(i=>`<th>${i+1}병</th>`).join('')}<th>우화일</th><th>체장</th>${canEditLarvaLine(l)?'<th>수정</th>':''}</tr></thead><tbody>${list.length?list.map(v=>`<tr class="${isDead(v.sourceData?.status)?'dead-record':''}"><td><button type="button" class="plain-link id-link" data-nav="larva/${attr(v.id)}">${esc(v.number)}</button></td><td>${sex(v.sex)}</td><td class="state-cell">${status(v.sourceData?.status||'—',true)}</td>${bottles.map(i=>`<td class="bottle-cell">${v.records[i]?`<span>${esc(v.records[i][0]||'—')}</span><br><span>${esc(v.records[i][1]||'—')}</span><br><span>${v.records[i][2]!==''&&v.records[i][2]!=null?esc(v.records[i][2])+' cc':'—'}</span><br><span>${v.records[i][3]!==''&&v.records[i][3]!=null?esc(v.records[i][3])+' g':'—'}</span>`:'—'}</td>`).join('')}<td>${esc(v.emerged||'—')}</td><td>${fmtSize(v.size)}</td>${canEditLarvaLine(l)?`<td><button class="btn btn-light btn-sm" data-action="edit-larva" data-id="${attr(v.id)}">${icon('edit')} 기록 수정</button></td>`:''}</tr>`).join(''):'<tr><td colspan="${bottles.length+5+(canEditLarvaLine(l)?1:0)}" class="empty-table">유충 기록이 아직 없습니다. BeetleLog에서 이 라인을 가져오면 소속 유충도 함께 등록됩니다.</td></tr>'}</tbody></table></div></section>`;}
@@ -699,7 +701,7 @@ function adultModal(id){const a=adult(id),t=a||{code:'',lineage:'',generation:''
       <div class="modal-actions">${l?`<button type="button" class="btn btn-red delete-record" data-action="delete-line" data-id="${attr(l.id)}">삭제</button>`:''}<button type="button" class="btn btn-light" data-action="close-modal">취소</button><button class="btn btn-dark" type="submit">${l?'변경사항 저장':'라인 생성'}</button></div></form>`;
     return modalFrame(l?'라인 정보 수정':'새 라인 생성','등록된 성충으로 일반·Wild 라인을 관리합니다.',body);
   }
-  function transferModal(id){const a=adult(id);if(!a)return '';const body=`<form id="transfer-form"><input type="hidden" name="id" value="${attr(id)}"/><div class="modal-content"><div class="form-grid"><div class="field full"><label>선택 개체</label><input disabled value="${attr(a.code)}"/></div><div class="field"><label>현재 소유자</label><input disabled value="${attr(memberName(a.owner))}"/></div><div class="field"><label>새 소유자 *</label><select name="to" required>${opt(db.members.filter(x=>x.id!==a.owner),'','회원 선택')}</select></div><div class="field"><label>이동일 *</label>${datePicker({name:"date",value:dateToday(),label:"이동일",required:true})}</div><div class="field full"><label>이동 메모</label><textarea name="note" placeholder="분양, 사육 이관 등"></textarea></div></div><div class="note">브리더와 개체 관리번호는 그대로 유지하고, 소유자 및 이동 기록만 업데이트합니다.</div></div><div class="modal-actions"><button type="button" class="btn btn-light" data-action="close-modal">취소</button><button class="btn btn-dark" type="submit">소유자 변경 저장</button></div></form>`;return modalFrame('소유자 변경','브리더 간 개체 양도·이동 이력을 기록합니다.',body);}
+  function transferModal(id){const a=adult(id);if(!a)return '';const choices=ui.transferCandidates||[];const body=`<form id="transfer-form"><input type="hidden" name="id" value="${attr(id)}"/><input type="hidden" name="version" value="${attr(a.updatedAt||'')}"/><div class="modal-content"><div class="form-grid"><div class="field full"><label>보낼 성충</label><input disabled value="${attr(a.code)} · ${attr(a.lineage)} · ${attr(fmtSize(a.size))}"/></div><div class="field"><label>현재 보유자</label><input disabled value="${attr(memberName(a.owner))}"/></div><div class="field"><label>받을 KML 회원 *</label><select name="to" required>${opt(choices,'','회원 선택')}</select>${!choices.length?'<small class="field-hint">보낼 수 있는 다른 승인 회원이 없습니다. 상대 회원이 KML에 먼저 로그인해야 합니다.</small>':''}</div><div class="field"><label>이동일 *</label>${datePicker({name:'date',value:dateToday(),label:'이동일',required:true})}</div><div class="field full"><label>보내기 메모</label><textarea name="note" maxlength="1000" placeholder="분양, 사육 이관 등"></textarea></div></div><div class="note">상대의 알림함에 받기 요청이 전달됩니다. 상대가 수락하면 내 보유 목록에서 빠지고 상대 목록으로 이동합니다. 관리번호·브리더·계통은 유지됩니다. 수락 전에는 보내기를 취소할 수 있습니다.</div><p class="notification-error" role="alert" data-transfer-error hidden></p></div><div class="modal-actions"><button type="button" class="btn btn-light" data-action="close-modal">닫기</button><button class="btn btn-dark" type="submit" ${!choices.length?'disabled':''}>성충 보내기</button></div></form>`;return modalFrame('성충 보내기','국균연구소 내부 회원에게 성충을 보냅니다.',body);}
   // Keep the page behind a dialog stationary, especially in mobile Safari.
   let modalScrollY=null;
   let bodyBeforeModal=null;
@@ -764,7 +766,7 @@ function adultModal(id){const a=adult(id),t=a||{code:'',lineage:'',generation:''
       document.documentElement.classList.remove('kml-modal-open');
     }
   }
-  function render(){if(!allowed){gate();return;}const r=route();if(r.page==='members'&&!isAdmin()){go('dashboard');return;}if(!['adult','larva'].includes(r.page))leaveSpecimenDetail();app.innerHTML=shell(r.page);document.getElementById('page-content').innerHTML= r.page==='dashboard'?dashboard():r.page==='mypage'?myPage():r.page==='adults'||r.page==='registry'?adultsPage():r.page==='breeder'?breederPage(r.id):r.page==='adult'?adultDetail(r.id):r.page==='larva'?larvaDetail(r.id):r.page==='lines'||r.page==='archive'?linesPage():r.page==='line'?lineDetail(r.id):r.page==='members'&&isAdmin()?membersPage():r.page==='profile'?profilePage():r.page==='data'?dataPage():dashboard();renderModal();mountSpecimenTools();document.title=`KML | ${({breeder:'브리더 기록',dashboard:'국균연구소 DB',adults:'성충 관리',adult:'개체 상세',larva:'유충 상세',lines:'라인 관리',line:'라인 상세',members:'브리더 목록',mypage:'마이페이지',registry:'전체 성충',archive:'전체 라인',profile:'내 프로필',data:'데이터 관리'})[r.page]||'국균연구소'}`;}
+  function render(){if(!allowed){gate();return;}const r=route();if(r.page==='members'&&!isAdmin()){go('dashboard');return;}if(!['adult','larva'].includes(r.page))leaveSpecimenDetail();app.innerHTML=shell(r.page);document.getElementById('page-content').innerHTML= r.page==='notifications'?notificationsPage():r.page==='dashboard'?dashboard():r.page==='mypage'?myPage():r.page==='adults'||r.page==='registry'?adultsPage():r.page==='breeder'?breederPage(r.id):r.page==='adult'?adultDetail(r.id):r.page==='larva'?larvaDetail(r.id):r.page==='lines'||r.page==='archive'?linesPage():r.page==='line'?lineDetail(r.id):r.page==='members'&&isAdmin()?membersPage():r.page==='profile'?profilePage():r.page==='data'?dataPage():dashboard();renderModal();mountSpecimenTools();mountSocial();document.title=`KML | ${({notifications:'알림',breeder:'브리더 기록',dashboard:'국균연구소 DB',adults:'성충 관리',adult:'개체 상세',larva:'유충 상세',lines:'라인 관리',line:'라인 상세',members:'브리더 목록',mypage:'마이페이지',registry:'전체 성충',archive:'전체 라인',profile:'내 프로필',data:'데이터 관리'})[r.page]||'국균연구소'}`;}
   function openModal(kind,id=''){ui.modal={kind,id};ui.adultPhotoPreview=null;ui.adultPhotoReset=false;renderModal();}
   function closeModal(){ui.modal=null;ui.adultPhotoPreview=null;ui.adultPhotoReset=false;renderModal();}
   function downloadCSV(id){const l=byId(db.lines,id);if(!l)return;
@@ -832,10 +834,170 @@ async function saveLarvaEditor(form){
  }catch(error){fail('저장 실패: '+(error.message||String(error)));}
  finally{form.dataset.saving='false';if(submit)submit.disabled=false;}
 }
+// Social state stays outside page rendering so inbox and likes never discard form input.
+const social={user:'',items:[],unread:0,requests:[],reactions:{},reactionAdult:'',open:false,loading:false,loaded:false,more:false,busy:new Set(),timer:0,error:''};
+function resetSocial(){Object.assign(social,{user:'',items:[],unread:0,requests:[],reactions:{},reactionAdult:'',open:false,loading:false,loaded:false,more:false,error:''});social.busy.clear();if(social.timer)clearTimeout(social.timer);social.timer=0;}
+function ensureSocialUser(){if(social.user!==db.currentUser){resetSocial();social.user=db.currentUser||'';}}
+const requestLabel=state=>({pending:'수락 대기',accepted:'받기 완료',declined:'거절됨',cancelled:'보내기 취소',expired:'만료됨'})[state]||'처리됨';
+const socialDate=value=>{const date=new Date(value);return Number.isNaN(date.valueOf())?'':new Intl.DateTimeFormat('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit',timeZone:'Asia/Seoul'}).format(date);};
+function notificationBell(){
+ ensureSocialUser();const count=social.unread;
+ return '<button type="button" id="notification-bell" class="icon-btn notification-bell" data-action="toggle-inbox" aria-controls="notification-root" aria-expanded="'+social.open+'" aria-label="알림'+(count?' · 읽지 않은 알림 '+count+'개':'')+'">'+icon('bell')+'<span class="notification-badge" aria-hidden="true" '+(!count?'hidden':'')+'>'+(count>99?'99+':count)+'</span></button>';
+}
+function noticeText(item){
+ const code=item.adult_code||'성충';
+ return ({transfer_request:code+' 성충을 보냈습니다. 수락하면 내 성충 목록으로 이동합니다.',transfer_accepted:code+' 성충을 받았습니다.',transfer_declined:code+' 성충 보내기를 거절했습니다.',transfer_cancelled:code+' 성충 보내기를 취소했습니다.',transfer_expired:code+' 보내기가 만료되었습니다.',comment:code+' 성충에 댓글을 남겼습니다.',comment_like:'내 댓글에 좋아요를 눌렀습니다.'})[item.kind]||'새 알림이 있습니다.';
+}
+function requestActions(r){
+ if(!r||r.status!=='pending')return r?'<span class="tag">'+requestLabel(r.status)+'</span>':'';
+ const disabled=social.busy.has('request:'+r.id)?'disabled':'';
+ const button=(action,label,cls)=>'<button type="button" class="btn '+cls+' btn-sm" data-action="resolve-transfer" data-id="'+attr(r.id)+'" data-choice="'+action+'" '+disabled+'>'+label+'</button>';
+ return '<div class="notification-request-actions">'+(r.to_user===db.currentUser?button('accept','수락 · 내 성충으로 받기','btn-dark')+button('decline','거절','btn-light'):r.from_user===db.currentUser||r.initiated_by===db.currentUser?button('cancel','보내기 취소','btn-light'):'')+'</div>';
+}
+function notificationRow(n){
+ const r=social.requests.find(x=>x.id===n.request_id),m=member(n.actor_id)||{nickname:n.actor_name||'KML',avatar_url:n.actor_avatar||'',initial:(n.actor_name||'K')[0]};
+ const actor=n.actor_id?'<a class="breeder-link notification-actor" href="#/breeder/'+attr(n.actor_id)+'" data-nav="breeder/'+attr(n.actor_id)+'">'+avatar(m)+'<strong>'+esc(m.nickname)+'</strong></a>':'<span class="notification-actor">'+icon('bell')+'<strong>KML</strong></span>';
+ return '<article class="notification-item '+(!n.read_at?'is-unread':'')+'" data-notice-id="'+attr(n.id)+'"><div class="notification-meta">'+actor+'<time datetime="'+attr(n.created_at)+'">'+esc(socialDate(n.created_at))+'</time></div><button type="button" class="notification-open" data-action="open-notice" data-id="'+attr(n.id)+'">'+esc(noticeText(n))+'</button>'+(n.excerpt?'<p class="notification-excerpt">'+esc(n.excerpt)+'</p>':'')+(n.kind==='transfer_request'?requestActions(r):'')+(!n.read_at?'<button type="button" class="notification-read" data-action="read-notice" data-id="'+attr(n.id)+'">읽음 처리</button>':'')+'</article>';
+}
+function inboxContents(compact=false){
+ return (social.error?'<p class="notification-error" role="alert">'+esc(social.error)+'</p>':'')+(social.items.length?social.items.map(notificationRow).join(''):'<div class="empty">'+(social.loaded?'아직 알림이 없습니다.':'알림을 불러오는 중…')+'</div>')+(social.more?'<div class="notification-more"><button type="button" class="btn btn-light btn-sm" data-action="older-notifications" '+(social.loading?'disabled':'')+'>이전 알림 더 보기</button></div>':'')+(compact?'<button type="button" class="notification-all" data-nav="notifications">전체 알림 · 보낸 성충 보기 '+icon('arrow')+'</button>':'');
+}
+function sentTransferRows(){
+ const list=social.requests.filter(r=>r.from_user===db.currentUser||r.initiated_by===db.currentUser).sort((a,b)=>String(b.created_at).localeCompare(String(a.created_at)));
+ return list.length?list.map(r=>'<article class="sent-transfer"><div><a class="plain-link id-link" href="#/adult/'+attr(r.adult_id)+'" data-nav="adult/'+attr(r.adult_id)+'">'+esc(adult(r.adult_id)?.code||'성충')+'</a><p>'+esc(memberName(r.from_user))+' → '+esc(memberName(r.to_user))+'</p><small>'+esc(socialDate(r.created_at))+'</small></div>'+requestActions(r)+'</article>').join(''):'<div class="empty">보낸 성충이 없습니다.</div>';
+}
+function notificationsPage(){
+ ensureSocialUser();return pageHead('NOTIFICATIONS','알림','성충 받기와 댓글·좋아요 알림을 확인합니다.','<button type="button" class="btn btn-light" data-action="read-all-notices">모두 읽음</button>')+'<div class="notifications-layout"><section class="panel"><div class="panel-head"><div class="panel-title">받은 알림 <span data-unread-total>'+social.unread+'</span></div></div><div data-inbox-list>'+inboxContents()+'</div></section><section class="panel"><div class="panel-head"><div class="panel-title">보낸 성충</div></div><div data-sent-transfers>'+sentTransferRows()+'</div></section></div>';
+}
+function setSocialHTML(node,html){if(node&&node.kmlSocialHTML!==html){node.innerHTML=html;node.kmlSocialHTML=html;}}
+function renderInboxPopover(){
+ const root=document.getElementById('notification-root');if(!root)return;
+ const body=root.querySelector('.notification-popover-list'),scroll=body?.scrollTop||0;
+ const markup=social.open?'<section class="notification-popover" role="dialog" aria-modal="false" aria-labelledby="notification-popover-title"><header><h2 id="notification-popover-title" tabindex="-1">알림</h2><div class="actions"><button type="button" class="notification-read" data-action="read-all-notices">모두 읽음</button><button type="button" class="icon-btn" data-action="close-inbox" aria-label="알림 닫기">'+icon('close')+'</button></div></header><div class="notification-popover-list">'+inboxContents(true)+'</div></section>':'';
+ setSocialHTML(root,markup);
+ const next=root.querySelector('.notification-popover-list');if(next)next.scrollTop=scroll;
+ const bell=document.getElementById('notification-bell');if(bell)bell.setAttribute('aria-expanded',String(social.open));
+}
+function closeInbox(focus=false){social.open=false;renderInboxPopover();if(focus)document.getElementById('notification-bell')?.focus();}
+function renderSocialFragments(){
+ const bell=document.getElementById('notification-bell');if(bell){bell.setAttribute('aria-label','알림'+(social.unread?' · 읽지 않은 알림 '+social.unread+'개':''));const badge=bell.querySelector('.notification-badge');if(badge){badge.hidden=!social.unread;badge.textContent=social.unread>99?'99+':String(social.unread);}}
+ renderInboxPopover();
+ document.querySelectorAll('[data-inbox-list]').forEach(root=>{setSocialHTML(root,inboxContents());});
+ document.querySelectorAll('[data-sent-transfers]').forEach(root=>{setSocialHTML(root,sentTransferRows());});
+ document.querySelectorAll('[data-unread-total]').forEach(el=>{el.textContent=social.unread;});
+ document.querySelectorAll('[data-adult-transfer-state]').forEach(el=>{const r=social.requests.find(x=>x.adult_id===el.dataset.adultTransferState&&x.status==='pending');el.innerHTML=r?'<div class="pending-transfer"><span>'+esc(memberName(r.to_user))+'님에게 보내기 · 수락 대기</span>'+requestActions(r)+'</div>':'';});
+ renderCommentReactions();
+}
+async function refreshSocial(older=false){
+ if(!allowed||!authUser||document.hidden)return;ensureSocialUser();if(social.loading)return;
+ const user=social.user,account=authUser.id;social.loading=true;
+ try{
+  const last=older?social.items.at(-1):null;
+  const args={p_before:last?.created_at||null,p_before_id:last?.id||null,p_limit:30};
+  const [feed,pending,recent]=await Promise.all([supa.rpc('kml_inbox',args),supa.from('kml_transfer_requests').select('*').eq('status','pending').order('created_at',{ascending:false}),supa.from('kml_transfer_requests').select('*').neq('status','pending').order('created_at',{ascending:false}).limit(30)]);
+  for(const result of [feed,pending,recent])if(result.error)throw result.error;
+  if(!allowed||authUser?.id!==account||social.user!==user)return;
+  const firstLoad=!social.loaded,incoming=feed.data?.items||[],map=new Map(social.items.map(x=>[x.id,x]));for(const item of incoming)map.set(item.id,item);
+  social.items=[...map.values()].sort((a,b)=>String(b.created_at).localeCompare(String(a.created_at))||String(b.id).localeCompare(String(a.id)));
+  social.unread=Number(feed.data?.unread||0);social.requests=[...(pending.data||[]),...(recent.data||[])];social.loaded=true;social.error='';
+  if(older||firstLoad)social.more=incoming.length===30;
+ }catch(error){if(social.user===user)social.error='알림을 불러오지 못했습니다. 잠시 뒤 다시 열어 주세요.';}
+ finally{if(social.user===user){social.loading=false;renderSocialFragments();}}
+}
+async function markNoticesRead(id=null){
+ const account=authUser?.id;if(!account)return;
+ const {error}=await supa.rpc('kml_mark_notifications_read',{p_id:id});if(error)throw error;
+ if(authUser?.id!==account)return;
+ const now=new Date().toISOString();let read=0;for(const n of social.items)if((!id||n.id===id)&&!n.read_at){n.read_at=now;read++;}social.unread=id?Math.max(0,social.unread-read):0;renderSocialFragments();
+ await refreshSocial();
+}
+async function openNotice(id){
+ const n=social.items.find(x=>x.id===id);if(!n)return;
+ await markNoticesRead(id);closeInbox();
+ if(n.adult_id){go('adult/'+n.adult_id+(n.comment_id?'/comment-'+n.comment_id:''));}else notify('연결된 개체가 삭제되었습니다. 알림 기록은 유지됩니다.');
+}
+function commentReactionButton(c){
+ const stat=social.reactions[c.id]||{likes:0,liked:false},busy=social.busy.has('like:'+c.id);
+ return '<button type="button" class="comment-like '+(stat.liked?'is-liked':'')+'" data-action="like-comment" data-id="'+attr(c.id)+'" aria-pressed="'+stat.liked+'" aria-label="댓글 좋아요'+(stat.liked?' 취소':'')+'" '+(busy?'disabled':'')+'>'+icon('heart')+'<span>좋아요</span><b>'+Number(stat.likes||0)+'</b></button>';
+}
+function renderCommentReactions(){document.querySelectorAll('[data-comment-reaction]').forEach(el=>{const c=byId(db.comments,el.dataset.commentReaction);if(c)setSocialHTML(el,commentReactionButton(c));});}
+async function refreshCommentReactions(){
+ const r=route();if(!allowed||r.page!=='adult')return;const account=authUser?.id;
+ const {data,error}=await supa.rpc('kml_comment_reactions',{p_adult:r.id});
+ if(error||!allowed||authUser?.id!==account||route().page!=='adult'||route().id!==r.id)return;
+ social.reactionAdult=r.id;for(const stat of data||[])if(!social.busy.has('like:'+stat.comment_id))social.reactions[stat.comment_id]=stat;
+ renderCommentReactions();
+}
+async function toggleCommentLike(id){
+ const key='like:'+id;if(social.busy.has(key))return;const account=authUser?.id;social.busy.add(key);renderCommentReactions();
+ try{const {data,error}=await supa.rpc('kml_toggle_comment_like',{p_comment:id});if(error)throw error;if(authUser?.id===account&&data)social.reactions[id]=data;}
+ catch(error){notify('좋아요 저장 실패: '+(error.message||String(error)));}
+ finally{if(authUser?.id===account){social.busy.delete(key);renderCommentReactions();}}
+}
+async function openTransferModal(id){
+ const a=adult(id);if(!a||(!mineAdult(a)&&!isAdmin()))return notify('본인 성충만 보낼 수 있습니다.');
+ const account=authUser?.id;const {data,error}=await supa.rpc('kml_transfer_candidates');
+ if(account!==authUser?.id)return;if(error)return notify('회원 목록을 불러오지 못했습니다: '+error.message);
+ ui.transferCandidates=(data||[]).filter(x=>x.user_id!==a.owner).map(x=>({id:x.user_id,nickname:x.nickname,avatar_url:x.avatar_url}));
+ openModal('transfer',id);
+}
+async function submitTransfer(form){
+ if(form.dataset.saving==='true')return;const data=Object.fromEntries(new FormData(form)),a=adult(data.id);
+ const errorBox=form.querySelector('[data-transfer-error]'),submit=form.querySelector('[type="submit"]');
+ const fail=message=>{if(errorBox){errorBox.hidden=false;errorBox.textContent=message;}notify(message);};
+ if(!a||(!mineAdult(a)&&!isAdmin()))return fail('본인 성충만 보낼 수 있습니다.');
+ if(!data.to||data.to===a.owner)return fail('받을 회원을 선택하세요.');
+ form.dataset.saving='true';if(submit)submit.disabled=true;
+ try{
+  const account=authUser?.id;
+  const {data:requestId,error}=await supa.rpc('kml_request_adult_transfer',{p_adult:a.id,p_to:data.to,p_date:data.date,p_note:data.note||'',p_version:data.version});if(error)throw error;
+  if(account!==authUser?.id)return;
+  social.requests.push({id:requestId,adult_id:a.id,from_user:a.owner,to_user:data.to,initiated_by:db.currentUser,status:'pending',transfer_date:data.date,note:data.note||'',created_at:new Date().toISOString()});
+  closeModal();render();notify('받는 회원에게 알림을 보냈습니다. 수락하면 보유 목록이 이동합니다.');await refreshSocial();
+ }catch(error){fail('보내기 실패: '+(error.message||String(error)));}
+ finally{form.dataset.saving='false';if(submit)submit.disabled=false;}
+}
+async function resolveTransfer(id,choice){
+ const key='request:'+id;if(social.busy.has(key))return;const account=authUser?.id;social.busy.add(key);renderSocialFragments();
+ try{
+  const {data,error}=await supa.rpc('kml_resolve_adult_transfer',{p_request:id,p_action:choice});if(error)throw error;
+  if(account!==authUser?.id)return;
+  const local=social.requests.find(r=>r.id===id);if(local){local.status=data;if(data==='accepted'){const a=adult(local.adult_id);if(a){a.owner=local.to_user;a.status='보유';a.updatedAt='';}}}
+  let refreshFailed=false;try{await loadRemote();}catch(error){refreshFailed=true;}
+  await refreshSocial();
+  if(!ui.modal&&!document.querySelector('#comment-form textarea')?.value?.trim())render();
+  if(refreshFailed)notify('요청을 처리했습니다. 최신 목록을 불러오려면 새로고침해 주세요.');
+  else notify(data==='accepted'?'성충을 받았습니다. 내 성충 목록에서 확인할 수 있습니다.':data==='expired'?'성충 상태가 변경되어 보내기가 만료됐습니다.':data==='declined'?'성충 받기를 거절했습니다.':'보내기를 취소했습니다.');
+ }catch(error){notify('처리 실패: '+(error.message||String(error)));}
+ finally{if(account===authUser?.id){social.busy.delete(key);renderSocialFragments();}}
+}
+function mountSocial(){
+ ensureSocialUser();renderSocialFragments();
+ if(!social.loaded&&!social.loading&&!social.timer)social.timer=setTimeout(()=>{social.timer=0;refreshSocial();},0);
+ if(route().page==='adult'){
+  refreshCommentReactions();const anchor=route().tab;
+  if(anchor?.startsWith('comment-'))document.getElementById(anchor)?.scrollIntoView?.({block:'center',behavior:'smooth'});
+ }
+}
+document.addEventListener('keydown',event=>{if(event.key==='Escape'&&social.open){event.preventDefault();closeInbox(true);}});
+document.addEventListener('click',event=>{if(social.open&&!event.target.closest('#notification-root')&&!event.target.closest('#notification-bell'))closeInbox();});
 document.addEventListener('click',async event=>{
     const nav=event.target.closest('[data-nav]');if(nav){if(event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;event.preventDefault();go(nav.dataset.nav);return;}
     const a=event.target.closest('[data-action]');if(!a)return;
     const act=a.dataset.action;
+    if(['toggle-inbox','close-inbox','open-notice','read-notice','read-all-notices','older-notifications','like-comment','resolve-transfer'].includes(act)){
+      try{
+        if(act==='toggle-inbox'){social.open=!social.open;renderInboxPopover();if(social.open){document.getElementById('notification-popover-title')?.focus();await refreshSocial();}}
+        if(act==='close-inbox')closeInbox(true);
+        if(act==='open-notice')await openNotice(a.dataset.id);
+        if(act==='read-notice')await markNoticesRead(a.dataset.id);
+        if(act==='read-all-notices')await markNoticesRead();
+        if(act==='older-notifications')await refreshSocial(true);
+        if(act==='like-comment')await toggleCommentLike(a.dataset.id);
+        if(act==='resolve-transfer')await resolveTransfer(a.dataset.id,a.dataset.choice);
+      }catch(error){notify('처리 실패: '+(error.message||String(error)));}
+      return;
+    }
     if(act==='edit-larva'){const v=byId(db.larvae,a.dataset.id);if(v&&canEditLarvaLine(byId(db.lines,v.lineId)))openModal('larva',v.id);else notify('본인 라인의 유충만 수정할 수 있습니다.');return;}
     if(act==='add-larva-record'){addLarvaEditorRow();return;}
     if(act==='remove-larva-record'){if(confirm('이 병 기록을 제거할까요? 저장하면 반영됩니다.'))a.closest('[data-larva-record]').remove();return;}
@@ -894,7 +1056,7 @@ document.addEventListener('click',async event=>{
     if(act==='line-generation-auto'){updateLineGeneration(true);return;}
     if(act==='new-line')openModal('line');
     if(act==='edit-line'){const l=byId(db.lines,a.dataset.id||route().id);if(l&&(mineLine(l)||isAdmin()))openModal('line',l.id);else notify('본인이 만든 라인만 수정할 수 있습니다.');}
-    if(act==='transfer'){const x=adult(a.dataset.id);if(x&&(mineAdult(x)||isAdmin()))openModal('transfer',x.id);else notify('본인 소유 개체만 이동할 수 있습니다.');}
+    if(act==='transfer'){await openTransferModal(a.dataset.id);return;}
     if(act==='close-modal')closeModal();
     if(act==='modal-backdrop'&&event.target===a)closeModal();
     if(act==='delete-comment'){if(confirm('이 댓글을 삭제할까요?')){const {error:de}=await supa.from('kml_comments').delete().eq('id',a.dataset.id);if(de)return notify('댓글 삭제 실패: '+de.message);db.comments=db.comments.filter(c=>c.id!==a.dataset.id);render();notify('댓글을 삭제했습니다.');}}
@@ -919,7 +1081,7 @@ document.addEventListener('click',async event=>{
     if(act==='excel-not-ready')notify('엑셀 업로드는 다음 개발 단계에서 연결합니다. 현재는 미구현 기능입니다.');
     if(act==='download-line')downloadCSV(a.dataset.id);
     if(act==='google-login'){if(!supa)return;const redirectTo=location.origin+location.pathname;const {error:e}=await supa.auth.signInWithOAuth({provider:'google',options:{redirectTo}});if(e)notify('Google 로그인 오류: '+e.message);}
-    if(act==='sign-out'){clearDetailLabels();await supa?.auth.signOut();allowed=false;authUser=null;db={members:[],adults:[],lines:[],larvae:[],comments:[],transfers:[],currentUser:null};gate();}
+    if(act==='sign-out'){resetSocial();clearDetailLabels();await supa?.auth.signOut();allowed=false;authUser=null;db={members:[],adults:[],lines:[],larvae:[],comments:[],transfers:[],currentUser:null};gate();}
   });  document.addEventListener('input',e=>{
     if(e.target.matches('#line-form [name="generation"]')){
       e.target.dataset.manual=e.target.value.trim()?'true':'false';return;
@@ -1004,10 +1166,7 @@ document.addEventListener('click',async event=>{
     if(formId==='line-form'){
       const name=String(data.name||'').trim();const wild=data.isWild==='on';if(!name||!data.mother||(!wild&&!data.father))return notify(wild?'라인명과 모 성충을 선택하세요.':'라인명과 부모 개체를 선택하세요.');if(db.lines.some(x=>x.name.toLowerCase()===name.toLowerCase()&&x.id!==data.id))return notify('이미 같은 라인명이 있습니다.');if(data.father===data.mother)return notify('부모 개체를 서로 다르게 선택하세요.');const old=data.id?byId(db.lines,data.id):null;if(data.id&&(!old||(!mineLine(old)&&!isAdmin())))return notify('본인이 만든 라인만 수정할 수 있습니다.');const l={...(old||{}),id:data.id||uid(),name,father:data.father||'',mother:data.mother,year:data.year,generation:String(data.generation||'').trim().toUpperCase(),isWild:wild,method:old?.method||'',note:data.note,createdBy:old?.createdBy||db.currentUser};try{const stored=await persist('kml_lines',l.id,lineRecord(l),Boolean(data.id));l.updatedAt=stored.updated_at;}catch(err){return notify('라인 저장 실패: '+(err.message||err));}if(data.id){const index=db.lines.findIndex(x=>x.id===l.id);if(index>=0)db.lines[index]=l;}else db.lines.push(l);save();closeModal();go('line/'+l.id);render();notify(data.id?'라인을 수정했습니다.':'라인을 생성했습니다.');
     }
-    if(formId==='transfer-form'){
-       if(data.id){const x=adult(data.id);if(!x||(!mineAdult(x)&&!isAdmin()))return notify('본인 소유 개체만 이동할 수 있습니다.');}
-      const a=adult(data.id);if(!a||!data.to||data.to===a.owner)return notify('변경할 소유자를 선택하세요.');const {error:te}=await supa.rpc('kml_transfer_adult',{p_adult_id:a.id,p_to_user:data.to,p_date:data.date,p_note:data.note||''});if(te)return notify('소유자 변경 실패: '+te.message); db.transfers.push({id:uid(),adultId:a.id,from:a.owner,to:data.to,date:data.date,note:data.note});a.owner=data.to;save();closeModal();render();notify('소유자 변경 이력을 저장했습니다.');
-    }
+    if(formId==='transfer-form'){await submitTransfer(form);return;}
     if(formId==='profile-form'){
       const me=current();const nickname=String(data.nickname||'').trim();if(!nickname)return notify('닉네임을 입력하세요.');const intro=String(data.intro||'');let avatar_url=me.avatar_url||'';
       try{if(ui.photoReset)avatar_url='';else if(ui.photoPreview)avatar_url=ui.photoPreview;else if(data.photo?.size)avatar_url=await photoToJpeg(data.photo);}catch(err){return notify('사진 처리 실패: '+(err.message||err));}
@@ -1025,7 +1184,7 @@ document.addEventListener('click',async event=>{
   let crossAppRefreshBusy=false;
   let crossAppRefreshLast=0;
   async function refreshLinkedRecords(){
-    if(crossAppRefreshBusy||!allowed||ui.modal||detailLabelState.saving||detailLabelState.editorOpen||document.hidden||
+    if(crossAppRefreshBusy||!allowed||ui.modal||social.open||document.querySelector('#comment-form textarea')?.value?.trim()||detailLabelState.saving||detailLabelState.editorOpen||document.hidden||
        Date.now()-crossAppRefreshLast<3000)return;
     const target=document.activeElement;
     if(target&&target.matches?.('input,select,textarea,[contenteditable="true"]'))return;
@@ -1035,10 +1194,10 @@ document.addEventListener('click',async event=>{
     catch(e){/* Retain the last rendered data while offline. */}
     finally{crossAppRefreshBusy=false;}
   }
-  setInterval(refreshLinkedRecords,8000);
-  window.addEventListener('focus',refreshLinkedRecords);
+  setInterval(()=>{refreshLinkedRecords();refreshSocial();refreshCommentReactions();},8000);
+  window.addEventListener('focus',()=>{refreshLinkedRecords();refreshSocial();refreshCommentReactions();});
   document.addEventListener('visibilitychange',()=>{
-    if(!document.hidden){showStandaloneHome();refreshLinkedRecords();}
+    if(!document.hidden){showStandaloneHome();refreshLinkedRecords();refreshSocial();refreshCommentReactions();}
   });
   window.addEventListener('pageshow',event=>{
     if(event.persisted)showStandaloneHome();
