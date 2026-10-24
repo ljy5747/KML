@@ -47,7 +47,7 @@ function prepareDetailLabel(kind,id){
   const key=labelDraftKey(kind,id);
   if(detailLabelState.key!==key){Object.assign(detailLabelState,{key,kind,id,view:'label',editorOpen:false});}
   let draft=labelDrafts.get(key);
-  if(!draft||!draft.edited){draft={values:initialLabelValues(kind,id),edited:false};labelDrafts.set(key,draft);}
+  if(!draft||(!draft.edited&&!draft.pending)){draft={values:initialLabelValues(kind,id),edited:false};labelDrafts.set(key,draft);}
   if(labelDrafts.size>50){const oldest=labelDrafts.keys().next().value;if(oldest!==key)labelDrafts.delete(oldest);}
   return draft;
 }
@@ -70,12 +70,12 @@ function specimenLabelEditor(values){
   let html=LABEL_FIELD_GROUPS.map(([title,fields])=>'<h3>'+title+'</h3><div class="label-field-grid">'+fields.map(f=>labelInput(f,values)).join('')+'</div>').join('');
   for(let i=0;i<5;i++)html+='<div class="label-feed-heading"><strong>'+['1st','2nd','3rd','4th','5th'][i]+'</strong><button type="button" class="btn btn-light btn-sm" data-action="clear-label-feed" data-feed="'+i+'">비우기</button></div><div class="label-field-grid">'+[[`fd${i}`,'날짜','date'],[`ff${i}`,'먹이원'],[`fv${i}`,'용량'],[`fw${i}`,'체중 (g)']].map(f=>labelInput(f,values)).join('')+'</div>';
   html+='<h3>용화 · 우화</h3><div class="label-field-grid">'+[['pupaDate','용화 날짜','date'],['pupaW','용화 체중 (g)'],['adultDate','우화 날짜','date'],['adult','우화 크기 (mm)'],['breeder','브리더']].map(f=>labelInput(f,values)).join('')+'</div>';
-  return html+'<p class="label-date-warning" data-label-date-warning role="alert" hidden>날짜 순서를 확인하세요. 푸딩 → 교체 → 용화 → 우화 순서보다 이른 날짜가 있습니다.</p><div class="label-editor-actions"><button type="button" class="btn btn-light btn-sm" data-action="reset-label-inputs">라벨 입력 초기화</button><button type="button" class="btn btn-light btn-sm" data-action="refill-specimen-label">개체 기록으로 채우기</button></div><datalist id="label-generation-list">'+['WD','WF1','WF2','WF3','F1','F2','F3','F4','CB','CBF1','CBF2','CBF3'].map(x=>'<option value="'+x+'">').join('')+'</datalist><datalist id="label-feed-list"><option value="S8K"><option value="균사"><option value="발효톱밥"></datalist><datalist id="label-volume-list">'+['500CC','800CC','1100CC','1500CC','2300CC','3000CC'].map(x=>'<option value="'+x+'">').join('')+'</datalist>';
+  return html+'<p class="label-date-warning" data-label-date-warning role="alert" hidden>날짜 순서를 확인하세요. 푸딩 → 교체 → 용화 → 우화 순서보다 이른 날짜가 있습니다.</p><div class="label-editor-actions"><button type="button" class="btn btn-dark" data-action="complete-label-edit">수정 완료</button></div><datalist id="label-generation-list">'+['WD','WF1','WF2','WF3','F1','F2','F3','F4','CB','CBF1','CBF2','CBF3'].map(x=>'<option value="'+x+'">').join('')+'</datalist><datalist id="label-feed-list"><option value="S8K"><option value="균사"><option value="발효톱밥"></datalist><datalist id="label-volume-list">'+['500CC','800CC','1100CC','1500CC','2300CC','3000CC'].map(x=>'<option value="'+x+'">').join('')+'</datalist>';
 }
 function specimenTools(kind,id,pedigreeHTML){
   const draft=prepareDetailLabel(kind,id),tree=detailLabelState.view==='tree';
   const v=kind==='larva'?byId(db.larvae,id):null,extra=v?larvaBottleRecords(v).filter(r=>!labelIsPudding(r)).length:0;
-  return '<section class="panel specimen-tools" data-specimen-tools data-detail-key="'+attr(detailLabelState.key)+'"><div class="specimen-tools-head"><h2 data-detail-panel-title>'+(tree?'계통도':'사육 라벨')+'</h2><div class="specimen-view-tabs" role="tablist" aria-label="상세 보기 전환"><button type="button" id="specimen-label-tab" role="tab" aria-controls="specimen-label-view" aria-selected="'+!tree+'" data-action="detail-specimen-view" data-view="label">'+icon('file')+'라벨</button><button type="button" id="specimen-tree-tab" role="tab" aria-controls="specimen-tree-view" aria-selected="'+tree+'" data-action="detail-specimen-view" data-view="tree">'+icon('family')+'계통도</button></div></div><div class="specimen-stage"><div id="specimen-label-view" role="tabpanel" aria-labelledby="specimen-label-tab" '+(tree?'hidden':'')+'><canvas class="specimen-label-canvas" data-specimen-label-canvas width="1444" height="1032" aria-label="국균연구소 사육 라벨 미리보기">국균연구소 사육 라벨</canvas><p class="label-load-state" data-label-load-state aria-live="polite">라벨을 불러오는 중…</p></div><div id="specimen-tree-view" role="tabpanel" aria-labelledby="specimen-tree-tab" '+(!tree?'hidden':'')+'><div class="pedigree-legend"><span><b class="p-legend-m" aria-hidden="true">♂</b> 수컷</span><span><b class="p-legend-f" aria-hidden="true">♀</b> 암컷</span></div>'+pedigreeHTML+'</div></div><div data-label-tools '+(tree?'hidden':'')+'><div class="specimen-label-actions"><span class="section-caption" data-label-draft-state>'+(draft.edited?'라벨 내용 수정됨':'개체 기록에서 채움')+'</span><button type="button" class="btn btn-dark" data-action="save-specimen-label" '+(detailLabelState.saving?'disabled':'')+'>'+icon('download')+'이미지 저장</button></div>'+(extra>5?'<p class="label-record-limit">라벨에는 1~5병까지 표시합니다. 전체 '+extra+'병 기록은 아래 사육 기록에서 확인할 수 있습니다.</p>':'')+'<details class="specimen-label-editor" '+(detailLabelState.editorOpen?'open':'')+'><summary>라벨 내용 수정 · 라벨 전용</summary><div class="specimen-label-fields">'+specimenLabelEditor(draft.values)+'</div></details></div></section>';
+  return '<section class="panel specimen-tools" data-specimen-tools data-detail-key="'+attr(detailLabelState.key)+'"><div class="specimen-tools-head"><h2 data-detail-panel-title>'+(tree?'계통도':'사육 라벨')+'</h2><div class="specimen-view-tabs" role="tablist" aria-label="상세 보기 전환"><button type="button" id="specimen-label-tab" role="tab" aria-controls="specimen-label-view" aria-selected="'+!tree+'" data-action="detail-specimen-view" data-view="label">'+icon('file')+'라벨</button><button type="button" id="specimen-tree-tab" role="tab" aria-controls="specimen-tree-view" aria-selected="'+tree+'" data-action="detail-specimen-view" data-view="tree">'+icon('family')+'계통도</button></div></div><div class="specimen-stage"><div id="specimen-label-view" role="tabpanel" aria-labelledby="specimen-label-tab" '+(tree?'hidden':'')+'><canvas class="specimen-label-canvas" data-specimen-label-canvas width="1444" height="1032" aria-label="국균연구소 사육 라벨 미리보기">국균연구소 사육 라벨</canvas><p class="label-load-state" data-label-load-state aria-live="polite">라벨을 불러오는 중…</p></div><div id="specimen-tree-view" role="tabpanel" aria-labelledby="specimen-tree-tab" '+(!tree?'hidden':'')+'><div class="pedigree-legend"><span><b class="p-legend-m" aria-hidden="true">♂</b> 수컷</span><span><b class="p-legend-f" aria-hidden="true">♀</b> 암컷</span></div>'+pedigreeHTML+'</div></div><div data-label-tools '+(tree?'hidden':'')+'><div class="specimen-label-actions"><span class="section-caption" data-label-draft-state>'+(draft.pending?'수정 중':draft.edited?'수정 완료':'라벨 미리보기')+'</span><button type="button" class="btn btn-dark" data-action="save-specimen-label" '+(detailLabelState.saving||draft.pending?'disabled':'')+'>'+icon('download')+'이미지 저장</button></div>'+(extra>5?'<p class="label-record-limit">라벨에는 1~5병까지 표시합니다. 전체 '+extra+'병 기록은 아래 사육 기록에서 확인할 수 있습니다.</p>':'')+'<details class="specimen-label-editor" '+(detailLabelState.editorOpen?'open':'')+'><summary>라벨 내용 수정 · 라벨 전용</summary><div class="specimen-label-fields">'+specimenLabelEditor(draft.pending||draft.values)+'</div></details></div></section>';
 }
 function ensureLabelImage(){
   if(!labelImagePromise)labelImagePromise=new Promise((resolve,reject)=>{const image=new Image();image.onload=()=>resolve(image);image.onerror=()=>{labelImagePromise=null;reject(Error('라벨지 이미지를 불러오지 못했습니다. 새로고침해 주세요.'));};image.src=LABEL_TEMPLATE_PATH;});
@@ -190,7 +190,7 @@ function paintMountedLabel(){
   const canvas=document.querySelector('[data-specimen-label-canvas]'),key=detailLabelState.key,draft=labelDrafts.get(key);
   if(!canvas||!draft?.values)return;
   const host=canvas.closest('[data-specimen-tools]');if(host?.dataset.detailKey!==key)return;
-  const warning=host.querySelector('[data-label-date-warning]');if(warning)warning.hidden=!labelDatesInvalid(draft.values);
+  const warning=host.querySelector('[data-label-date-warning]');if(warning)warning.hidden=!labelDatesInvalid(draft.pending||draft.values);
   const version=(canvas.labelVersion||0)+1;canvas.labelVersion=version;
   const current=()=>canvas.isConnected&&canvas.labelVersion===version&&detailLabelState.key===key;
   const paint=image=>{if(!current())return;try{drawLabelCanvas(canvas,labelDrafts.get(key).values,image);const message=host.querySelector('[data-label-load-state]');if(message)message.hidden=true;}catch(error){const message=host.querySelector('[data-label-load-state]');if(message){message.hidden=false;message.textContent=error.message;}}};
@@ -214,36 +214,36 @@ function switchSpecimenView(view){
   host.querySelectorAll('[data-action="detail-specimen-view"]').forEach(button=>button.setAttribute('aria-selected',String(button.dataset.view===view)));
   if(!tree)queueLabelPaint();
 }
-function markLabelDraft(){
-  const draft=labelDrafts.get(detailLabelState.key);if(!draft)return;draft.edited=true;
-  const status=document.querySelector('[data-label-draft-state]');if(status)status.textContent='라벨 내용 수정됨';queueLabelPaint();
+function markLabelPending(){
+  const host=document.querySelector('[data-specimen-tools]'),draft=labelDrafts.get(detailLabelState.key);if(!host||!draft||host.dataset.detailKey!==detailLabelState.key)return;
+  const status=host.querySelector('[data-label-draft-state]');if(status)status.textContent='수정 중';
+  const warning=host.querySelector('[data-label-date-warning]');if(warning)warning.hidden=!labelDatesInvalid(draft.pending||draft.values);
+  const saveButton=host.querySelector('[data-action="save-specimen-label"]');if(saveButton)saveButton.disabled=true;
 }
 function updateLabelInput(event){
   const input=event.target.closest?.('[data-label-field]');if(!input)return;
-  const host=input.closest('[data-specimen-tools]'),draft=labelDrafts.get(detailLabelState.key),field=input.dataset.labelField;
-  if(!draft?.values||host?.dataset.detailKey!==detailLabelState.key||!Object.hasOwn(draft.values,field)||draft.values[field]===input.value)return;
-  draft.values[field]=input.value;markLabelDraft();
-}
-function setLabelInputs(values,edited){
-  const draft=labelDrafts.get(detailLabelState.key);if(!draft)return;draft.values={...values};draft.edited=edited;
-  const host=document.querySelector('[data-specimen-tools]');host?.querySelectorAll('[data-label-field]').forEach(input=>{input.value=labelText(values[input.dataset.labelField]);});
-  const status=host?.querySelector('[data-label-draft-state]');if(status)status.textContent=edited?'라벨 내용 수정됨':'개체 기록에서 채움';queueLabelPaint();
+  const host=input.closest('[data-specimen-tools]'),draft=labelDrafts.get(detailLabelState.key),field=input.dataset.labelField,values=draft?.pending||draft?.values;
+  if(!values||host?.dataset.detailKey!==detailLabelState.key||!Object.hasOwn(values,field)||values[field]===input.value)return;
+  draft.pending={...values,[field]:input.value};markLabelPending();
 }
 function clearLabelFeed(index){
   const i=Number(index),draft=labelDrafts.get(detailLabelState.key);if(!Number.isInteger(i)||i<0||i>4||!draft?.values)return;
-  const next={...draft.values};for(const key of ['fd','ff','fv','fw'])next[key+i]='';setLabelInputs(next,true);
+  const next={...(draft.pending||draft.values)};for(const key of ['fd','ff','fv','fw'])next[key+i]='';draft.pending=next;
+  const host=document.querySelector('[data-specimen-tools]');host?.querySelectorAll('[data-label-field]').forEach(input=>{input.value=labelText(next[input.dataset.labelField]);});markLabelPending();
 }
-function refillSpecimenLabel(){
-  const draft=labelDrafts.get(detailLabelState.key);if(!draft)return;
-  if(draft.edited&&!confirm('라벨 수정 내용을 지우고 개체 기록으로 다시 채울까요?'))return;
-  setLabelInputs(initialLabelValues(detailLabelState.kind,detailLabelState.id),false);
-}
-function resetLabelInputs(){
-  const draft=labelDrafts.get(detailLabelState.key);if(!draft?.values||!confirm('라벨 입력만 모두 비울까요? 개체 기록은 유지됩니다.'))return;
-  setLabelInputs(Object.fromEntries(Object.keys(draft.values).map(key=>[key,''])),true);
+function completeSpecimenLabelEdit(){
+  const host=document.querySelector('[data-specimen-tools]'),draft=labelDrafts.get(detailLabelState.key);if(!host||!draft?.values||host.dataset.detailKey!==detailLabelState.key)return false;
+  const next={...(draft.pending||draft.values)};
+  host.querySelectorAll('[data-label-field]').forEach(input=>{const field=input.dataset.labelField;if(Object.hasOwn(next,field))next[field]=input.value;});
+  draft.edited=draft.edited||Object.keys(next).some(field=>next[field]!==draft.values[field]);draft.values=next;delete draft.pending;
+  const status=host.querySelector('[data-label-draft-state]');if(status)status.textContent=draft.edited?'수정 완료':'라벨 미리보기';
+  const saveButton=host.querySelector('[data-action="save-specimen-label"]');if(saveButton)saveButton.disabled=detailLabelState.saving;
+  detailLabelState.editorOpen=false;const editor=host.querySelector('.specimen-label-editor');if(editor)editor.open=false;
+  queueLabelPaint();return true;
 }
 async function saveSpecimenLabel(button){
   const draft=labelDrafts.get(detailLabelState.key);if(detailLabelState.saving||!draft?.values)return;
+  if(draft.pending){notify('수정 완료를 누른 뒤 이미지를 저장하세요.');return;}
   const values={...draft.values};let nativeExport=false;detailLabelState.saving=true;if(button)button.disabled=true;
   try{
     const [image]=await Promise.all([ensureLabelImage(),ensureLabelGlyphs(values)]);
@@ -255,7 +255,7 @@ async function saveSpecimenLabel(button){
     if(mobile&&navigator.canShare?.({files:[file]})){try{await navigator.share({files:[file],title:name});return;}catch(error){if(error.name==='AbortError')return;}}
     const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),4000);
   }catch(error){notify('라벨 저장 실패: '+(error.message||String(error)));}
-  finally{detailLabelState.saving=false;if(nativeExport)detailLabelState.returnUntil=Date.now()+2000;document.querySelectorAll('[data-action="save-specimen-label"]').forEach(control=>{control.disabled=false;});}
+  finally{detailLabelState.saving=false;if(nativeExport)detailLabelState.returnUntil=Date.now()+2000;document.querySelectorAll('[data-action="save-specimen-label"]').forEach(control=>{control.disabled=!!labelDrafts.get(detailLabelState.key)?.pending;});}
 }
 document.addEventListener('input',updateLabelInput);
 document.addEventListener('change',updateLabelInput);

@@ -23,8 +23,7 @@ document.addEventListener('click',async event=>{
     if(act==='detail-specimen-view'){switchSpecimenView(a.dataset.view);return;}
     if(act==='save-specimen-label'){await saveSpecimenLabel(a);return;}
     if(act==='clear-label-feed'){clearLabelFeed(a.dataset.feed);return;}
-    if(act==='refill-specimen-label'){refillSpecimenLabel();return;}
-    if(act==='reset-label-inputs'){resetLabelInputs();return;}
+    if(act==='complete-label-edit'){completeSpecimenLabelEdit();return;}
     if(act==='year-step'){stepYear(a);return;}
     if(act==='toggle-menu'){ui.menu=!ui.menu;render();}
     if(act==='close-menu'){ui.menu=false;render();}
