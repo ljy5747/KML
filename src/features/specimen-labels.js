@@ -78,10 +78,11 @@ function specimenTools(kind,id,pedigreeHTML){
   const v=kind==='larva'?byId(db.larvae,id):null,extra=v?larvaBottleRecords(v).filter(r=>!labelIsPudding(r)).length:0;
   const labelPreview='<canvas class="specimen-label-canvas" data-specimen-label-canvas width="1444" height="1032" aria-label="국균연구소 사육 라벨 미리보기">국균연구소 사육 라벨</canvas><p class="label-load-state" data-label-load-state aria-live="polite">라벨을 불러오는 중…</p>';
   const treePreview='<div class="pedigree-legend"><span><b class="p-legend-m" aria-hidden="true">♂</b> 수컷</span><span><b class="p-legend-f" aria-hidden="true">♀</b> 암컷</span></div>'+pedigreeHTML;
-  const controls='<div data-label-tools '+(tree?'hidden':'')+'><div class="specimen-label-actions"><span class="section-caption" data-label-draft-state>'+(draft.pending?'수정 중':draft.edited?'수정 완료':'라벨 미리보기')+'</span><button type="button" class="btn btn-dark" data-action="save-specimen-label" '+(detailLabelState.saving||draft.pending?'disabled':'')+'>'+icon('download')+'이미지 저장</button></div>'+(extra>5?'<p class="label-record-limit">라벨에는 1~5병까지 표시합니다. 전체 '+extra+'병 기록은 아래 사육 기록에서 확인할 수 있습니다.</p>':'')+'<details class="specimen-label-editor" '+(detailLabelState.editorOpen?'open':'')+'><summary>라벨 내용 수정 · 라벨 전용</summary><div class="specimen-label-fields">'+specimenLabelEditor(draft.pending||draft.values)+'</div></details></div>';
+  const headerActions='<div class="label-header-actions" data-label-header-actions '+(tree?'hidden':'')+'><button type="button" class="btn btn-light" data-action="toggle-label-editor" aria-controls="specimen-label-editor" aria-expanded="'+detailLabelState.editorOpen+'">'+icon('edit')+'라벨 수정</button><button type="button" class="btn btn-dark" data-action="save-specimen-label" '+(detailLabelState.saving||draft.pending?'disabled':'')+'>'+icon('download')+'이미지 저장</button></div>';
+  const controls='<div data-label-tools '+(tree?'hidden':'')+'><span class="label-edit-status" data-label-draft-state role="status">'+(draft.pending?'수정 중':draft.edited?'수정 완료':'')+'</span>'+(extra>5?'<p class="label-record-limit">라벨에는 1~5병까지 표시합니다. 전체 '+extra+'병 기록은 아래 사육 기록에서 확인할 수 있습니다.</p>':'')+'<div id="specimen-label-editor" class="specimen-label-editor" role="region" aria-label="라벨 수정" '+(!detailLabelState.editorOpen?'hidden':'')+'><div class="specimen-label-fields">'+specimenLabelEditor(draft.pending||draft.values)+'</div></div></div>';
   const frame='<section class="panel specimen-tools'+(stacked?' specimen-tools--stacked':'')+'" data-specimen-tools data-detail-key="'+attr(detailLabelState.key)+'">';
-  if(stacked)return frame+'<div class="specimen-tools-head"><h2 data-detail-panel-title>사육 라벨</h2></div><div class="specimen-stage"><div id="specimen-label-view" role="region" aria-label="사육 라벨">'+labelPreview+'</div></div>'+controls+'<section class="adult-pedigree-section" aria-labelledby="adult-pedigree-heading"><div class="specimen-tools-head"><h2 id="adult-pedigree-heading">계통도</h2></div><div class="specimen-stage adult-pedigree-stage"><div id="specimen-tree-view" role="region" aria-label="성충 계통도">'+treePreview+'</div></div></section></section>';
-  return frame+'<div class="specimen-tools-head"><h2 data-detail-panel-title>'+(tree?'계통도':'사육 라벨')+'</h2><div class="specimen-view-tabs" role="tablist" aria-label="상세 보기 전환"><button type="button" id="specimen-label-tab" role="tab" aria-controls="specimen-label-view" aria-selected="'+!tree+'" data-action="detail-specimen-view" data-view="label">'+icon('file')+'라벨</button><button type="button" id="specimen-tree-tab" role="tab" aria-controls="specimen-tree-view" aria-selected="'+tree+'" data-action="detail-specimen-view" data-view="tree">'+icon('family')+'계통도</button></div></div><div class="specimen-stage"><div id="specimen-label-view" role="tabpanel" aria-labelledby="specimen-label-tab" '+(tree?'hidden':'')+'>'+labelPreview+'</div><div id="specimen-tree-view" role="tabpanel" aria-labelledby="specimen-tree-tab" '+(!tree?'hidden':'')+'>'+treePreview+'</div></div>'+controls+'</section>';
+  if(stacked)return frame+'<div class="specimen-tools-head specimen-label-head"><h2 data-detail-panel-title>LABEL</h2>'+headerActions+'</div><div class="specimen-stage"><div id="specimen-label-view" role="region" aria-label="라벨">'+labelPreview+'</div></div>'+controls+'<section class="adult-pedigree-section" aria-labelledby="adult-pedigree-heading"><div class="specimen-tools-head"><h2 id="adult-pedigree-heading">계통도</h2></div><div class="specimen-stage adult-pedigree-stage"><div id="specimen-tree-view" role="region" aria-label="성충 계통도">'+treePreview+'</div></div></section></section>';
+  return frame+'<div class="specimen-tools-head specimen-label-head"><h2 data-detail-panel-title>'+(tree?'계통도':'LABEL')+'</h2>'+headerActions+'<div class="specimen-view-tabs" role="tablist" aria-label="상세 보기 전환"><button type="button" id="specimen-label-tab" role="tab" aria-controls="specimen-label-view" aria-selected="'+!tree+'" data-action="detail-specimen-view" data-view="label">'+icon('file')+'라벨</button><button type="button" id="specimen-tree-tab" role="tab" aria-controls="specimen-tree-view" aria-selected="'+tree+'" data-action="detail-specimen-view" data-view="tree">'+icon('family')+'계통도</button></div></div><div class="specimen-stage"><div id="specimen-label-view" role="tabpanel" aria-labelledby="specimen-label-tab" '+(tree?'hidden':'')+'>'+labelPreview+'</div><div id="specimen-tree-view" role="tabpanel" aria-labelledby="specimen-tree-tab" '+(!tree?'hidden':'')+'>'+treePreview+'</div></div>'+controls+'</section>';
 }
 function ensureLabelImage(){
   if(!labelImagePromise)labelImagePromise=new Promise((resolve,reject)=>{const image=new Image();image.onload=()=>resolve(image);image.onerror=()=>{labelImagePromise=null;reject(Error('라벨지 이미지를 불러오지 못했습니다. 새로고침해 주세요.'));};image.src=LABEL_TEMPLATE_PATH;});
@@ -208,7 +209,6 @@ function queueLabelPaint(){
 }
 function mountSpecimenTools(){
   const host=document.querySelector('[data-specimen-tools]');if(!host)return;
-  const editor=host.querySelector('.specimen-label-editor');editor?.addEventListener('toggle',()=>{if(host.dataset.detailKey===detailLabelState.key)detailLabelState.editorOpen=editor.open;});
   paintMountedLabel();
 }
 function switchSpecimenView(view){
@@ -216,9 +216,16 @@ function switchSpecimenView(view){
   const host=document.querySelector('[data-specimen-tools]');if(!host||host.dataset.detailKey!==detailLabelState.key)return;
   detailLabelState.view=view;const tree=view==='tree';
   host.querySelector('#specimen-label-view').hidden=tree;host.querySelector('#specimen-tree-view').hidden=!tree;host.querySelector('[data-label-tools]').hidden=tree;
-  host.querySelector('[data-detail-panel-title]').textContent=tree?'계통도':'사육 라벨';
+  host.querySelector('[data-detail-panel-title]').textContent=tree?'계통도':'LABEL';
+  const actions=host.querySelector('[data-label-header-actions]');if(actions)actions.hidden=tree;
   host.querySelectorAll('[data-action="detail-specimen-view"]').forEach(button=>button.setAttribute('aria-selected',String(button.dataset.view===view)));
   if(!tree)queueLabelPaint();
+}
+function toggleLabelEditor(){
+  const host=document.querySelector('[data-specimen-tools]');if(!host||host.dataset.detailKey!==detailLabelState.key)return;
+  const editor=host.querySelector('.specimen-label-editor');if(!editor)return;
+  detailLabelState.editorOpen=editor.hidden;editor.hidden=!detailLabelState.editorOpen;
+  host.querySelector('[data-action="toggle-label-editor"]')?.setAttribute('aria-expanded',String(detailLabelState.editorOpen));
 }
 function markLabelPending(){
   const host=document.querySelector('[data-specimen-tools]'),draft=labelDrafts.get(detailLabelState.key);if(!host||!draft||host.dataset.detailKey!==detailLabelState.key)return;
@@ -242,9 +249,10 @@ function completeSpecimenLabelEdit(){
   const next={...(draft.pending||draft.values)};
   host.querySelectorAll('[data-label-field]').forEach(input=>{const field=input.dataset.labelField;if(Object.hasOwn(next,field))next[field]=input.value;});
   draft.edited=draft.edited||Object.keys(next).some(field=>next[field]!==draft.values[field]);draft.values=next;delete draft.pending;
-  const status=host.querySelector('[data-label-draft-state]');if(status)status.textContent=draft.edited?'수정 완료':'라벨 미리보기';
+  const status=host.querySelector('[data-label-draft-state]');if(status)status.textContent=draft.edited?'수정 완료':'';
   const saveButton=host.querySelector('[data-action="save-specimen-label"]');if(saveButton)saveButton.disabled=detailLabelState.saving;
-  detailLabelState.editorOpen=false;const editor=host.querySelector('.specimen-label-editor');if(editor)editor.open=false;
+  detailLabelState.editorOpen=false;const editor=host.querySelector('.specimen-label-editor');if(editor)editor.hidden=true;
+  host.querySelector('[data-action="toggle-label-editor"]')?.setAttribute('aria-expanded','false');
   queueLabelPaint();return true;
 }
 async function saveSpecimenLabel(button){
