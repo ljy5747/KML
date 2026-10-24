@@ -256,6 +256,9 @@
 .larva-save-error{color:#a53f31;line-height:1.6;font-size:14px}
 
 .p-cell.dead-record .breeder-link-name{text-decoration:line-through}
+
+.line-detail-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:19px}
+.line-detail-toolbar .backlink{margin-bottom:0}
 /* Both KML brand areas are home controls, including keyboard and touch use. */
 .brand-home{width:100%;border:0;border-bottom:1px solid #393731;background:transparent;color:inherit;text-align:left;cursor:pointer}
 .brand-home .brand-mark{display:block}
