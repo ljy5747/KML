@@ -29,6 +29,7 @@ jobs:
         run: |
           node scripts/build.mjs --check
           node tests/kml-import-ui.cjs
+          node tests/dashboard-registration.cjs
           node tests/year-picker.cjs
           node tests/pedigree-ui.cjs
           node tests/specimen-labels.cjs
