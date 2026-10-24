@@ -36,7 +36,7 @@ flowchart TD
 | `src/ui/dialog.js` | 입력창 표시, 스크롤과 화면 높이 처리 |
 | `src/forms/specimens.js` | 성충·라인·소유자 변경 입력창, 누대수 계산 |
 | `src/data/records.js` | 데이터 읽기, 저장, 표시 데이터 변환 |
-| `src/data/export.js` | 유충 CSV 내보내기 |
+| `src/data/export.js` | 유충 Excel 양식 내보내기 |
 | `src/features/beetlelog-import.js` | BeetleLog 선택 가져오기와 유충 연결 |
 | `src/features/specimen-labels.js` | 성충·유충 라벨, 초안, 계통도 전환과 PNG 저장 |
 | `assets/label-template.png` | Labeling 저장소의 원본 라벨지 |

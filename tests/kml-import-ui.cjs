@@ -1,5 +1,5 @@
 const fs=require('fs'),vm=require('vm'),assert=require('assert/strict');
-const code=fs.readFileSync(__dirname+'/../app.js','utf8').replace('  boot();','  globalThis.test={lineageLabel,sex,importEligibility,beetleImportRows,beetleImportModal,adultRows,adultsTable,adultDetail,lineCard,lineDetail,downloadCSV,ui,setDb:x=>db=x};');
+const code=fs.readFileSync(__dirname+'/../app.js','utf8').replace('  boot();','  globalThis.test={lineageLabel,sex,importEligibility,beetleImportRows,beetleImportModal,adultRows,adultsTable,adultDetail,lineCard,lineDetail,ui,setDb:x=>db=x};');
 let csvBlob;
 const element={style:{setProperty(){},removeProperty(){}},addEventListener(){},click(){},remove(){}};
 const sandbox={window:{addEventListener(){}},document:{getElementById:()=>element,addEventListener(){},createElement:()=>({...element}),body:{append(){}}},setInterval(){},setTimeout(){},clearTimeout(){},location:{hash:'#/lines'},URL:{createObjectURL:blob=>(csvBlob=blob,'blob:test'),revokeObjectURL(){}},Blob};
@@ -20,5 +20,4 @@ assert.equal(t.importEligibility(t.ui.bImport.lines[0],'lines'),'');
 const selection=t.beetleImportRows();assert.ok(selection.includes('유충 1마리')&&selection.includes('누락 유충 추가 가능')&&!selection.includes('왕사슴벌레')&&!selection.includes('disabled'));
 for(const html of [t.adultRows([adult]),t.adultsTable([adult],true),t.adultDetail(adult.id),t.lineCard(line),t.lineDetail(line.id)]) assert.ok(!html.includes('왕사슴벌레'),html.slice(0,100));
 const detail=t.lineDetail(line.id);assert.ok(detail.includes('4병')&&detail.includes('d4')&&detail.includes('사망')&&detail.includes('0 g'));
-t.downloadCSV(line.id);
-(async()=>{const text=await csvBlob.text();assert.ok(text.includes('4병 日期'.replace('日期','날짜'))&&text.includes('f4')&&text.includes('미구분')&&text.includes('사망'));console.log('PASS: Wild/WD/WF1 labels, hidden species, unknown sex, existing line reselection, larva count, four-bottle table/CSV, zero weight and status.');})();
+console.log('PASS: Wild/WD/WF1 labels, hidden species, unknown sex, existing line reselection, larva count, four-bottle table, zero weight and status.');

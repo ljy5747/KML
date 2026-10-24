@@ -1,0 +1,31 @@
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict'),X=require('../assets/vendor/xlsx-0.20.3.full.min.js');
+const element={style:{setProperty(){},removeProperty(){}},addEventListener(){}};
+const c={window:{addEventListener(){}},document:{getElementById:()=>element,addEventListener(){}},setInterval(){},setTimeout(){},clearTimeout(){},location:{hash:'#/lines'}};
+vm.runInNewContext(fs.readFileSync(__dirname+'/../app.js','utf8').replace('  boot();','globalThis.t={lineExcelData,excelTable,excelPlan,lineModal,downloadLineExcel,setDb:x=>db=x};'),c);
+const t=c.t,line={id:'L',name:'꼴통A & <라인>',createdBy:'u'},records=Array.from({length:7},(_,i)=>['2026-07-'+String(i+1).padStart(2,'0'),'먹이원 '+i,'800',i===0?'0':String(i+1)]);
+const larva={id:'v',lineId:'L',number:'001',sex:'U',records,emerged:'2026-10-01',size:'81.2',updatedAt:'stamp',sourceData:{status:'사망',memo:'=SUM(A1) & <메모>\n_x0041_',pupation:{pupaDate:'2026-09-01',pupaWeight:'0'},bottleRecords:records.map(()=>({id:'retain',photo:'retain'}))}};
+t.setDb({currentUser:'u',members:[],adults:[],lines:[line],larvae:[larva]});
+const sandbox={self:{},TextEncoder,TextDecoder};vm.runInNewContext(fs.readFileSync(__dirname+'/../assets/vendor/xlsx-0.20.3.full.min.js','utf8'),sandbox);vm.runInNewContext(fs.readFileSync(__dirname+'/../assets/excel-export-template.js','utf8'),sandbox);
+const template=fs.readFileSync(__dirname+'/../assets/templates/KML_larvae_template.xlsx');
+function exportFile(list){const data=t.lineExcelData(line,list);return {data,bytes:Buffer.from(sandbox.self.buildLineExcel(template,data.headers,data.rows))};}
+const {data,bytes}=exportFile([larva]);assert.equal(data.headers.length,37);assert.equal(data.rows[0][1],'001');
+const wb=X.read(bytes,{type:'buffer',cellNF:true});assert.deepEqual(wb.SheetNames,['유충','예시','안내']);const sheet=wb.Sheets['유충'];assert.equal(sheet.B3.v,'001');assert.equal(sheet.B3.t,'s');assert.equal(sheet.H3.v,0);assert.equal(sheet.H3.t,'n');assert.equal(sheet.A3.v,line.name);assert.equal(sheet.E3.t,'n');assert.equal(sheet.AK3.v,larva.sourceData.memo);assert.equal(sheet.AK3.f,undefined);assert.equal(sheet.B2.v,'[고정 예시] 001');assert.equal(sheet.AK2.v,'KML 고정 예시 · 3행부터 입력');
+let parsed;const worker={XLSX:X,TextEncoder,TextDecoder,importScripts(){},self:{postMessage:r=>parsed=r}};vm.runInNewContext(fs.readFileSync(__dirname+'/../assets/excel-worker.js','utf8'),worker);worker.self.onmessage({data:{buffer:bytes,kind:'larvae'}});assert.ok(!parsed.error,parsed.error);const table=t.excelTable(parsed,'larvae');assert.equal(table.rows.length,1);assert.equal(table.rows[0].row,3);assert.equal(table.rows[0].values['bottle.6.feedBrand'],'먹이원 6');assert.equal(table.rows[0].values.pupaWeight,0);assert.equal(table.rows[0].values.pupaDate,'2026-09-01');assert.equal(table.rows[0].values.note,larva.sourceData.memo);const plan=t.excelPlan(table,'larvae',true);assert.equal(plan.errors.length,0);assert.equal(plan.items.length,0,'unchanged export must reimport without changes');
+const C=X.CFB,original=C.read(template,{type:'buffer'}),written=C.read(bytes,{type:'buffer'});const text=(zip,path)=>Buffer.from(C.find(zip,'/'+path).content).toString();
+for(const path of original.FullPaths.filter(p=>p.startsWith('Root Entry/')&&!p.includes('\x01')&&!p.endsWith('/')).map(p=>p.slice(11)))if(path!=='xl/worksheets/sheet1.xml')assert.equal(text(original,path),text(written,path),path+' must be preserved');
+const xml=text(written,'xl/worksheets/sheet1.xml');assert.ok(xml.includes('sheetProtection'));assert.ok(xml.includes('ySplit="2"'));assert.ok(xml.includes('r="AK502"'));assert.ok(xml.includes('sqref="C2:C502"'));assert.ok(!xml.includes('<x:f>'));
+const empty=exportFile([]);assert.equal(empty.data.headers.length,29);assert.equal(X.read(empty.bytes,{type:'buffer'}).Sheets['유충'].B2.v,'[고정 예시] 001');
+const many=Array.from({length:500},(_,i)=>({...larva,number:String(i).padStart(3,'0'),records:[]}));const full=exportFile(many);assert.equal(X.read(full.bytes,{type:'buffer'}).Sheets['유충'].B502.v,'499');assert.throws(()=>t.lineExcelData(line,[...many,larva]),/500/);
+const max=exportFile([{...larva,records:Array.from({length:60},()=>records[0])}]);assert.equal(max.data.headers.length,249);assert.equal(X.read(max.bytes,{type:'buffer'}).Sheets['유충']['!ref'].split(':')[1],'IO502');
+assert.ok(t.lineModal(line.id).includes('Excel 내보내기'));assert.ok(!t.lineModal(line.id).includes('CSV 내보내기'));
+if(process.env.KML_EXPORT_QA)fs.writeFileSync(process.env.KML_EXPORT_QA,bytes);
+console.log('PASS: protected template roundtrip, seven/60 bottles, 500 rows, empty line, string IDs, typed zero/dates, XML/formula-like text, unchanged reimport and untouched ZIP parts.');
+
+(async()=>{
+ let downloaded,downloadName,terminated=false;
+ c.AbortController=AbortController;c.Blob=Blob;c.fetch=async()=>({ok:true,arrayBuffer:async()=>template.buffer.slice(template.byteOffset,template.byteOffset+template.byteLength)});
+ c.document.createElement=()=>({click(){downloadName=this.download;},remove(){}});c.document.body={append(){}};c.URL={createObjectURL:blob=>(downloaded=blob,'blob:test'),revokeObjectURL(){}};
+ c.Worker=class{constructor(){this.context={self:{postMessage:data=>this.onmessage({data})},TextEncoder,TextDecoder};this.context.importScripts=(...paths)=>{for(const p of paths)vm.runInNewContext(fs.readFileSync(__dirname+'/../assets/'+p.replace(/^\.\//,''),'utf8'),this.context);};vm.runInNewContext(fs.readFileSync(__dirname+'/../assets/excel-export-worker.js','utf8'),this.context);}postMessage(data){this.context.self.onmessage({data});}terminate(){terminated=true;}};
+ const button={innerHTML:'Excel 내보내기',disabled:false};await t.downloadLineExcel(line.id,button);assert.ok(downloaded);assert.equal(downloaded.type,'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');assert.ok(downloadName.endsWith('.xlsx'));assert.equal(button.disabled,false);assert.equal(button.innerHTML,'Excel 내보내기');assert.ok(terminated);assert.equal(X.read(Buffer.from(await downloaded.arrayBuffer()),{type:'buffer'}).Sheets['유충'].B3.v,'001');
+ console.log('PASS: async template fetch, actual browser worker generation, XLSX download and button cleanup.');
+})().catch(error=>{console.error(error);process.exitCode=1;});

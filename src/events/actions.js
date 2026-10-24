@@ -98,7 +98,7 @@ document.addEventListener('click',async event=>{
       }catch(err){if(result)result.textContent='연결 확인 실패: '+(err.message||String(err));}
     }
     if(act==='excel-not-ready')notify('엑셀 업로드는 다음 개발 단계에서 연결합니다. 현재는 미구현 기능입니다.');
-    if(act==='download-line')downloadCSV(a.dataset.id);
+    if(act==='download-line')await downloadLineExcel(a.dataset.id,a);
     if(act==='google-login'){if(!supa)return;const redirectTo=location.origin+location.pathname;const {error:e}=await supa.auth.signInWithOAuth({provider:'google',options:{redirectTo}});if(e)notify('Google 로그인 오류: '+e.message);}
     if(act==='sign-out'){ui.excelImport?.worker?.terminate();ui.excelImport=null;resetSocial();clearDetailLabels();await supa?.auth.signOut();allowed=false;authUser=null;db={members:[],adults:[],lines:[],larvae:[],comments:[],transfers:[],currentUser:null};gate();}
   });
