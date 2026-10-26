@@ -103,7 +103,7 @@ display:inline-block;line-height:1;vertical-align:middle;position:relative;top:-
 .grade.gS{color:#E8C77A;border-color:#E8C77A88;background:#2A2114}
 .grade.gA{color:#9BC7E8;border-color:#5AA9E666;background:#141D24}
 .grade.gB{color:#A8C98C;border-color:#6B8E4E88;background:#171E12}
-.grade.gC,.grade.gD,.grade.gE{color:var(--dim);border-color:var(--line)}
+.grade.gC,.grade.gF{color:var(--dim);border-color:var(--line)}
 .rwait{font-size:11px;color:#6E6559}
 .rcrown{flex:none;width:26px;text-align:right;font-size:17px;line-height:1}
 .rrow.top .rname b{font-size:18px}
@@ -358,7 +358,8 @@ function sexHeads(larvae,sex){
   });
   return vs.sort(function(a,b){return b-a;});
 }
-function gradeOf(t){return t>=90?"S":t>=80?"A":t>=70?"B":t>=60?"C":t>=50?"D":"E";}
+/* 종합점수 정렬 순서 기준: S 1명 · A/B/C 각 2명 · F 1명 (8명 기준) */
+function gradeOf(rank){return rank===1?"S":rank<=3?"A":rank<=5?"B":rank<=7?"C":"F";}
 function computeBreederRanks(rows,metric){
   rows.forEach(function(r){
     var M=sexVals(r.br.larvae,metric,"m"),F=sexVals(r.br.larvae,metric,"f");
@@ -386,7 +387,6 @@ function computeBreederRanks(rows,metric){
     /* 랭킹 점수: 가진 항목만으로 환산 (전체 3두 이상이면 집계) */
     if(!r.eligible){r.total=null;r.grade=null;return;}
     r.total=r.partial;
-    r.grade=gradeOf(r.total);
   });
   return rows;
 }
@@ -520,6 +520,7 @@ function render(B){
     if(Math.abs(a.total-b.total)>1e-9)return b.total-a.total;   /* 높을수록 상위 */
     return (b.mAvg||0)-(a.mAvg||0);              /* 동점이면 수컷 평균 */
   });
+  ranked.forEach(function(r,i){r.grade=r.total!=null?gradeOf(i+1):null;});
 
   var tA=keys[0],tB=keys[1];
   var sA=teamStats(rows.filter(function(r){return r.br.team===tA;}));
@@ -785,7 +786,7 @@ function openRankInfo(){
     +'<div class="info-sec">참가 조건</div>'
     +'<p>기록된 개체가 <b>3두 이상</b>이면 집계돼요. 한쪽 성별이나 두폭 기록이 없으면 그 항목은 빼고 <b>가진 항목만으로 100점 만점에 맞춰</b> 환산해요 (빈 항목 감점 없음).</p>'
     +'<div class="info-sec">등급</div>'
-    +'<p><span class="grade gS">S</span> 90↑ &nbsp;<span class="grade gA">A</span> 80↑ &nbsp;<span class="grade gB">B</span> 70↑ &nbsp;<span class="grade gC">C</span> 60↑ &nbsp;<span class="grade gD">D</span> 50↑ &nbsp;<span class="grade gE">E</span></p>'
+    +'<p>종합점수 순으로 <b>8명 기준</b> 등급을 배정해요.<br/><span class="grade gS">S</span> 1위 (1명) &nbsp;<span class="grade gA">A</span> 2~3위 (2명) &nbsp;<span class="grade gB">B</span> 4~5위 (2명) &nbsp;<span class="grade gC">C</span> 6~7위 (2명) &nbsp;<span class="grade gF">F</span> 8위 (1명)<br/>동점이면 수컷 평균이 높은 순서로, 그 값도 같으면 참가자 등록 순서로 등급을 배정해요. 집계 대기는 등급에서 제외돼요.</p>'
     +'<div class="info-sec">팀 중간 집계</div>'
     +'<p>팀원 종합 점수를 <b>합산</b>해요. 팀장 점수는 <b>×1.3</b>, 기록 없는 팀원은 0점이에요. 막대는 두 팀 합계 대비 비율이고, 한 팀이 <b>60% 이상</b>이면 우세로 표시돼요.</p>'
     +'<p class="info-foot">무게는 개체별 최신 병 기준 · 성충 체장이 입력되기 시작하면 무게 대신 체장(mm)으로 평가 · 동점이면 수컷 평균이 높은 쪽이 상위</p>'
