@@ -1,5 +1,5 @@
 /* Fill the Artifact Tool template without rewriting its formatting/protection. */
-importScripts('./vendor/xlsx-0.20.3.full.min.js','./excel-export-template.js');
+importScripts('./vendor/xlsx-0.20.3.full.min.js','./excel-export-template.js?v=table-style-20261028');
 self.onmessage=function(event){
  try{
   const {template,headers,rows}=event.data;

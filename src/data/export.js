@@ -14,10 +14,10 @@ async function downloadLineExcel(id,button){
  try{
   const data=lineExcelData(line,db.larvae.filter(v=>v.lineId===id));
   const controller=new AbortController(),fetchTimer=setTimeout(()=>controller.abort(),20000);let response;
-  try{response=await fetch('assets/templates/KML_larvae_template.xlsx?v=scroll-fix-20261024',{signal:controller.signal});if(!response.ok)throw Error('엑셀 양식을 내려받지 못했습니다.');}finally{clearTimeout(fetchTimer);}
+  try{response=await fetch('assets/templates/KML_larvae_template.xlsx?v=table-style-20261028',{signal:controller.signal});if(!response.ok)throw Error('엑셀 양식을 내려받지 못했습니다.');}finally{clearTimeout(fetchTimer);}
   const template=await response.arrayBuffer();
   const buffer=await new Promise((resolve,reject)=>{
-   worker=new Worker('assets/excel-export-worker.js?v=line-export-20261024');
+   worker=new Worker('assets/excel-export-worker.js?v=table-style-20261028');
    timer=setTimeout(()=>reject(Error('파일 생성 시간이 초과됐습니다. 다시 시도해 주세요.')),30000);
    worker.onmessage=event=>event.data.error?reject(Error(event.data.error)):resolve(event.data.buffer);
    worker.onerror=()=>reject(Error('Excel 파일을 만들지 못했습니다. 다시 시도해 주세요.'));

@@ -8,7 +8,7 @@ self.buildLineExcel=function(template,headers,rows){
  const escape=value=>String(value??'').replace(/_x[\da-f]{4}_/gi,m=>'_x005F_'+m.slice(1)).replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g,'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
  const rawRow=n=>xml.match(new RegExp('<'+prefix+'row\\b[^>]*\\br="'+n+'"[^>]*>[\\s\\S]*?</'+prefix+'row>'))?.[0];
  const cellMap=n=>new Map([...rawRow(n).matchAll(new RegExp('<'+prefix+'c\\b([^>]*?)(?:/>|>([\\s\\S]*?)</'+prefix+'c>)','g'))].map(m=>[m[1].match(/\br="([A-Z]+)\d+"/)[1],{xml:m[0],style:m[1].match(/\bs="(\d+)"/)?.[1]||'0'}]));
- const first=cellMap(1),example=cellMap(2),input=cellMap(3),last=headers.length-5,originalLast=24;
+ const first=cellMap(1),example=cellMap(2),input=cellMap(3),bottom=cellMap(502),last=headers.length-5,originalLast=24;
  if(headers.length<29||(headers.length-9)%4!==0)throw Error('유충 엑셀 열 구성이 올바르지 않습니다.');
  const original=i=>i<4?i:i<last?4+(i-4)%4:originalLast+(i-last);
  function cell(value,index,row,style){
@@ -25,8 +25,10 @@ self.buildLineExcel=function(template,headers,rows){
   const source=i<last?i:originalLast+i-last;
   return shift(example.get(col(source)).xml,i,2);
  }).join('')+'</'+prefix+'row>';
- const body=Array.from({length:500},(_,i)=>'<'+prefix+'row r="'+(i+3)+'" ht="24" customHeight="1">'+headers.map((_,j)=>cell(rows[i]?.[j]??'',j,i+3,input.get(col(original(j))).style)).join('')+'</'+prefix+'row>').join('');
- const columns=headers.map((_,i)=>'<'+prefix+'col min="'+(i+1)+'" max="'+(i+1)+'" width="'+(i===headers.length-1?32:18)+'" customWidth="1" style="'+input.get(col(original(i))).style+'"/>').join('');
+ const body=Array.from({length:500},(_,i)=>'<'+prefix+'row r="'+(i+3)+'" ht="24" customHeight="1">'+headers.map((_,j)=>cell(rows[i]?.[j]??'',j,i+3,(i===499?bottom:input).get(col(original(j))).style)).join('')+'</'+prefix+'row>').join('');
+ const sourceColumns=[...xml.matchAll(new RegExp('<'+prefix+'col\\b([^>]*?)/>','g'))].map(m=>({min:Number(m[1].match(/\bmin="(\d+)"/)[1]),max:Number(m[1].match(/\bmax="(\d+)"/)[1]),width:m[1].match(/\bwidth="([\d.]+)"/)[1]}));
+ const width=i=>sourceColumns.find(c=>original(i)+1>=c.min&&original(i)+1<=c.max).width;
+ const columns=headers.map((_,i)=>'<'+prefix+'col min="'+(i+1)+'" max="'+(i+1)+'" width="'+width(i)+'" customWidth="1" style="'+input.get(col(original(i))).style+'"/>').join('');
  let output=xml.replace(new RegExp('<'+prefix+'sheetData\\b[^>]*>[\\s\\S]*?</'+prefix+'sheetData>'),'<'+prefix+'sheetData>'+headerRow+exampleRow+body+'</'+prefix+'sheetData>');
  output=output.replace(new RegExp('<'+prefix+'cols>[\\s\\S]*?</'+prefix+'cols>'),'<'+prefix+'cols>'+columns+'</'+prefix+'cols>');
  output=output.replace(new RegExp('<'+prefix+'dimension\\b[^>]*/>'),'<'+prefix+'dimension ref="A1:'+col(headers.length-1)+'502"/>');
