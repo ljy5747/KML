@@ -13,6 +13,11 @@ function larvaBottleRecords(v){
   const rows=Array.isArray(v?.records)?v.records:[];
   return rows.length?rows.map((row,i)=>({...source[i],date:labelText(row?.[0]),feedBrand:labelText(row?.[1]),feedType:labelText(source[i]?.feedType),bottleSize:labelText(row?.[2]),weight:labelText(row?.[3])})):source.map(r=>({...r}));
 }
+function larvaHeadWidth(v){
+  if(Object.hasOwn(v?.sourceData||{},'headWidth'))return labelText(v.sourceData.headWidth);
+  const measured=larvaBottleRecords(v).filter(r=>labelText(r.headWidth).trim()!=='').sort((a,b)=>labelText(a.date).localeCompare(labelText(b.date)));
+  return labelText(measured.at(-1)?.headWidth);
+}
 function labelRecordContext(kind,id){
   if(kind==='larva'){
     const v=byId(db.larvae,id);if(!v)return null;
@@ -35,7 +40,7 @@ function initialLabelValues(kind,id){
     const feed=row=>labelText(row?.feedBrand||row?.feedType).trim();
     const volume=value=>{const s=labelText(value).trim();return !s?'':/^\d+(?:\.\d+)?$/.test(s)?s+'CC':s.replace(/cc$/i,'CC');};
     d.pudDate=labelText(pudding?.date);d.pudFeed=feed(pudding);
-    const head=records.slice().reverse().find(row=>labelText(row.headWidth).trim()!=='');d.head=labelText(head?.headWidth);
+    d.head=larvaHeadWidth(r);
     d.pupaDate=labelText(r.sourceData?.pupation?.pupaDate);d.pupaW=labelText(r.sourceData?.pupation?.pupaWeight);
     d.adultDate=d.adultDate||labelText(r.sourceData?.eclosion?.date);d.adult=d.adult||labelText(r.sourceData?.eclosion?.totalLength);
     for(let i=0;i<5;i++){const row=bottles[i];if(!row)continue;d['fd'+i]=labelText(row.date);d['ff'+i]=feed(row);d['fv'+i]=volume(row.bottleSize);d['fw'+i]=labelText(row.weight);}

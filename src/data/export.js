@@ -3,8 +3,9 @@ function lineExcelData(line,list){
  const count=Math.max(5,...list.map(v=>larvaBottleRecords(v).length));
  if(count>60)throw Error('Excel 양식은 최대 60병까지 지원합니다.');
  if(list.length>500)throw Error('한 번에 내보낼 수 있는 유충은 최대 500개체입니다.');
- const headers=['라인명*','관리번호*','성별','상태',...Array.from({length:count},(_,i)=>[`${i+1}병 날짜`,`${i+1}병 먹이원`,`${i+1}병 용량(cc)`,`${i+1}병 무게(g)`]).flat(),'용화일','용화 무게(g)','우화일','체장(mm)','메모'];
- const rows=list.map(v=>{const records=larvaBottleRecords(v),source=v.sourceData||{},p=source.pupation||{};return[line.name,String(v.number??''),v.sex==='M'?'수컷':v.sex==='F'?'암컷':'미구분',source.status||'유충',...Array.from({length:count},(_,i)=>{const b=records[i]||{};return[b.date??'',b.feedBrand||b.feedType||'',b.bottleSize??'',b.weight??''];}).flat(),p.pupaDate??'',p.pupaWeight??'',v.emerged||source.eclosion?.date||'',v.size??'',source.memo??''];});
+ const headers=['라인명*','관리번호*','성별','두폭(mm)','상태',...Array.from({length:count},(_,i)=>[`${i+1}병 날짜`,`${i+1}병 먹이원`,`${i+1}병 용량(cc)`,`${i+1}병 무게(g)`]).flat(),'용화일','용화 무게(g)','우화일','체장(mm)','메모'];
+ const sorted=list.slice().sort((a,b)=>String(a.number??'').localeCompare(String(b.number??''),'ko',{numeric:true,sensitivity:'base'}));
+ const rows=sorted.map(v=>{const records=larvaBottleRecords(v),source=v.sourceData||{},p=source.pupation||{};return[line.name,String(v.number??''),v.sex==='M'?'수컷':v.sex==='F'?'암컷':'미구분',larvaHeadWidth(v),source.status||'유충',...Array.from({length:count},(_,i)=>{const b=records[i]||{};return[b.date??'',b.feedBrand||b.feedType||'',b.bottleSize??'',b.weight??''];}).flat(),p.pupaDate??'',p.pupaWeight??'',v.emerged||source.eclosion?.date||'',v.size??'',source.memo??''];});
  return {headers,rows};
 }
 async function downloadLineExcel(id,button){
@@ -14,10 +15,10 @@ async function downloadLineExcel(id,button){
  try{
   const data=lineExcelData(line,db.larvae.filter(v=>v.lineId===id));
   const controller=new AbortController(),fetchTimer=setTimeout(()=>controller.abort(),20000);let response;
-  try{response=await fetch('assets/templates/KML_larvae_template.xlsx?v=table-style-20261028',{signal:controller.signal});if(!response.ok)throw Error('엑셀 양식을 내려받지 못했습니다.');}finally{clearTimeout(fetchTimer);}
+  try{response=await fetch('assets/templates/KML_larvae_template.xlsx?v=headwidth-sort-20261028',{signal:controller.signal});if(!response.ok)throw Error('엑셀 양식을 내려받지 못했습니다.');}finally{clearTimeout(fetchTimer);}
   const template=await response.arrayBuffer();
   const buffer=await new Promise((resolve,reject)=>{
-   worker=new Worker('assets/excel-export-worker.js?v=table-style-20261028');
+   worker=new Worker('assets/excel-export-worker.js?v=headwidth-sort-20261028');
    timer=setTimeout(()=>reject(Error('파일 생성 시간이 초과됐습니다. 다시 시도해 주세요.')),30000);
    worker.onmessage=event=>event.data.error?reject(Error(event.data.error)):resolve(event.data.buffer);
    worker.onerror=()=>reject(Error('Excel 파일을 만들지 못했습니다. 다시 시도해 주세요.'));

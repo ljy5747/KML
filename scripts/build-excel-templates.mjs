@@ -7,9 +7,10 @@ const previewDir=process.env.KML_TEMPLATE_PREVIEW_DIR||'/tmp/kml-excel-template-
 await fs.mkdir(previewDir,{recursive:true});
 const letters=n=>{let s='';for(n++;n;n=Math.floor((n-1)/26))s=String.fromCharCode(65+(n-1)%26)+s;return s;};
 const adult=['관리번호*','혈통*','누대수','성별*','체장(mm)','우화일','브리더 닉네임','부 관리번호','모 관리번호','입수 경로','보유 상태','메모'];
-const larvae=['라인명*','관리번호*','성별','상태',...Array.from({length:5},(_,i)=>[`${i+1}병 날짜`,`${i+1}병 먹이원`,`${i+1}병 용량(cc)`,`${i+1}병 무게(g)`]).flat(),'용화일','용화 무게(g)','우화일','체장(mm)','메모'];
+const larvae=['라인명*','관리번호*','성별','두폭(mm)','상태',...Array.from({length:5},(_,i)=>[`${i+1}병 날짜`,`${i+1}병 먹이원`,`${i+1}병 용량(cc)`,`${i+1}병 무게(g)`]).flat(),'용화일','용화 무게(g)','우화일','체장(mm)','메모'];
 await fs.mkdir(out,{recursive:true});
 for(const [kind,headers]of [['adults',adult],['larvae',larvae]]){
+ if(process.env.KML_TEMPLATE_KIND&&process.env.KML_TEMPLATE_KIND!==kind)continue;
  const wb=Workbook.create(),name=kind==='adults'?'성충':'유충',main=wb.worksheets.add(name),sample=wb.worksheets.add('예시'),guide=wb.worksheets.add('안내');
  for(const sheet of [main,sample]){
   sheet.showGridLines=false;const end=letters(headers.length-1);sheet.getRange(`A1:${end}502`).format.font={name:'Noto Serif KR',size:11,color:'#302D27'};
@@ -19,20 +20,20 @@ for(const [kind,headers]of [['adults',adult],['larvae',larvae]]){
   headers.forEach((header,i)=>{
    const column=letters(i);if(/번호|혈통|누대수|닉네임|메모|라인명|먹이원/.test(header))sheet.getRange(`${column}2:${column}502`).setNumberFormat('@');
    if(/날짜|우화일|용화일/.test(header))sheet.getRange(`${column}2:${column}502`).setNumberFormat('yyyy-mm-dd');
-   if(/무게|체장/.test(header))sheet.getRange(`${column}2:${column}502`).setNumberFormat('0.0');
+   if(/무게|체장|두폭/.test(header))sheet.getRange(`${column}2:${column}502`).setNumberFormat('0.0');
    if(header==='메모')sheet.getRange(`${column}1:${column}502`).format.columnWidth=32.015625;
    if(kind==='larvae'&&header==='관리번호*')sheet.getRange(`${column}1:${column}502`).format.columnWidth=10.76171875;
    if(/먹이원/.test(header))sheet.getRange(`${column}1:${column}502`).format.columnWidth=23.13671875;
   });
   const sex=kind==='adults'?'D':'C';sheet.getRange(`${sex}2:${sex}502`).dataValidation={rule:{type:'list',values:kind==='adults'?['수컷','암컷']:['미구분','수컷','암컷']}};
-  const status=kind==='adults'?'K':'D';sheet.getRange(`${status}2:${status}502`).dataValidation={rule:{type:'list',values:kind==='adults'?['보유','분양','사망']:['유충','용화','우화','분양','사망']}};
+  const status=kind==='adults'?'K':'E';sheet.getRange(`${status}2:${status}502`).dataValidation={rule:{type:'list',values:kind==='adults'?['보유','분양','사망']:['유충','용화','우화','분양','사망']}};
   if(kind==='adults')sheet.getRange('J2:J502').dataValidation={rule:{type:'list',values:['우화','입양','채집']}};
  }
  const end=letters(headers.length-1);
  const fixed=sample.getRange(`A2:${end}2`);
  main.tabColor='#B5945C';sample.tabColor='#D4C6AD';guide.tabColor='#8B8B82';
  if(kind==='adults')sample.getRange('A2:L3').values=[['EX-M001','꼴통A','F3','수컷',84.2,new Date('2026-06-15T00:00:00Z'),'','','','우화','보유','사육 메모 예시'],['EX-F001','Wild','WD','암컷',50.1,null,'','','','채집','보유','']];
- else {const row=Array(headers.length).fill('');row[0]='내 라인명';row[1]='001';row[2]='미구분';row[3]='유충';row[4]=new Date('2026-07-01T00:00:00Z');row[5]='먹이원 A';row[6]=800;row[7]=0;row[8]=new Date('2026-09-01T00:00:00Z');row[9]='먹이원 B';row[10]=1400;row[11]=22.5;sample.getRange(`A2:${letters(headers.length-1)}2`).values=[row];}
+ else {const row=Array(headers.length).fill('');row[0]='내 라인명';row[1]='001';row[2]='미구분';row[3]=10.5;row[4]='유충';row[5]=new Date('2026-07-01T00:00:00Z');row[6]='먹이원 A';row[7]=800;row[8]=0;row[9]=new Date('2026-09-01T00:00:00Z');row[10]='먹이원 B';row[11]=1400;row[12]=22.5;sample.getRange(`A2:${letters(headers.length-1)}2`).values=[row];}
  const example=fixed.values[0];
  example[kind==='adults'?0:1]=kind==='adults'?'[고정 예시] EX-M001':'[고정 예시] 001';
  example[headers.length-1]='KML 고정 예시 · 3행부터 입력';

@@ -42,7 +42,8 @@ begin
    v:=jsonb_populate_record(v,p-array['source_patch','bottle_changes']);
    if v.sex not in ('M','F','U') or v.sex is null or (v.size is not null and (v.size<0 or v.size>200)) then raise exception '유충 성별·체장을 확인하세요.';end if;
    source:=case when jsonb_typeof(v.source_data)='object' then v.source_data else '{}'::jsonb end;patch:=coalesce(p->'source_patch','{}'::jsonb);
-   if jsonb_typeof(patch) is distinct from 'object' or exists(select 1 from jsonb_object_keys(patch) k where k not in ('status','memo','pupation')) then raise exception '잘못된 유충 추가 정보입니다.';end if;
+   if jsonb_typeof(patch) is distinct from 'object' or exists(select 1 from jsonb_object_keys(patch) k where k not in ('status','memo','pupation','headWidth')) then raise exception '잘못된 유충 추가 정보입니다.';end if;
+   if patch?'headWidth' and (jsonb_typeof(patch->'headWidth') is distinct from 'string' or (patch->>'headWidth'<>'' and (patch->>'headWidth' !~ '^[0-9]+([.][0-9]+)?$' or (patch->>'headWidth')::numeric>1000000))) then raise exception '두폭은 0 이상의 숫자여야 합니다.';end if;
    if patch?'pupation' then
     if jsonb_typeof(patch->'pupation') is distinct from 'object' or exists(select 1 from jsonb_object_keys(patch->'pupation') k where k not in ('prepupaDate','pupaDate','pupaWeight')) then raise exception '용화 정보를 확인하세요.';end if;
     source:=jsonb_set(source,'{pupation}',(case when jsonb_typeof(source->'pupation')='object' then source->'pupation' else '{}'::jsonb end)||(patch->'pupation'));

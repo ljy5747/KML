@@ -231,6 +231,11 @@ function larvaBottleRecords(v){
   const rows=Array.isArray(v?.records)?v.records:[];
   return rows.length?rows.map((row,i)=>({...source[i],date:labelText(row?.[0]),feedBrand:labelText(row?.[1]),feedType:labelText(source[i]?.feedType),bottleSize:labelText(row?.[2]),weight:labelText(row?.[3])})):source.map(r=>({...r}));
 }
+function larvaHeadWidth(v){
+  if(Object.hasOwn(v?.sourceData||{},'headWidth'))return labelText(v.sourceData.headWidth);
+  const measured=larvaBottleRecords(v).filter(r=>labelText(r.headWidth).trim()!=='').sort((a,b)=>labelText(a.date).localeCompare(labelText(b.date)));
+  return labelText(measured.at(-1)?.headWidth);
+}
 function labelRecordContext(kind,id){
   if(kind==='larva'){
     const v=byId(db.larvae,id);if(!v)return null;
@@ -253,7 +258,7 @@ function initialLabelValues(kind,id){
     const feed=row=>labelText(row?.feedBrand||row?.feedType).trim();
     const volume=value=>{const s=labelText(value).trim();return !s?'':/^\d+(?:\.\d+)?$/.test(s)?s+'CC':s.replace(/cc$/i,'CC');};
     d.pudDate=labelText(pudding?.date);d.pudFeed=feed(pudding);
-    const head=records.slice().reverse().find(row=>labelText(row.headWidth).trim()!=='');d.head=labelText(head?.headWidth);
+    d.head=larvaHeadWidth(r);
     d.pupaDate=labelText(r.sourceData?.pupation?.pupaDate);d.pupaW=labelText(r.sourceData?.pupation?.pupaWeight);
     d.adultDate=d.adultDate||labelText(r.sourceData?.eclosion?.date);d.adult=d.adult||labelText(r.sourceData?.eclosion?.totalLength);
     for(let i=0;i<5;i++){const row=bottles[i];if(!row)continue;d['fd'+i]=labelText(row.date);d['ff'+i]=feed(row);d['fv'+i]=volume(row.bottleSize);d['fw'+i]=labelText(row.weight);}
@@ -817,8 +822,9 @@ function lineExcelData(line,list){
  const count=Math.max(5,...list.map(v=>larvaBottleRecords(v).length));
  if(count>60)throw Error('Excel 양식은 최대 60병까지 지원합니다.');
  if(list.length>500)throw Error('한 번에 내보낼 수 있는 유충은 최대 500개체입니다.');
- const headers=['라인명*','관리번호*','성별','상태',...Array.from({length:count},(_,i)=>[`${i+1}병 날짜`,`${i+1}병 먹이원`,`${i+1}병 용량(cc)`,`${i+1}병 무게(g)`]).flat(),'용화일','용화 무게(g)','우화일','체장(mm)','메모'];
- const rows=list.map(v=>{const records=larvaBottleRecords(v),source=v.sourceData||{},p=source.pupation||{};return[line.name,String(v.number??''),v.sex==='M'?'수컷':v.sex==='F'?'암컷':'미구분',source.status||'유충',...Array.from({length:count},(_,i)=>{const b=records[i]||{};return[b.date??'',b.feedBrand||b.feedType||'',b.bottleSize??'',b.weight??''];}).flat(),p.pupaDate??'',p.pupaWeight??'',v.emerged||source.eclosion?.date||'',v.size??'',source.memo??''];});
+ const headers=['라인명*','관리번호*','성별','두폭(mm)','상태',...Array.from({length:count},(_,i)=>[`${i+1}병 날짜`,`${i+1}병 먹이원`,`${i+1}병 용량(cc)`,`${i+1}병 무게(g)`]).flat(),'용화일','용화 무게(g)','우화일','체장(mm)','메모'];
+ const sorted=list.slice().sort((a,b)=>String(a.number??'').localeCompare(String(b.number??''),'ko',{numeric:true,sensitivity:'base'}));
+ const rows=sorted.map(v=>{const records=larvaBottleRecords(v),source=v.sourceData||{},p=source.pupation||{};return[line.name,String(v.number??''),v.sex==='M'?'수컷':v.sex==='F'?'암컷':'미구분',larvaHeadWidth(v),source.status||'유충',...Array.from({length:count},(_,i)=>{const b=records[i]||{};return[b.date??'',b.feedBrand||b.feedType||'',b.bottleSize??'',b.weight??''];}).flat(),p.pupaDate??'',p.pupaWeight??'',v.emerged||source.eclosion?.date||'',v.size??'',source.memo??''];});
  return {headers,rows};
 }
 async function downloadLineExcel(id,button){
@@ -828,10 +834,10 @@ async function downloadLineExcel(id,button){
  try{
   const data=lineExcelData(line,db.larvae.filter(v=>v.lineId===id));
   const controller=new AbortController(),fetchTimer=setTimeout(()=>controller.abort(),20000);let response;
-  try{response=await fetch('assets/templates/KML_larvae_template.xlsx?v=table-style-20261028',{signal:controller.signal});if(!response.ok)throw Error('엑셀 양식을 내려받지 못했습니다.');}finally{clearTimeout(fetchTimer);}
+  try{response=await fetch('assets/templates/KML_larvae_template.xlsx?v=headwidth-sort-20261028',{signal:controller.signal});if(!response.ok)throw Error('엑셀 양식을 내려받지 못했습니다.');}finally{clearTimeout(fetchTimer);}
   const template=await response.arrayBuffer();
   const buffer=await new Promise((resolve,reject)=>{
-   worker=new Worker('assets/excel-export-worker.js?v=table-style-20261028');
+   worker=new Worker('assets/excel-export-worker.js?v=headwidth-sort-20261028');
    timer=setTimeout(()=>reject(Error('파일 생성 시간이 초과됐습니다. 다시 시도해 주세요.')),30000);
    worker.onmessage=event=>event.data.error?reject(Error(event.data.error)):resolve(event.data.buffer);
    worker.onerror=()=>reject(Error('Excel 파일을 만들지 못했습니다. 다시 시도해 주세요.'));
@@ -1050,7 +1056,7 @@ function mountSocial(){
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&social.open){event.preventDefault();closeInbox(true);}});
 document.addEventListener('click',event=>{if(social.open&&!event.target.closest('#notification-root')&&!event.target.closest('#notification-bell'))closeInbox();});
 const EXCEL_ALIASES={
- code:['관리번호','개체번호','코드','code','number'],lineage:['혈통','혈통명','lineage'],generation:['누대수','누대','세대','generation','gen'],sex:['성별','sex'],size:['체장','크기','성충크기','size','totallength'],emerged:['우화일','우화날짜','emerged','eclosiondate'],breeder:['브리더','브리더닉네임','breeder'],owner:['보유자','현재보유자','현재소유자','소유자','owner'],father:['부관리번호','부개체','부','수컷관리번호','father','sire'],mother:['모관리번호','모개체','모','암컷관리번호','mother','dam'],source:['입수경로','입수','source'],status:['상태','보유상태','status'],note:['메모','비고','note','memo'],line:['라인명','라인','라인코드','line','linename'],pupaDate:['용화일','용화날짜','pupadate'],prepupaDate:['전용일','전용날짜','prepupadate'],pupaWeight:['용화무게','용화체중','pupaweight'],species:['종','종명','species']
+ code:['관리번호','개체번호','코드','code','number'],lineage:['혈통','혈통명','lineage'],generation:['누대수','누대','세대','generation','gen'],sex:['성별','sex'],headWidth:['두폭','두폭mm','headwidth'],size:['체장','크기','성충크기','size','totallength'],emerged:['우화일','우화날짜','emerged','eclosiondate'],breeder:['브리더','브리더닉네임','breeder'],owner:['보유자','현재보유자','현재소유자','소유자','owner'],father:['부관리번호','부개체','부','수컷관리번호','father','sire'],mother:['모관리번호','모개체','모','암컷관리번호','mother','dam'],source:['입수경로','입수','source'],status:['상태','보유상태','status'],note:['메모','비고','note','memo'],line:['라인명','라인','라인코드','line','linename'],pupaDate:['용화일','용화날짜','pupadate'],prepupaDate:['전용일','전용날짜','prepupadate'],pupaWeight:['용화무게','용화체중','pupaweight'],species:['종','종명','species']
 };
 const excelNorm=value=>String(value??'').replace(/\([^)]*\)/g,'').replace(/[\s_*·.\-]/g,'').toLowerCase();
 const excelCell=value=>String(value??'').trim();
@@ -1135,10 +1141,10 @@ function excelPlan(table,kind,updateExisting=false,selectedLine=''){
   }else{
    payload.line_id=line.id;put('number',code,old?.number,'관리번호');if(f.sex!==undefined)put('sex',excelSex(f.sex,true),old?.sex,'성별');else if(!old)payload.sex='U';
    if(f.size!==undefined)put('size',excelNumber(f.size,200),old?.size===''?null:Number(old?.size),'체장');if(f.emerged!==undefined)put('emerged',excelDate(f.emerged,date1904),old?.emerged||null,'우화일');
-   const sourcePatch={};if(f.status!==undefined){let status=clean(f.status);if(status==='폐사')status='사망';if(!['유충','사육중','용화','우화','분양','사망'].includes(status))throw Error('유충 상태를 확인하세요.');if(status!==old?.sourceData?.status)sourcePatch.status=status;}
+   const sourcePatch={};if(f.headWidth!==undefined){const value=excelNumber(f.headWidth),text=value===null?'':String(value);if(text!==larvaHeadWidth(old))sourcePatch.headWidth=text;}if(f.status!==undefined){let status=clean(f.status);if(status==='폐사')status='사망';if(!['유충','사육중','용화','우화','분양','사망'].includes(status))throw Error('유충 상태를 확인하세요.');if(status!==old?.sourceData?.status)sourcePatch.status=status;}
    if(f.note!==undefined){const value=clean(f.note,2000);if(value!==(old?.sourceData?.memo||''))sourcePatch.memo=value;}
    for(const field of ['prepupaDate','pupaDate','pupaWeight'])if(f[field]!==undefined){const value=field==='pupaWeight'?excelNumber(f[field]):excelDate(f[field],date1904),text=value===null?'':String(value);if(text!==String(old?.sourceData?.pupation?.[field]??''))(sourcePatch.pupation??={})[field]=text;}
-   if(Object.keys(sourcePatch).length){payload.source_patch=sourcePatch;fields.push('상태·메모·용화');}
+   if(Object.keys(sourcePatch).length){payload.source_patch=sourcePatch;fields.push('두폭·상태·메모·용화');}
    const oldBottles=old?larvaBottleRecords(old):[],changes=new Map();
    for(const [field,raw]of Object.entries(f))if(field.startsWith('bottle.')){
     const [,number,name]=field.split('.'),index=Number(number);let value;
@@ -1163,7 +1169,7 @@ function excelPlan(table,kind,updateExisting=false,selectedLine=''){
 function excelImportModal(){
  const state=ui.excelImport;if(!state)return'';const adultKind=state.kind==='adults',plan=state.plan,locked=state.reading||state.saving;
  const options=db.lines.filter(mineLine).map(l=>'<option value="'+attr(l.id)+'" '+(state.lineId===l.id?'selected':'')+'>'+esc(l.name)+'</option>').join('');
- const body='<div class="modal-content"><div class="excel-import-tools"><a class="btn btn-light" href="assets/templates/KML_'+(adultKind?'adults':'larvae')+'_template.xlsx?v=table-style-20261028" download>'+icon('download')+'양식 다운로드</a><label class="excel-file-picker">파일 선택<input type="file" id="excel-import-file" accept=".xlsx,.xls,.csv" '+(locked?'disabled':'')+'></label></div>'+(!adultKind?'<label class="field excel-target"><span>대상 라인</span><select id="excel-import-line" '+(locked||state.parent?'disabled':'')+'><option value="">파일의 라인명으로 구분</option>'+options+'</select></label>':'')+'<label class="excel-update-toggle"><input type="checkbox" id="excel-import-updates" '+(state.updateExisting?'checked':'')+' '+(locked?'disabled':'')+'> 기존 개체도 수정</label><div class="excel-policy">빈칸은 기존 값 유지 · 선택 항목 삭제는 [비우기]</div><p class="excel-file-state" role="status">'+esc(state.reading?'파일을 읽는 중…':state.fileName||'')+'</p>'+(state.error?'<div class="excel-import-error" role="alert">'+esc(state.error)+'</div>':'')+(plan?'<div class="excel-counts"><span>신규 <b>'+plan.newCount+'</b></span><span>수정 <b>'+plan.updateCount+'</b></span><span>오류 <b>'+plan.errors.length+'</b></span></div>'+(plan.errors.length?'<ul class="excel-errors" role="alert">'+plan.errors.slice(0,100).map(e=>'<li>'+(e.row?e.row+'행: ':'')+esc(e.message)+'</li>').join('')+'</ul>':'')+'<div class="datatable-wrap excel-preview"><table class="datatable"><thead><tr><th>행</th><th>개체</th><th>처리</th><th>변경 항목</th></tr></thead><tbody>'+plan.preview.slice(0,500).map(x=>'<tr><td>'+x.row+'</td><td>'+esc(x.key)+'</td><td>'+esc(x.state)+'</td><td>'+esc(x.fields||'—')+(x.values?.length?'<details class="excel-row-values"><summary>변경값 보기</summary><ul>'+x.values.map(value=>'<li>'+esc(value)+'</li>').join('')+'</ul></details>':'')+'</td></tr>').join('')+'</tbody></table></div>':'')+'</div><div class="modal-actions"><button type="button" class="btn btn-light" data-action="close-modal" '+(state.saving?'disabled':'')+'>'+(state.parent?'라인 수정으로':'닫기')+'</button><button type="button" class="btn btn-dark" data-action="save-excel-import" '+(locked||!plan||plan.errors.length||!plan.items.length?'disabled':'')+'>'+(state.saving?'저장 중…':(plan?plan.items.length+'개체 저장':'저장'))+'</button></div>';
+ const body='<div class="modal-content"><div class="excel-import-tools"><a class="btn btn-light" href="assets/templates/KML_'+(adultKind?'adults':'larvae')+'_template.xlsx?v=headwidth-sort-20261028" download>'+icon('download')+'양식 다운로드</a><label class="excel-file-picker">파일 선택<input type="file" id="excel-import-file" accept=".xlsx,.xls,.csv" '+(locked?'disabled':'')+'></label></div>'+(!adultKind?'<label class="field excel-target"><span>대상 라인</span><select id="excel-import-line" '+(locked||state.parent?'disabled':'')+'><option value="">파일의 라인명으로 구분</option>'+options+'</select></label>':'')+'<label class="excel-update-toggle"><input type="checkbox" id="excel-import-updates" '+(state.updateExisting?'checked':'')+' '+(locked?'disabled':'')+'> 기존 개체도 수정</label><div class="excel-policy">빈칸은 기존 값 유지 · 선택 항목 삭제는 [비우기]</div><p class="excel-file-state" role="status">'+esc(state.reading?'파일을 읽는 중…':state.fileName||'')+'</p>'+(state.error?'<div class="excel-import-error" role="alert">'+esc(state.error)+'</div>':'')+(plan?'<div class="excel-counts"><span>신규 <b>'+plan.newCount+'</b></span><span>수정 <b>'+plan.updateCount+'</b></span><span>오류 <b>'+plan.errors.length+'</b></span></div>'+(plan.errors.length?'<ul class="excel-errors" role="alert">'+plan.errors.slice(0,100).map(e=>'<li>'+(e.row?e.row+'행: ':'')+esc(e.message)+'</li>').join('')+'</ul>':'')+'<div class="datatable-wrap excel-preview"><table class="datatable"><thead><tr><th>행</th><th>개체</th><th>처리</th><th>변경 항목</th></tr></thead><tbody>'+plan.preview.slice(0,500).map(x=>'<tr><td>'+x.row+'</td><td>'+esc(x.key)+'</td><td>'+esc(x.state)+'</td><td>'+esc(x.fields||'—')+(x.values?.length?'<details class="excel-row-values"><summary>변경값 보기</summary><ul>'+x.values.map(value=>'<li>'+esc(value)+'</li>').join('')+'</ul></details>':'')+'</td></tr>').join('')+'</tbody></table></div>':'')+'</div><div class="modal-actions"><button type="button" class="btn btn-light" data-action="close-modal" '+(state.saving?'disabled':'')+'>'+(state.parent?'라인 수정으로':'닫기')+'</button><button type="button" class="btn btn-dark" data-action="save-excel-import" '+(locked||!plan||plan.errors.length||!plan.items.length?'disabled':'')+'>'+(state.saving?'저장 중…':(plan?plan.items.length+'개체 저장':'저장'))+'</button></div>';
  return modalFrame(adultKind?'성충 Excel 가져오기':'라인 유충 Excel 가져오기','',body);
 }
 function rebuildExcelPreview(){const state=ui.excelImport;if(!state?.table)return;state.error='';try{state.plan=excelPlan(state.table,state.kind,state.updateExisting,state.lineId);}catch(error){state.error=error.message;state.plan=null;}renderModal();}

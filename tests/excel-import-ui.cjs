@@ -5,6 +5,13 @@ const c={window:{addEventListener(){}},document:{getElementById:()=>el,addEventL
 vm.runInNewContext(fs.readFileSync(__dirname+'/../app.js','utf8').replace('  boot();','globalThis.t={excelTable,excelPlan,excelDate,adultsPage,linesPage,excelImportModal,setDb:x=>db=x,setImport:x=>ui.excelImport=x};'),c);const t=c.t;
 const db={currentUser:'u',members:[{id:'u',nickname:'회원'}],adults:[{id:'old',code:'OLD',lineage:'기존',sex:'M',size:'80',status:'보유',source:'우화',owner:'u',breeder:'u',generation:'F2',updatedAt:'stamp',photoUrl:'KEEP',note:'기존 메모'},{id:'foreign',code:'OTHER',lineage:'타인',sex:'F',owner:'other',updatedAt:'other'}],lines:[{id:'line',name:'내라인',createdBy:'u'},{id:'foreignLine',name:'다른라인',createdBy:'other'}],larvae:[{id:'v',lineId:'line',number:'001',sex:'U',records:[['2026-07-01','A','800','20'],['2026-08-01','B','1400','25']],sourceData:{status:'유충',bottleRecords:[{id:'keep-id',photo:'keep-photo'},{id:'second'}]},updatedAt:'version'}],comments:[],transfers:[]};t.setDb(db);
 const table=(rows,kind='adults')=>t.excelTable({rows},kind);
+for(const [input,expected]of [[10.5,'10.5'],[0,'0'],['[비우기]','']]){
+ db.larvae[0].sourceData.headWidth='12';
+ const head=t.excelPlan(table([['라인명','관리번호','성별','두폭(mm)'],['내라인','001','미구분',input]],'larvae'),'larvae',true);
+ assert.equal(head.errors.length,0);assert.equal(head.items[0].payload.source_patch.headWidth,expected);assert.equal(head.items[0].payload.bottle_changes,undefined);
+}
+delete db.larvae[0].sourceData.headWidth;
+const invalidHead=t.excelPlan(table([['라인명','관리번호','두폭(mm)'],['내라인','001',-1]],'larvae'),'larvae',true);assert.ok(invalidHead.errors.length);
 let p=t.excelPlan(table([['관리번호','혈통','성별','체장(mm)'],['NEW','꼴통A','수컷',0]]),'adults');assert.equal(p.errors.length,0);assert.equal(p.items[0].payload.size,0);assert.ok(p.preview[0].values.some(value=>value==='체장: 0'));assert.equal(p.items[0].payload.status,'보유');
 p=t.excelPlan(table([['관리번호','혈통','성별'],['OLD','바꾸기','수컷']]),'adults');assert.equal(p.items.length,0);assert.ok(p.preview[0].state.includes('건너뜀'));
 p=t.excelPlan(table([['관리번호','메모'],['OLD','수정']]),'adults',true);assert.equal(p.items[0].payload.note,'수정');assert.ok(!Object.hasOwn(p.items[0].payload,'lineage'));assert.ok(!Object.hasOwn(p.items[0].payload,'photo_url'));assert.equal(p.items[0].version,'stamp');
