@@ -451,7 +451,7 @@ html.kml-modal-open body{overscroll-behavior:none}
 .home-banner-copy{position:relative;z-index:2;padding:38px 30px;width:72%}
 .home-banner .hero-kicker{color:#cdb185;letter-spacing:.12em;font-size:10px}
 .home-banner h2{font-size:38px;line-height:1.25;letter-spacing:-.05em;margin:17px 0 27px;font-weight:750}
-.home-banner-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.home-banner-actions{display:flex;flex-direction:column;align-items:stretch;width:max-content;max-width:100%;gap:8px}
 .home-banner .btn-outline{color:#dec9a8;border-color:#a88d63;background:#171916aa}
 .home-banner-visual{position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse at 85% 65%,#484436 0,transparent 65%)}
 .home-banner-visual::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#171916 8%,#171916bc 32%,transparent 68%)}
