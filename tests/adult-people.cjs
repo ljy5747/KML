@@ -1,0 +1,17 @@
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const el={style:{setProperty(){},removeProperty(){}},addEventListener(){}};
+const c={window:{addEventListener(){}},document:{getElementById:()=>el,addEventListener(){}},location:{hash:'#/registry'},setInterval(){},setTimeout(){},clearTimeout(){}};
+vm.runInNewContext(fs.readFileSync(__dirname+'/../app.js','utf8').replace('  boot();','globalThis.t={adultModal,adultPeopleValues,adultBreederValue,adultBreederLink,adultBreederName,adultRecord,pedCell,initialLabelValues,filteredAdults,excelTable,excelPlan,setDb:x=>db=x,setAdmin:x=>role=x,setSearch:x=>ui.search=x};'),c);
+const t=c.t,db={currentUser:'u',members:[{id:'u',nickname:'회원 A'},{id:'v',nickname:'회원 B',avatar_url:'https://example.com/avatar.jpg'}],adults:[{id:'a',code:'A1',lineage:'꼴통A',owner:'u',breeder:'',breederName:'외부 <브리더>',sex:'M',size:'80',updatedAt:'stamp'}],lines:[],larvae:[],comments:[],transfers:[]};t.setDb(db);
+let a=db.adults[0];
+t.setAdmin('admin');let html=t.adultModal('a');assert.match(html,/<select name="owner" required>/);assert.doesNotMatch(html,/<select name="owner"[^>]*disabled/);assert.ok(html.includes('외부 &lt;브리더&gt;'));
+let people=t.adultPeopleValues({owner:'v',breeder:'v',breederName:'old external'},a);assert.equal(people.owner,'v');assert.equal(people.breeder,'v');assert.equal(people.breederName,'');
+const row=t.adultRecord({...a,...people});assert.equal(row.owner_id,'v');assert.equal(row.breeder_id,'v');assert.equal(row.breeder_name,'');
+t.setAdmin('member');assert.throws(()=>t.adultPeopleValues({owner:'v',breeder:'v'},a),/성충 보내기/);assert.throws(()=>t.adultPeopleValues({owner:'missing'},a),/소유자/);
+html=t.adultBreederLink(a,'table-member');assert.ok(html.includes('external-breeder-mark'));assert.ok(html.includes('<svg'));assert.ok(html.includes('외부 &lt;브리더&gt;'));assert.ok(!html.includes('data-nav'));assert.ok(t.pedCell('a','M').includes('외부 &lt;브리더&gt;'));assert.equal(t.initialLabelValues('adult','a').breeder,'외부 <브리더>');
+people=t.adultBreederValue('','회원 B');assert.equal(people.breeder,'v');assert.equal(people.breederName,'');a.breeder='v';a.breederName='';db.members[1].nickname='바뀐 회원 B';assert.equal(t.adultBreederName(a),'바뀐 회원 B');assert.ok(t.adultBreederLink(a).includes('data-nav="breeder/v"'));assert.ok(t.adultBreederLink(a).includes('avatar.jpg'));
+a.breeder='';a.breederName='외부 <브리더>';t.setSearch('외부 <');assert.equal(t.filteredAdults().length,1);t.setSearch('');
+let parsed=t.excelTable({rows:[['관리번호','브리더 닉네임'],['A1','새 외부인']]},'adults');let plan=t.excelPlan(parsed,'adults',true);assert.equal(plan.errors.length,0);assert.equal(plan.items[0].payload.breeder_name,'새 외부인');
+parsed=t.excelTable({rows:[['관리번호','브리더 닉네임'],['A1','바뀐 회원 B']]},'adults');plan=t.excelPlan(parsed,'adults',true);assert.equal(plan.items[0].payload.breeder_id,'v');assert.equal(plan.items[0].payload.breeder_name,'');
+assert.throws(()=>t.adultBreederValue('','x'.repeat(81)),/80자/);
+console.log('PASS: admin owner editing, regular-member ownership guard, member ID/name/photo linkage, escaped external names with circular beetle marks, pedigree/label/search and Excel member/external transitions.');

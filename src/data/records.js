@@ -16,7 +16,7 @@ const persist=async(table,id,payload,updating=false)=>{
   const sourceLabel=value=>['우화','입양','채집'].includes(value)?value:value==='자체 우화'?'우화':'입양';
   const adultState=value=>value==='이동'?'분양':value==='종료'?'사망':(value||'보유');
   const adultRecord=a=>({code:a.code,lineage:a.lineage,generation:a.generation||'',sex:a.sex,size:a.size===''?null:Number(a.size),
-    emerged:a.emerged||null,breeder_id:a.breeder||null,owner_id:a.owner||null,
+    emerged:a.emerged||null,breeder_id:a.breeder||null,breeder_name:a.breeder?'':(a.breederName||''),owner_id:a.owner||null,
     father_id:a.father||null,mother_id:a.mother||null,source:a.source,status:a.status,note:a.note||'',photo_url:a.photoUrl||''});
   const lineRecord=l=>({name:l.name,father_id:l.father||null,mother_id:l.mother,generation:l.generation||'',is_wild:!!l.isWild,year:l.year?Number(l.year):null,method:l.method||'',note:l.note||''});
   async function loadRemote(){
@@ -35,7 +35,7 @@ const persist=async(table,id,payload,updating=false)=>{
       members:profiles.map(x=>({id:x.user_id,nickname:x.nickname,intro:x.intro||'',avatar_url:x.avatar_url||'',
         role:x.user_id===authUser.id&&role==='admin'?'관리자':'브리더',initial:(x.nickname||'K')[0],color:'#a68758'})),
       adults:a.map(x=>({id:x.id,code:x.code,lineage:lineageLabel(x.lineage,x.species,x.generation),generation:x.generation||'',sex:x.sex,size:x.size===null?'':String(x.size),emerged:x.emerged||'',
-        breeder:x.breeder_id||'',owner:x.owner_id||'',father:x.father_id||'',mother:x.mother_id||'',status:adultState(x.status),
+        breeder:x.breeder_id||'',breederName:x.breeder_name||'',owner:x.owner_id||'',father:x.father_id||'',mother:x.mother_id||'',status:adultState(x.status),
         source:sourceLabel(x.source),note:x.note||'',photoUrl:x.photo_url||'',species:x.species||'',beetlelogId:x.beetlelog_id||'',beetlelogOwner:x.beetlelog_owner_id||'',createdAt:x.created_at||'',updatedAt:x.updated_at||''})),
       lines:l.map(x=>({id:x.id,name:x.name,father:x.father_id,mother:x.mother_id,year:x.year||'',generation:x.generation||'',isWild:!!x.is_wild,method:x.method||'',note:x.note||'',createdBy:x.created_by||'',species:x.species||'',beetlelogId:x.beetlelog_id||'',beetlelogOwner:x.beetlelog_owner_id||'',createdAt:x.created_at||'',updatedAt:x.updated_at||''})),
       larvae:v.map(x=>({id:x.id,lineId:x.line_id,number:x.number,sex:x.sex||'U',records:x.records||[],emerged:x.emerged||'',size:x.size===null?'':String(x.size),sourceData:x.source_data||{},updatedAt:x.updated_at||'',beetlelogId:x.beetlelog_id||'',beetlelogOwner:x.beetlelog_owner_id||''})),

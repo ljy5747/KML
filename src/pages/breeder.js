@@ -1,4 +1,9 @@
 // Member links expose only the nickname/photo and already-visible KML records.
+function adultBreederName(a){return member(a?.breeder)?.nickname||a?.breederName||'외부 / 미등록';}
+function adultBreederLink(a,className='breeder-link'){
+  if(member(a?.breeder))return breederLink(a.breeder,className);
+  return '<span class="breeder-link external-breeder '+className+'"><span class="mini-avatar external-breeder-mark" aria-hidden="true">'+beetleArt()+'</span><span class="breeder-link-name">'+esc(adultBreederName(a))+'</span></span>';
+}
 function breederLink(id,className='breeder-link',content=''){
   const m=member(id);if(!m)return '<span class="'+className+'">'+esc(memberName(id))+'</span>';
   const image=avatar(m).replace('<div ','<span ').replace('</div>','</span>').replace('<img ','<img loading="lazy" decoding="async" ');

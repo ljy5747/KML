@@ -95,3 +95,5 @@ button.line-pedigree-photo:focus-visible{outline:2px solid #a98752;outline-offse
 
 .hero--specimen .hero-actions{flex-wrap:wrap}
 @media(max-width:680px){.hero--specimen .hero-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch}.hero--specimen .hero-actions .btn:first-child{grid-column:1/-1}}
+
+.external-breeder-mark{background:#eee7db!important;color:#856e49;border:1px solid #d8c8ad;border-radius:50%}.external-breeder-mark svg{width:19px;height:20px}.external-breeder-mark g[stroke]{stroke:#856e49;stroke-width:12}.external-breeder:hover .breeder-link-name{text-decoration:none}#adult-form [data-external-breeder][hidden]{display:none}

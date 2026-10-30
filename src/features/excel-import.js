@@ -38,7 +38,7 @@ function excelTable(parsed,kind){
  return{rows:data,date1904:!!parsed.date1904,defaultLine};
 }
 function excelPreviewValues(payload,prepared){
- const labels={lineage:'혈통',generation:'누대수',sex:'성별',size:'체장',emerged:'우화일',breeder_id:'브리더',father_id:'부',mother_id:'모',source:'입수 경로',status:'상태',note:'메모',memo:'메모',pupaDate:'용화일',prepupaDate:'전용일',pupaWeight:'용화 무게',date:'날짜',feedBrand:'먹이원',feedType:'종류',bottleSize:'용량',weight:'무게',headWidth:'두폭',pudding:'푸딩'};
+ const labels={lineage:'혈통',generation:'누대수',sex:'성별',size:'체장',emerged:'우화일',breeder_id:'브리더',breeder_name:'외부 브리더',father_id:'부',mother_id:'모',source:'입수 경로',status:'상태',note:'메모',memo:'메모',pupaDate:'용화일',prepupaDate:'전용일',pupaWeight:'용화 무게',date:'날짜',feedBrand:'먹이원',feedType:'종류',bottleSize:'용량',weight:'무게',headWidth:'두폭',pudding:'푸딩'};
  const value=(key,v)=>{if(v===null||v==='')return '(비우기)';if(key==='father_id'||key==='mother_id')return prepared.find(x=>x.id===v)?.code||adult(v)?.code||'연결 개체';if(key==='breeder_id')return memberName(v);if(key==='sex')return v==='M'?'수컷':v==='F'?'암컷':'미구분';return String(v).slice(0,160);};
  const out=[];for(const [key,v]of Object.entries(payload))if(labels[key])out.push(labels[key]+': '+value(key,v));
  for(const [key,v]of Object.entries(payload.source_patch||{})){if(key==='pupation'){for(const [field,text]of Object.entries(v))out.push(labels[field]+': '+value(field,text));}else out.push((labels[key]||key)+': '+value(key,v));}
@@ -78,7 +78,7 @@ function excelPlan(table,kind,updateExisting=false,selectedLine=''){
    if(f.status!==undefined){const value=clean(f.status);if(!['보유','분양','사망'].includes(value))throw Error('보유 상태는 보유·분양·사망입니다.');put('status',value,old?.status,'상태');}
    if(f.source!==undefined){const value=clean(f.source),normal=value==='자가'||value==='자체 우화'?'우화':value;if(!['우화','입양','채집'].includes(normal))throw Error('입수 경로는 우화·입양·채집입니다.');put('source',normal,old?.source,'입수 경로');}
    if(f.owner!==undefined&&!['본인','나','me',memberName(db.currentUser)].includes(excelCell(f.owner)))throw Error('보유자 변경은 성충 보내기를 이용하세요.');
-   if(f.breeder!==undefined){const value=clean(f.breeder);let breeder=null;if(value){if(['본인','나','me'].includes(value))breeder=db.currentUser;else{const matches=db.members.filter(m=>m.nickname===value);if(matches.length!==1)throw Error('브리더 닉네임을 확인하세요. 같은 이름이 여러 명이면 개체 수정에서 선택해 주세요.');breeder=matches[0].id;}}put('breeder_id',breeder,old?.breeder||null,'브리더');}
+   if(f.breeder!==undefined){const selected=adultBreederValue('',clean(f.breeder,80));put('breeder_id',selected.breeder||null,old?.breeder||null,'브리더');put('breeder_name',selected.breederName,old?.breederName||'','외부 브리더');}
    for(const [field,sex]of [['father','M'],['mother','F']])if(f[field]!==undefined){const value=clean(f[field],80),parent=value?adultMap.get(value.toLowerCase()):null;if(value&&!parent)throw Error('부모 관리번호를 찾을 수 없습니다: '+value);const fileParent=prepared.find(x=>x.id===parent?.id);const gender=fileParent&&(!fileParent.old||updateExisting)&&fileParent.f.sex?excelSex(fileParent.f.sex):parent?.sex;if(parent&&gender!==sex)throw Error('부·모의 성별을 확인하세요.');if(parent?.id===id)throw Error('자신을 부모로 지정할 수 없습니다.');put(field+'_id',parent?.id||null,old?.[field]||null,field==='father'?'부':'모');}
    if(!old){payload.source=payload.source||'우화';payload.status=payload.status||'보유';}
   }else{

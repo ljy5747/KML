@@ -1,3 +1,4 @@
+  document.addEventListener('change',e=>{if(e.target.matches?.('#adult-form select[name=breeder]'))updateAdultBreederField(e.target);});
   document.addEventListener('change',e=>{const map={'sex-filter':'sex','year-filter':'year','status-filter':'status','sort-filter':'sort'};if(map[e.target.id]){ui[map[e.target.id]]=e.target.value;updateAdultsTable();}});
   document.addEventListener('submit',async e=>{
     const form=e.target;const formId=form.getAttribute('id');if(!['adult-form','line-form','profile-form','transfer-form','comment-form','larva-form'].includes(formId))return;e.preventDefault();if(formId==='larva-form'){await saveLarvaEditor(form);return;}const f=new FormData(form);const data=Object.fromEntries(f.entries());
@@ -6,8 +7,8 @@
       const code=String(data.code||'').trim(),lineage=String(data.lineage||'').trim();if(!code||!lineage)return notify('관리번호와 혈통을 입력하세요.');
       if(db.adults.some(x=>x.code.toLowerCase()===code.toLowerCase()&&x.id!==data.id))return notify('이미 사용 중인 관리번호입니다.');
       if(data.father&&data.father===data.mother)return notify('부모는 다른 개체여야 합니다.');
-      const old=data.id?adult(data.id):null; if(old&&data.owner!==old.owner)return notify('소유자 변경은 개체 상세의 소유자 변경 기능을 이용하세요.');
-      const next={id:data.id||uid(),code,lineage:/^(WD|wild|와일드)$/i.test(lineage)?'Wild':lineage,generation:String(data.generation||'').trim().toUpperCase(),sex:data.sex,size:data.size,emerged:data.emerged,breeder:data.breeder,owner:data.owner,father:data.father,mother:data.mother,source:data.source,status:data.status,note:data.note,photoUrl:ui.adultPhotoReset?'':(ui.adultPhotoPreview||old?.photoUrl||'')};
+      const old=data.id?adult(data.id):null;let people;try{people=adultPeopleValues(data,old);}catch(error){return notify(error.message);}
+      const next={id:data.id||uid(),code,lineage:/^(WD|wild|와일드)$/i.test(lineage)?'Wild':lineage,generation:String(data.generation||'').trim().toUpperCase(),sex:data.sex,size:data.size,emerged:data.emerged,...people,father:data.father,mother:data.mother,source:data.source,status:data.status,note:data.note,photoUrl:ui.adultPhotoReset?'':(ui.adultPhotoPreview||old?.photoUrl||'')};
       // Prevent circular parent references (including indirect loops).
       const reaches=(start,target,seen=new Set())=>{if(!start||seen.has(start))return false;if(start===target)return true;seen.add(start);const a=adult(start);return a?reaches(a.father,target,seen)||reaches(a.mother,target,seen):false;};
       if(reaches(next.father,next.id)||reaches(next.mother,next.id))return notify('부모·자손 관계가 순환합니다. 다른 개체를 선택하세요.');

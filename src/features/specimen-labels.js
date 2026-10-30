@@ -32,7 +32,7 @@ function initialLabelValues(kind,id){
   const c=labelRecordContext(kind,id);if(!c)return null;
   const r=c.record;
   const lineage=p=>p?[p.lineage,p.code].filter(Boolean).join(' '):'';
-  const d={sex:labelSex(r.sex),no:labelText(kind==='larva'?r.number:r.code),line:labelText(c.line?.name||(kind==='adult'?r.lineage:'')),gen:labelText(kind==='larva'?c.line?.generation:r.generation),mSize:labelText(c.father?.size),mLine:lineage(c.father),fSize:labelText(c.mother?.size),fLine:lineage(c.mother),pudDate:'',pudFeed:'',head:'',pupaDate:'',pupaW:'',adultDate:labelText(r.emerged),adult:labelText(r.size),breeder:member(c.breeder)?.nickname||''};
+  const d={sex:labelSex(r.sex),no:labelText(kind==='larva'?r.number:r.code),line:labelText(c.line?.name||(kind==='adult'?r.lineage:'')),gen:labelText(kind==='larva'?c.line?.generation:r.generation),mSize:labelText(c.father?.size),mLine:lineage(c.father),fSize:labelText(c.mother?.size),fLine:lineage(c.mother),pudDate:'',pudFeed:'',head:'',pupaDate:'',pupaW:'',adultDate:labelText(r.emerged),adult:labelText(r.size),breeder:kind==='adult'?(member(c.breeder)?.nickname||r.breederName||''):(member(c.breeder)?.nickname||'')};
   for(let i=0;i<5;i++)for(const key of ['fd','ff','fv','fw'])d[key+i]='';
   if(kind==='larva'){
     const records=larvaBottleRecords(r).slice().sort((a,b)=>labelText(a.date).localeCompare(labelText(b.date)));
