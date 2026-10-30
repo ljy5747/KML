@@ -1,0 +1,11 @@
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const el={style:{setProperty(){},removeProperty(){}},addEventListener(){}};
+const c={window:{addEventListener(){}},document:{getElementById:()=>el,addEventListener(){}},location:{hash:'#/registry'},setInterval(){},setTimeout(){},clearTimeout(){}};
+vm.runInNewContext(fs.readFileSync(__dirname+'/../app.js','utf8').replace('  boot();','globalThis.t={adultDateValues,adultRecord,adultYear,adultModal,adultDetail,adultsTable,adultsPage,filteredAdults,excelTable,excelPlan,setDb:x=>db=x,setYear:x=>ui.year=x};'),c);const t=c.t;
+const a={id:'a',code:'A1',lineage:'꼴통A',sex:'M',owner:'u',breeder:'u',emerged:'',emergedYear:2024,size:'80',updatedAt:'version'};t.setDb({currentUser:'u',members:[{id:'u',nickname:'회원'}],adults:[a],lines:[],larvae:[],comments:[],transfers:[]});
+let values=t.adultDateValues({emerged:'',emergedYear:'2024'});assert.equal(values.emerged,'');assert.equal(values.emergedYear,2024);let payload=t.adultRecord({...a,...values});assert.equal(payload.emerged,null);assert.equal(payload.emerged_year,2024);
+assert.equal(t.adultYear(a),'2024');assert.ok(t.adultsTable([a]).includes('<td>2024</td>'));assert.ok(t.adultDetail('a').includes('<small>연도</small><strong>2024</strong>'));assert.ok(t.adultModal('a').includes('value="2024" selected'));assert.ok(t.adultModal('a').includes('data-date-value value=""'));assert.ok(t.adultsPage().includes('<option >2024</option>'));t.setYear('2024');assert.equal(t.filteredAdults().length,1);t.setYear('2025');assert.equal(t.filteredAdults().length,0);
+values=t.adultDateValues({emerged:'2024-02-29',emergedYear:'2024'});assert.equal(values.emerged,'2024-02-29');assert.equal(values.emergedYear,2024);assert.throws(()=>t.adultDateValues({emerged:'2025-02-29',emergedYear:'2025'}),/우화일/);
+assert.equal(t.adultYear({...a,emerged:'2025-07-01'}),'2025');assert.equal(t.adultYear({}),'—');
+const table=t.excelTable({rows:[['관리번호','우화일'],['A1',2023]]},'adults');const plan=t.excelPlan(table,'adults',true);assert.equal(plan.errors.length,0);assert.equal(plan.items[0].payload.emerged_year,2023);assert.equal(plan.items[0].payload.emerged,undefined);
+console.log('PASS: year-only form saves without invented month/day, reload/edit selection, table/detail/filter/year options, full dates and leap days, Excel year-only input.');

@@ -16,7 +16,7 @@ begin
   v_id:=(item->>'id')::uuid;version:=nullif(item->>'version','')::timestamptz;p:=item->'payload';
   if v_id is null or jsonb_typeof(p) is distinct from 'object' then raise exception '잘못된 개체 데이터입니다.';end if;
   if item->>'kind'='adults' then
-   if exists(select 1 from jsonb_object_keys(p) k where k not in ('code','lineage','generation','sex','size','emerged','breeder_id','breeder_name','father_id','mother_id','source','status','note')) then raise exception '허용하지 않은 성충 항목입니다.';end if;
+   if exists(select 1 from jsonb_object_keys(p) k where k not in ('code','lineage','generation','sex','size','emerged','emerged_year','breeder_id','breeder_name','father_id','mother_id','source','status','note')) then raise exception '허용하지 않은 성충 항목입니다.';end if;
    select * into a from public.kml_adults where id=v_id for update;fresh:=not found;
    if fresh and version is not null then raise exception '성충이 삭제되었거나 접근 권한이 없습니다.';end if;
    if not fresh and (a.owner_id is distinct from (select auth.uid()) or version is null or a.updated_at is distinct from version) then raise exception '성충이 다른 앱에서 변경되었거나 본인 보유 개체가 아닙니다. 파일을 다시 확인하세요.';end if;
@@ -25,10 +25,10 @@ begin
    if a.sex not in ('M','F') or a.sex is null or a.source is null or a.status is null or a.source not in ('우화','입양','채집') or a.status not in ('보유','분양','사망') then raise exception '성별·상태·입수 경로를 확인하세요.';end if;
    if exists(select 1 from public.kml_adults where lower(code)=lower(a.code) and id<>v_id) then raise exception '이미 사용 중인 성충 관리번호입니다: %',a.code;end if;
    if fresh then
-    insert into public.kml_adults(id,code,lineage,generation,sex,size,emerged,breeder_id,breeder_name,owner_id,source,status,note,created_by)
-    values(v_id,a.code,a.lineage,coalesce(a.generation,''),a.sex,a.size,a.emerged,a.breeder_id,coalesce(a.breeder_name,''),(select auth.uid()),a.source,a.status,coalesce(a.note,''),(select auth.uid()));made:=made+1;
+    insert into public.kml_adults(id,code,lineage,generation,sex,size,emerged,emerged_year,breeder_id,breeder_name,owner_id,source,status,note,created_by)
+    values(v_id,a.code,a.lineage,coalesce(a.generation,''),a.sex,a.size,a.emerged,a.emerged_year,a.breeder_id,coalesce(a.breeder_name,''),(select auth.uid()),a.source,a.status,coalesce(a.note,''),(select auth.uid()));made:=made+1;
    else
-    update public.kml_adults set code=a.code,lineage=a.lineage,generation=a.generation,sex=a.sex,size=a.size,emerged=a.emerged,breeder_id=a.breeder_id,breeder_name=coalesce(a.breeder_name,''),source=a.source,status=a.status,note=a.note where id=v_id;edited:=edited+1;
+    update public.kml_adults set code=a.code,lineage=a.lineage,generation=a.generation,sex=a.sex,size=a.size,emerged=a.emerged,emerged_year=a.emerged_year,breeder_id=a.breeder_id,breeder_name=coalesce(a.breeder_name,''),source=a.source,status=a.status,note=a.note where id=v_id;edited:=edited+1;
    end if;
   elsif item->>'kind'='larvae' then
    if exists(select 1 from jsonb_object_keys(p) k where k not in ('line_id','number','sex','emerged','size','source_patch','bottle_changes')) then raise exception '허용하지 않은 유충 항목입니다.';end if;

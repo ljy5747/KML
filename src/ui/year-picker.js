@@ -16,8 +16,8 @@ const currentYear=()=>new Date().getFullYear();
   function dayOptions(year,month,selected){
     return '<option value="">일</option>'+Array.from({length:daysInMonth(year,month)},(_,i)=>i+1).map(day=>'<option value="'+padDate(day)+'" '+(Number(selected)===day?'selected':'')+'>'+day+'일</option>').join('');
   }
-  function datePicker({name,value='',label='날짜',required=false}){
-    const match=String(value).match(/^(\d{4})-(\d{2})-(\d{2})$/),year=match?match[1]:currentYear(),month=match?match[2]:'',day=match?match[3]:'';
+  function datePicker({name,value='',yearValue='',label='날짜',required=false}){
+    const match=String(value).match(/^(\d{4})-(\d{2})-(\d{2})$/),year=match?match[1]:(yearValue||currentYear()),month=match?match[2]:'',day=match?match[3]:'';
     return '<div class="date-picker" data-date-picker data-required="'+required+'"><input type="hidden" name="'+attr(name)+'" data-date-value value="'+attr(value)+'"/>'+yearPicker({name:name+'Year',value:year,label:label+' 연도',datePart:true})+'<div class="date-month-day"><select data-date-month aria-label="'+attr(label)+' 월" '+(required?'required':'')+'><option value="">월</option>'+Array.from({length:12},(_,i)=>i+1).map(m=>'<option value="'+padDate(m)+'" '+(Number(month)===m?'selected':'')+'>'+m+'월</option>').join('')+'</select><select data-date-day data-month-key="'+year+'-'+month+'" aria-label="'+attr(label)+' 일" '+(!month?'disabled':'')+' '+(required||month?'required':'')+'>'+dayOptions(year,month,day)+'</select></div></div>';
   }
   function updateYearButtons(select){

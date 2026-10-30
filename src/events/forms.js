@@ -7,8 +7,8 @@
       const code=String(data.code||'').trim(),lineage=String(data.lineage||'').trim();if(!code||!lineage)return notify('관리번호와 혈통을 입력하세요.');
       if(db.adults.some(x=>x.code.toLowerCase()===code.toLowerCase()&&x.id!==data.id))return notify('이미 사용 중인 관리번호입니다.');
       if(data.father&&data.father===data.mother)return notify('부모는 다른 개체여야 합니다.');
-      const old=data.id?adult(data.id):null;let people;try{people=adultPeopleValues(data,old);}catch(error){return notify(error.message);}
-      const next={id:data.id||uid(),code,lineage:/^(WD|wild|와일드)$/i.test(lineage)?'Wild':lineage,generation:String(data.generation||'').trim().toUpperCase(),sex:data.sex,size:data.size,emerged:data.emerged,...people,father:data.father,mother:data.mother,source:data.source,status:data.status,note:data.note,photoUrl:ui.adultPhotoReset?'':(ui.adultPhotoPreview||old?.photoUrl||'')};
+      const old=data.id?adult(data.id):null;let people;try{people={...adultPeopleValues(data,old),...adultDateValues(data)};}catch(error){return notify(error.message);}
+      const next={id:data.id||uid(),code,lineage:/^(WD|wild|와일드)$/i.test(lineage)?'Wild':lineage,generation:String(data.generation||'').trim().toUpperCase(),sex:data.sex,size:data.size,...people,father:data.father,mother:data.mother,source:data.source,status:data.status,note:data.note,photoUrl:ui.adultPhotoReset?'':(ui.adultPhotoPreview||old?.photoUrl||'')};
       // Prevent circular parent references (including indirect loops).
       const reaches=(start,target,seen=new Set())=>{if(!start||seen.has(start))return false;if(start===target)return true;seen.add(start);const a=adult(start);return a?reaches(a.father,target,seen)||reaches(a.mother,target,seen):false;};
       if(reaches(next.father,next.id)||reaches(next.mother,next.id))return notify('부모·자손 관계가 순환합니다. 다른 개체를 선택하세요.');
