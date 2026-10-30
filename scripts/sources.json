@@ -40,6 +40,7 @@
     "src/styles/specimen-labels.css",
     "src/styles/notifications.css",
     "src/styles/help.css",
-    "src/styles/excel-import.css"
+    "src/styles/excel-import.css",
+    "src/styles/home-banners.css"
   ]
 }

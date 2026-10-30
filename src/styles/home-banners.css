@@ -1,0 +1,16 @@
+.home-banners{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-bottom:22px}
+.home-banner{position:relative;isolation:isolate;min-width:0;min-height:320px;overflow:hidden;border-radius:13px;background:#171916;color:#fff}
+.home-banner-copy{position:relative;z-index:2;padding:38px 30px;width:72%}
+.home-banner .hero-kicker{color:#cdb185;letter-spacing:.12em;font-size:10px}
+.home-banner h2{font-size:38px;line-height:1.25;letter-spacing:-.05em;margin:17px 0 27px;font-weight:750}
+.home-banner-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.home-banner .btn-outline{color:#dec9a8;border-color:#a88d63;background:#171916aa}
+.home-banner-visual{position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse at 85% 65%,#484436 0,transparent 65%)}
+.home-banner-visual::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#171916 8%,#171916bc 32%,transparent 68%)}
+.home-banner-photo{position:absolute;display:block;object-fit:contain;max-width:none;filter:drop-shadow(-8px 10px 18px #0008)}
+.home-banner-photo--adult{width:310px;height:390px;right:-62px;bottom:-83px;transform:rotate(-13deg)}
+.home-banner-photo--pair{width:75%;height:94%;right:-12px;bottom:-12px}
+.home-banner-mark{position:absolute;z-index:1;right:20px;bottom:17px;font-size:8px;color:#dac8a7;letter-spacing:.16em;text-shadow:0 1px 4px #000}
+@media(max-width:1250px){.home-banner-copy{padding:32px 24px;width:78%}.home-banner-actions .btn{padding:0 12px;font-size:11px}.home-banner-photo--pair{width:80%;right:-25px}}
+@media(max-width:760px){.home-banners{grid-template-columns:1fr;gap:14px}.home-banner{min-height:250px}.home-banner-copy{padding:30px 24px;width:72%}.home-banner h2{font-size:34px;margin:16px 0 24px}.home-banner-photo--adult{height:330px;width:290px;bottom:-78px;right:-35px}.home-banner-photo--pair{width:65%;height:110%;right:-10px;bottom:-28px}.home-banner-visual::after{background:linear-gradient(90deg,#171916 8%,#171916b0 35%,transparent 72%)}.home-banner-actions .btn{min-height:42px}}
+@media(max-width:390px){.home-banner-copy{padding:28px 20px;width:85%}.home-banner h2{font-size:32px}.home-banner-actions{gap:6px}.home-banner-actions .btn{padding:0 10px}.home-banner-photo--pair{width:73%;right:-22px}}
