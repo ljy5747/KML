@@ -46,12 +46,19 @@ function adultModal(id){const a=adult(id),t=a||{code:'',lineage:'',generation:''
     const hint=form.querySelector('[data-line-generation-hint]');
     if(hint)hint.textContent=suggested?'자동 계산값: '+suggested+' · 직접 수정할 수 있습니다.':'부모의 혈통·누대수를 확인하거나 직접 입력하세요.';
   }
+  function lineBreederValue(data,old=null){
+    const current=old?.createdBy||db.currentUser,next=String(data.createdBy||current);
+    if(next!==current&&(!isAdmin()||!old))throw Error('라인 브리더 변경은 관리자만 할 수 있습니다.');
+    if(isAdmin()&&old&&!member(next))throw Error('라인 브리더 회원을 선택하세요.');
+    return next;
+  }
   function lineModal(id){
     const l=byId(db.lines,id),wild=!!l?.isWild;
     const suggested=suggestLineGeneration(adult(l?.father),adult(l?.mother),wild);
     const body=`<form id="line-form"><input type="hidden" name="id" value="${attr(l?.id||'')}"/><input type="hidden" name="version" value="${attr(l?.updatedAt||'')}"/><div class="modal-content"><div class="form-grid">
       <div class="field"><label>라인명 *</label><input name="name" required maxlength="80" value="${attr(l?.name||'')}" placeholder="예: 꼴통A"/></div>
       <div class="field"><label>시즌 (연도)</label>${yearPicker({name:"year",value:l?.year,label:"시즌 연도"})}</div>
+      ${isAdmin()&&l?`<div class="field full"><label for="line-breeder">라인 브리더</label><select id="line-breeder" name="createdBy" required>${opt(db.members,l.createdBy,'회원 선택')}</select></div>`:''}
       <div class="field full wild-line-field"><label class="wild-line-toggle"><input type="checkbox" name="isWild" ${wild?'checked':''}/><span>Wild</span></label></div>
       <div class="field"><label data-line-father-label>${wild?'부 ♂ (선택)':'부 ♂ *'}</label><select name="father" ${wild?'':'required'}>${opt(db.adults.filter(x=>x.sex==='M'),l?.father||'',wild?'미등록 / 모름':'수컷 개체 선택')}</select></div>
       <div class="field"><label>모 ♀ *</label><select name="mother" required>${opt(db.adults.filter(x=>x.sex==='F'),l?.mother||'','암컷 개체 선택')}</select></div>

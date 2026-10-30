@@ -18,7 +18,7 @@ const persist=async(table,id,payload,updating=false)=>{
   const adultRecord=a=>({code:a.code,lineage:a.lineage,generation:a.generation||'',sex:a.sex,size:a.size===''?null:Number(a.size),
     emerged:a.emerged||null,breeder_id:a.breeder||null,breeder_name:a.breeder?'':(a.breederName||''),owner_id:a.owner||null,
     father_id:a.father||null,mother_id:a.mother||null,source:a.source,status:a.status,note:a.note||'',photo_url:a.photoUrl||''});
-  const lineRecord=l=>({name:l.name,father_id:l.father||null,mother_id:l.mother,generation:l.generation||'',is_wild:!!l.isWild,year:l.year?Number(l.year):null,method:l.method||'',note:l.note||''});
+  const lineRecord=l=>({name:l.name,father_id:l.father||null,mother_id:l.mother,generation:l.generation||'',is_wild:!!l.isWild,year:l.year?Number(l.year):null,method:l.method||'',note:l.note||'',...(isAdmin()&&l.createdBy?{created_by:l.createdBy}:{})});
   async function loadRemote(){
     const names=['kml_profiles','kml_adults','kml_lines','kml_larvae','kml_comments','kml_transfers'];
     const rs=await Promise.all(names.map(n=>supa.from(n).select('*')));
