@@ -156,6 +156,7 @@ font-family:Georgia,serif;font-style:italic;font-size:11px;font-weight:700;line-
 .chart-sub{font-size:11.5px;color:var(--dim);margin:-4px 0 8px;text-align:center}
 .legend{display:flex;gap:9px 13px;justify-content:center;font-size:11px;color:var(--dim);margin-top:9px;flex-wrap:wrap}
 .legend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+.legend i.avg-line{width:17px;height:0;border-top:2px dashed var(--gold-l);border-radius:0;vertical-align:3px}
 .chart-tbl{overflow-x:auto;margin-top:10px;border-top:1px solid var(--line2);padding-top:8px}
 .chart-tbl table{min-width:100%}
 .dt{color:var(--gold-l);font-weight:700}
@@ -358,8 +359,8 @@ function sexHeads(larvae,sex){
   });
   return vs.sort(function(a,b){return b-a;});
 }
-/* 종합점수 정렬 순서 기준: S 1명 · A 2명 · B/C 각 3명 · F 1명 (10명 기준) */
-function gradeOf(rank){return rank===1?"S":rank<=3?"A":rank<=6?"B":rank<=9?"C":"F";}
+/* 종합점수 정렬 순서 기준: S 1명 · A 2명 · B 3명 · C 2명 · F 2명 (10명 기준) */
+function gradeOf(rank){return rank===1?"S":rank<=3?"A":rank<=6?"B":rank<=8?"C":"F";}
 function computeBreederRanks(rows,metric){
   rows.forEach(function(r){
     var M=sexVals(r.br.larvae,metric,"m"),F=sexVals(r.br.larvae,metric,"f");
@@ -418,10 +419,11 @@ function shadeFor(base,i,n){
 
 /*CHART-START*/
 /* 라운드별 다중 선 그래프 — 선 끝에 브리더 프로필 사진 */
-function chart(series,rounds,unit,cid){
+function chart(series,rounds,unit,cid,overallAvg){
   cid=cid||0;
   var flat=[];series.forEach(function(s){s.vals.forEach(function(v){if(v!=null)flat.push(v);});});
   if(!flat.length)return '<div style="color:var(--dim);text-align:center;padding:16px 0;font-size:13px">데이터가 등록되면 그래프가 그려져요</div>';
+  if(overallAvg!=null)flat.push(overallAvg);
   var W=340,H=204,PL=32,PR=30,PT=16,PB=38;   /* 오른쪽 여백은 사진 자리 */
   var mn=Math.min.apply(null,flat),mx=Math.max.apply(null,flat);
   if(mx-mn<0.4){mx+=0.2;mn=Math.max(0,mn-0.2);}
@@ -436,6 +438,12 @@ function chart(series,rounds,unit,cid){
     body+='<line x1="'+PL+'" y1="'+y+'" x2="'+(W-PR)+'" y2="'+y+'" stroke="#241F19"/>'
       +'<text x="'+(PL-5)+'" y="'+(y+3)+'" font-size="9" fill="#6E6559" text-anchor="end">'+n1(v)+'</text>';
   });
+  /* 모든 참가자의 해당 성별 최신 병 무게 평균: 그래프 전체에 수평 점선 */
+  if(overallAvg!=null){
+    var ay=Y(overallAvg).toFixed(1);
+    body+='<line class="overall-avg-line" x1="'+PL+'" y1="'+ay+'" x2="'+(W-PR)+'" y2="'+ay+'"'
+      +' stroke="#E6C97A" stroke-width="1.7" stroke-dasharray="5 4" opacity=".9"/>';
+  }
   /* x축: 라운드명 + 날짜 */
   rounds.forEach(function(r,i){
     body+='<text x="'+X(i)+'" y="'+(H-20)+'" font-size="10" fill="#9A9086" text-anchor="middle">'+esc(r.name)+'</text>';
@@ -466,7 +474,8 @@ function chart(series,rounds,unit,cid){
   var s='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%">'
     +(defs?'<defs>'+defs+'</defs>':"")+body+avatars+'</svg>';
   s+='<div class="legend">'+series.filter(function(sr){return sr.vals.some(function(v){return v!=null;});})
-    .map(function(sr){return '<span><i style="background:'+sr.color+'"></i>'+esc(sr.name)+'</span>';}).join("")+'</div>';
+    .map(function(sr){return '<span><i style="background:'+sr.color+'"></i>'+esc(sr.name)+'</span>';}).join("")
+    +(overallAvg!=null?'<span><i class="avg-line"></i>전체 평균 (최신 병) '+n1(overallAvg)+esc(unit)+'</span>':"")+'</div>';
   /* 그래프 아래 날짜별 수치표 */
   s+='<div class="chart-tbl"><table><tr><th>날짜</th>'
     +series.map(function(sr){return '<th>'+esc(sr.name)+'</th>';}).join("")+'</tr>';
@@ -631,6 +640,14 @@ function render(B){
       return br.larvae.filter(function(l){return sex?sexOf(l.sex)===sex:true;})
         .map(function(l){return num(l.weights[i]);}).filter(function(v){return v!=null;});
     };
+    var overallSexAvg=function(sex){
+      var values=[];
+      breeders.forEach(function(br){br.larvae.forEach(function(l){
+        if(sexOf(l.sex)!==sex)return;
+        var w=latestW(l);if(w!=null)values.push(w);
+      });});
+      return avg(values);
+    };
     var charts=[
       ["수컷 유충 평균","<span class=\"sx-m\">♂</span> 개체들의 라운드별 평균",function(br,i){return avg(wAt(br,i,"m"));}],
       ["암컷 유충 평균","<span class=\"sx-f\">♀</span> 개체들의 라운드별 평균",function(br,i){return avg(wAt(br,i,"f"));},bcolorF],
@@ -638,7 +655,7 @@ function render(B){
     charts.forEach(function(c,ci){
       html+='<div class="sec-t"><span>'+c[0]+'</span></div><div class="panel">'
         +'<div class="chart-sub">'+c[1]+' · 단위 g</div>'
-        +chart(mkSeries(c[2],c[3]),rounds,"g",ci)+'</div>';
+        +chart(mkSeries(c[2],c[3]),rounds,"g",ci,overallSexAvg(ci===0?"m":"f"))+'</div>';
     });
   }
 
@@ -795,7 +812,7 @@ function openRankInfo(){
     +'<div class="info-sec">참가 조건</div>'
     +'<p>기록된 개체가 <b>3두 이상</b>이면 집계돼요. 한쪽 성별의 기록이 없으면 해당 항목은 빼고 <b>가진 항목만으로 100점 만점에 맞춰</b> 환산해요 (빈 항목 감점 없음).</p>'
     +'<div class="info-sec">등급</div>'
-    +'<p>종합점수 순으로 <b>10명 기준</b> 등급을 배정해요.<br/><span class="grade gS">S</span> 1위 (1명) &nbsp;<span class="grade gA">A</span> 2~3위 (2명) &nbsp;<span class="grade gB">B</span> 4~6위 (3명) &nbsp;<span class="grade gC">C</span> 7~9위 (3명) &nbsp;<span class="grade gF">F</span> 10위 (1명)<br/>동점이면 수컷 평균이 높은 순서로, 그 값도 같으면 참가자 등록 순서로 등급을 배정해요. 집계 대기는 등급에서 제외돼요.</p>'
+    +'<p>종합점수 순으로 <b>10명 기준</b> 등급을 배정해요.<br/><span class="grade gS">S</span> 1위 (1명) &nbsp;<span class="grade gA">A</span> 2~3위 (2명) &nbsp;<span class="grade gB">B</span> 4~6위 (3명) &nbsp;<span class="grade gC">C</span> 7~8위 (2명) &nbsp;<span class="grade gF">F</span> 9~10위 (2명)<br/>동점이면 수컷 평균이 높은 순서로, 그 값도 같으면 참가자 등록 순서로 등급을 배정해요. 집계 대기는 등급에서 제외돼요.</p>'
     +'<div class="info-sec">팀 중간 집계</div>'
     +'<p>팀원 종합 점수를 <b>합산</b>해요. 팀장 점수는 <b>×1.3</b>, 기록 없는 팀원은 0점이에요. 막대는 두 팀 합계 대비 비율이고, 한 팀이 <b>60% 이상</b>이면 우세로 표시돼요.</p>'
     +'<p class="info-foot">무게는 개체별 최신 병 기준 · 성충 체장이 입력되기 시작하면 무게 대신 체장(mm)으로 평가 · 동점이면 수컷 평균이 높은 쪽이 상위</p>'
