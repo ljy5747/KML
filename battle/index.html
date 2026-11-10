@@ -358,8 +358,8 @@ function sexHeads(larvae,sex){
   });
   return vs.sort(function(a,b){return b-a;});
 }
-/* 종합점수 정렬 순서 기준: S 1명 · A/B/C 각 2명 · F 1명 (8명 기준) */
-function gradeOf(rank){return rank===1?"S":rank<=3?"A":rank<=5?"B":rank<=7?"C":"F";}
+/* 종합점수 정렬 순서 기준: S 1명 · A 2명 · B/C 각 3명 · F 1명 (10명 기준) */
+function gradeOf(rank){return rank===1?"S":rank<=3?"A":rank<=6?"B":rank<=9?"C":"F";}
 function computeBreederRanks(rows,metric){
   rows.forEach(function(r){
     var M=sexVals(r.br.larvae,metric,"m"),F=sexVals(r.br.larvae,metric,"f");
@@ -795,7 +795,7 @@ function openRankInfo(){
     +'<div class="info-sec">참가 조건</div>'
     +'<p>기록된 개체가 <b>3두 이상</b>이면 집계돼요. 한쪽 성별의 기록이 없으면 해당 항목은 빼고 <b>가진 항목만으로 100점 만점에 맞춰</b> 환산해요 (빈 항목 감점 없음).</p>'
     +'<div class="info-sec">등급</div>'
-    +'<p>종합점수 순으로 <b>8명 기준</b> 등급을 배정해요.<br/><span class="grade gS">S</span> 1위 (1명) &nbsp;<span class="grade gA">A</span> 2~3위 (2명) &nbsp;<span class="grade gB">B</span> 4~5위 (2명) &nbsp;<span class="grade gC">C</span> 6~7위 (2명) &nbsp;<span class="grade gF">F</span> 8위 (1명)<br/>동점이면 수컷 평균이 높은 순서로, 그 값도 같으면 참가자 등록 순서로 등급을 배정해요. 집계 대기는 등급에서 제외돼요.</p>'
+    +'<p>종합점수 순으로 <b>10명 기준</b> 등급을 배정해요.<br/><span class="grade gS">S</span> 1위 (1명) &nbsp;<span class="grade gA">A</span> 2~3위 (2명) &nbsp;<span class="grade gB">B</span> 4~6위 (3명) &nbsp;<span class="grade gC">C</span> 7~9위 (3명) &nbsp;<span class="grade gF">F</span> 10위 (1명)<br/>동점이면 수컷 평균이 높은 순서로, 그 값도 같으면 참가자 등록 순서로 등급을 배정해요. 집계 대기는 등급에서 제외돼요.</p>'
     +'<div class="info-sec">팀 중간 집계</div>'
     +'<p>팀원 종합 점수를 <b>합산</b>해요. 팀장 점수는 <b>×1.3</b>, 기록 없는 팀원은 0점이에요. 막대는 두 팀 합계 대비 비율이고, 한 팀이 <b>60% 이상</b>이면 우세로 표시돼요.</p>'
     +'<p class="info-foot">무게는 개체별 최신 병 기준 · 성충 체장이 입력되기 시작하면 무게 대신 체장(mm)으로 평가 · 동점이면 수컷 평균이 높은 쪽이 상위</p>'
