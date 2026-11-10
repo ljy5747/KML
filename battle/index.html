@@ -335,11 +335,11 @@ function breederScore(best){
 }
 /* ── 브리더 종합 평가 (100점) ──
    항목별 점수 = 내 기록 ÷ 참가자 최고 기록 × 배점 (최고 기록 대비 비율)
-   수컷 평균 무게 23 · 최대 무게 23 · 평균 두폭 13 · 최대 두폭 11
-   암컷 평균 무게 16 · 최대 무게 14  (= EVAL_ITEMS 비중, 합계 100)
+   수컷 최대 무게 30 · 평균 무게 30
+   암컷 최대 무게 20 · 평균 무게 20  (= EVAL_ITEMS 비중, 합계 100)
    기록 없는 항목은 빼고 가진 항목만으로 100점 환산
    참가 조건: 기록된 개체 3두 이상 (최신 병 무게, 성충 체장 입력 시 체장 기준) */
-var EVAL_ITEMS=[["mAvg",0.23],["mMax",0.23],["mHAvg",0.13],["mHMax",0.11],["fAvg",0.16],["fMax",0.14]];
+var EVAL_ITEMS=[["mMax",0.30],["mAvg",0.30],["fMax",0.20],["fAvg",0.20]];
 var MIN_TOTAL=3;
 function sexVals(larvae,metric,sex){
   var vs=[];
@@ -779,8 +779,8 @@ function openRecords(bi){
   document.body.appendChild(d);
 }
 function openRankInfo(){
-  var rows=[["수컷 평균 무게",23],["수컷 최대 무게",23],["수컷 평균 두폭",13],["수컷 최대 두폭",11],
-            ["암컷 평균 무게",16],["암컷 최대 무게",14]];
+  var rows=[["수컷 최대 무게",30],["수컷 평균 무게",30],
+            ["암컷 최대 무게",20],["암컷 평균 무게",20]];
   var h='<div class="rec-head"><div class="rec-t">브리더 랭킹 산정 방식</div>'
     +'<button class="rec-x" onclick="closeRecords()">✕</button></div>'
     +'<div class="rec-body info-body">'
@@ -789,11 +789,11 @@ function openRankInfo(){
     +rows.map(function(r){return '<tr><td style="text-align:left">'+r[0]+'</td><td class="mono">'+r[1]+'</td></tr>';}).join("")
     +'<tr class="info-sum"><td style="text-align:left">합계</td><td class="mono">100</td></tr></table>'
     +'<div class="info-sec">항목별 점수</div>'
-    +'<p>참가자 중 <b>최고 기록 대비 비율</b>로 환산해요.<br/>예) 1위 33.2g, 내 기록 31.5g → 31.5 ÷ 33.2 = 94.9% → 수컷 최대 무게 23점 × 0.949 = <b>21.8점</b></p>'
-    +'<div class="info-sec">두폭</div>'
-    +'<p><b>수컷만</b> 집계해요. 개체당 1회 측정한 두폭(mm)으로 평균·최대를 매겨요.</p>'
+    +'<p>참가자 중 <b>최고 기록 대비 비율</b>로 환산해요.<br/>예) 1위 33.2g, 내 기록 31.5g → 31.5 ÷ 33.2 = 94.9% → 수컷 최대 무게 30점 × 0.949 = <b>28.5점</b></p>'
+    +'<div class="info-sec">평가 항목</div>'
+    +'<p>수컷과 암컷의 <b>최대 무게·평균 무게</b>만 평가해요. 두폭은 기록에 표시되지만 랭킹 점수에는 반영되지 않아요.</p>'
     +'<div class="info-sec">참가 조건</div>'
-    +'<p>기록된 개체가 <b>3두 이상</b>이면 집계돼요. 한쪽 성별이나 두폭 기록이 없으면 그 항목은 빼고 <b>가진 항목만으로 100점 만점에 맞춰</b> 환산해요 (빈 항목 감점 없음).</p>'
+    +'<p>기록된 개체가 <b>3두 이상</b>이면 집계돼요. 한쪽 성별의 기록이 없으면 해당 항목은 빼고 <b>가진 항목만으로 100점 만점에 맞춰</b> 환산해요 (빈 항목 감점 없음).</p>'
     +'<div class="info-sec">등급</div>'
     +'<p>종합점수 순으로 <b>8명 기준</b> 등급을 배정해요.<br/><span class="grade gS">S</span> 1위 (1명) &nbsp;<span class="grade gA">A</span> 2~3위 (2명) &nbsp;<span class="grade gB">B</span> 4~5위 (2명) &nbsp;<span class="grade gC">C</span> 6~7위 (2명) &nbsp;<span class="grade gF">F</span> 8위 (1명)<br/>동점이면 수컷 평균이 높은 순서로, 그 값도 같으면 참가자 등록 순서로 등급을 배정해요. 집계 대기는 등급에서 제외돼요.</p>'
     +'<div class="info-sec">팀 중간 집계</div>'
