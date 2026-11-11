@@ -22,10 +22,10 @@ body{background:var(--bg);color:var(--text);
 font-family:-apple-system,"Apple SD Gothic Neo","Pretendard","Malgun Gothic",sans-serif;font-size:15px;line-height:1.55}
 .mono{font-family:ui-monospace,"SF Mono",Menlo,monospace;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
 .serif{font-family:"Times New Roman","Nanum Myeongjo",Georgia,serif}
-.wrap{max-width:560px;margin:0 auto;padding:0 15px 70px}
+.wrap{max-width:560px;min-width:0;width:100%;margin:0 auto;padding:0 15px 70px}
 
 /* ── 포스터 대문 ── */
-.hero{position:relative;margin:0 auto;max-width:560px;padding:0 0 8px;display:flex;flex-direction:column}
+.hero{position:relative;min-width:0;width:100%;margin:0 auto;max-width:560px;padding:0 0 8px;display:flex;flex-direction:column}
 
 /* 방문자 카운터 */
 .visit{order:-1;display:flex;align-items:center;justify-content:center;gap:9px;
@@ -238,7 +238,8 @@ max-height:88vh;display:flex;flex-direction:column;box-shadow:0 12px 44px rgba(0
 justify-content:center;padding:20px;cursor:zoom-out}
 .lb img{max-width:100%;max-height:100%;border-radius:8px}
 
-@media (min-width:940px){
+/* 두 열이 실제로 들어갈 공간이 있을 때만 데스크톱 배치 적용 */
+@media (min-width:1100px){
   .layout{display:grid;grid-template-columns:minmax(320px,440px) minmax(0,560px);
   gap:34px;justify-content:center;align-items:start;padding:24px 20px 60px}
   .hero{max-width:none;padding:0}
