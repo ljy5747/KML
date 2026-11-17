@@ -4,7 +4,7 @@ const stamp=i=>'2026-10-'+String(i).padStart(2,'0')+'T01:00:00Z';
 tables.kml_adults=Array.from({length:7},(_,i)=>({id:'a'+(i+1),code:'ADULT-'+(i+1),lineage:'꼴통A',sex:'M',size:80,owner_id:'u',breeder_id:'u',created_at:stamp(i+1),updated_at:stamp(20-i),emerged:'2027-01-'+String(20-i)}));
 tables.kml_lines=Array.from({length:7},(_,i)=>({id:'l'+(i+1),name:'LINE-'+(i+1),created_by:'u',created_at:stamp(i+1),updated_at:stamp(20-i),year:2030-i}));
 const element={style:{setProperty(){},removeProperty(){}},addEventListener(){}};
-const supa={from:name=>({select:async()=>({data:tables[name]||[]})})};
+const supa={from:name=>({select:()=>({order:()=>({range:async()=>({data:tables[name]||[]})})})})};
 const sandbox={window:{supabase:{createClient:()=>supa},addEventListener(){}},document:{getElementById:()=>element,addEventListener(){}},setInterval(){},setTimeout(){},clearTimeout(){},location:{hash:'#/dashboard'}};
 const source=fs.readFileSync(__dirname+'/../app.js','utf8').replace('  boot();',"globalThis.t={dashboard,recentlyRegistered,load:async()=>{authUser={id:'u'};role='admin';await loadRemote();return db;}};");
 vm.runInNewContext(source,sandbox);const t=sandbox.t;

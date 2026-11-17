@@ -86,7 +86,7 @@ function commentReactionButton(c){
 }
 function renderCommentReactions(){document.querySelectorAll('[data-comment-reaction]').forEach(el=>{const c=byId(db.comments,el.dataset.commentReaction);if(c)setSocialHTML(el,commentReactionButton(c));});}
 async function refreshCommentReactions(){
- const r=route();if(!allowed||r.page!=='adult')return;const account=authUser?.id;
+ const r=route();if(!allowed||document.hidden||r.page!=='adult')return;const account=authUser?.id;
  const {data,error}=await supa.rpc('kml_comment_reactions',{p_adult:r.id});
  if(error||!allowed||authUser?.id!==account||route().page!=='adult'||route().id!==r.id)return;
  social.reactionAdult=r.id;for(const stat of data||[])if(!social.busy.has('like:'+stat.comment_id))social.reactions[stat.comment_id]=stat;

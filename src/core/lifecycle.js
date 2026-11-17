@@ -7,11 +7,11 @@ let crossAppRefreshBusy=false;
     if(target&&target.matches?.('input,select,textarea,[contenteditable="true"]'))return;
     crossAppRefreshBusy=true;
     crossAppRefreshLast=Date.now();
-    try{const old=JSON.stringify(db);await loadRemote();if(allowed&&!ui.modal&&JSON.stringify(db)!==old)render();}
+    try{const changed=await loadRemote();if(changed&&allowed&&!ui.modal)render();}
     catch(e){/* Retain the last rendered data while offline. */}
     finally{crossAppRefreshBusy=false;}
   }
-  setInterval(()=>{refreshLinkedRecords();refreshSocial();refreshCommentReactions();},8000);
+  setInterval(()=>{refreshLinkedRecords();refreshSocial();refreshCommentReactions();},30000);
   window.addEventListener('focus',()=>{refreshLinkedRecords();refreshSocial();refreshCommentReactions();});
   document.addEventListener('visibilitychange',()=>{
     if(!document.hidden){showStandaloneHome();refreshLinkedRecords();refreshSocial();refreshCommentReactions();}
